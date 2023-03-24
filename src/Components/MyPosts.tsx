@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { auth, db } from '../fbase';
 import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 import { doc } from '../Pages/Home';
-import Post from './Post';
+import PostUnit from './PostUnit';
 
-function Posts() {
+function MyPosts() {
 	const [data, setData] = useState<doc[]>([]);
 	const userInfo = auth.currentUser;
 
@@ -32,7 +32,17 @@ function Posts() {
 			<div className='flow-root'>
 				<ul role='list' className='divide-y divide-gray-200 dark:divide-gray-700'>
 					{data.map(
-						(doc) => doc.createdAt && <Post key={doc.id} title={doc.title} createdAt={doc.createdAt} creatorDisplayName={doc.creatorDisplayName} />
+						(doc) =>
+							doc.createdAt && (
+								<PostUnit
+									key={doc.id}
+									page={'MyPosts'}
+									title={doc.title}
+									createdAt={doc.createdAt}
+									creatorDisplayName={doc.creatorDisplayName}
+									creatorId={doc.creatorId}
+								/>
+							)
 					)}
 				</ul>
 			</div>
@@ -40,4 +50,4 @@ function Posts() {
 	);
 }
 
-export default Posts;
+export default MyPosts;

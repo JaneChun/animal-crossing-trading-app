@@ -13,6 +13,7 @@ const router = createBrowserRouter([
 		children: [
 			{
 				path: '',
+				index: true,
 				element: <Home />,
 			},
 			{
@@ -28,7 +29,7 @@ const router = createBrowserRouter([
 				element: <NewPost />,
 			},
 			{
-				path: 'user/:uid',
+				path: '/user/:uid',
 				element: <UserPage />,
 			},
 		],

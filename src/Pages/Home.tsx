@@ -4,7 +4,7 @@ import Carousel from '../Components/Carousel';
 import { auth, db } from '../fbase';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
-import { elapsedTime } from '../Utilities/elapsedTime';
+import PostUnit from '../Components/PostUnit';
 
 export interface doc {
 	id: string;
@@ -40,15 +40,27 @@ function Home() {
 	return (
 		<div className='absolute top-[calc(61px)]  min-h-[calc(100vh-61px)] w-screen'>
 			<Carousel />
-			<div className='mb-[calc(61px)] p-5'>
-				{data.map((d) => (
-					<ul className='mt-5' key={d.id}>
-						<li>제목: {d.title}</li>
-						<li>내용: {d.body}</li>
-						<li onClick={() => navigate(`/user/${d.creatorId}`)}>작성자: {d.creatorDisplayName}</li>
-						{d.createdAt && <li>{elapsedTime(d.createdAt)}</li>}
+			<div className='mb-[calc(61px)] py-5 px-7'>
+				<div className='mb-4 flex items-center justify-between'>
+					<div className='text-lg font-bold leading-none text-gray-900 dark:text-white'>거래글</div>
+				</div>
+				<div className='flow-root'>
+					<ul role='list' className='divide-y divide-gray-200 dark:divide-gray-700'>
+						{data.map(
+							(doc) =>
+								doc.createdAt && (
+									<PostUnit
+										key={doc.id}
+										page={'Home'}
+										title={doc.title}
+										createdAt={doc.createdAt}
+										creatorDisplayName={doc.creatorDisplayName}
+										creatorId={doc.creatorId}
+									/>
+								)
+						)}
 					</ul>
-				))}
+				</div>
 			</div>
 			{/* <Footer /> */}
 		</div>

@@ -3,7 +3,7 @@ import { auth } from '../fbase';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import EditProfile from '../Components/EditProfile';
-import Posts from '../Components/Posts';
+import MyPosts from '../Components/MyPosts';
 
 function MyPage() {
 	const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -56,7 +56,7 @@ function MyPage() {
 					</div>
 				</div>
 
-				<Posts />
+				<MyPosts />
 			</div>
 		)
 	);
