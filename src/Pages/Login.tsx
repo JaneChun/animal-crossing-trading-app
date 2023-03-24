@@ -14,8 +14,6 @@ function Login() {
 				const credential = GoogleAuthProvider.credentialFromResult(result);
 				const token = credential?.accessToken;
 				const user = result.user;
-				console.log('token', token);
-				console.log('user', user);
 				navigate('/');
 			})
 			.catch((error) => {
@@ -25,8 +23,12 @@ function Login() {
 
 	const onFacebookClick = async () => {
 		let provider: AuthProvider = new FacebookAuthProvider();
-		const user = await signInWithPopup(auth, provider);
-		console.log('user', user);
+		signInWithPopup(auth, provider).then((result) => {
+			const credential = FacebookAuthProvider.credentialFromResult(result);
+			const token = credential?.accessToken;
+			const user = result.user;
+			navigate('/');
+		});
 	};
 
 	return (
