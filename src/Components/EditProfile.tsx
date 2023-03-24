@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { auth, storage } from '../fbase';
 import { updateProfile } from 'firebase/auth';
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
 import { ref, uploadString, getDownloadURL, listAll, deleteObject } from 'firebase/storage';
 
 interface EditProfileProps {
@@ -31,27 +31,27 @@ const EditProfile = ({ setIsEditing }: EditProfileProps) => {
 	};
 
 	const createRef = async () => {
-		const fileRef: any = ref(storage, `ProfileImages/${userInfo?.uid}/${uuidv4()}`);
+		const fileRef: any = ref(storage, `ProfileImages/${userInfo?.uid}`);
 		await uploadString(fileRef, fileURLString, 'data_url');
 		const profileImageUrl = await getDownloadURL(ref(storage, fileRef));
 
 		return profileImageUrl;
 	};
 
-	const clearStorage = async () => {
-		try {
-			const listRef = ref(storage, `ProfileImages/${userInfo?.uid}`);
-			const response = await listAll(listRef);
-			const paths = response.items.map((item) => item.fullPath);
+	// const clearStorage = async () => {
+	// 	try {
+	// 		const listRef = ref(storage, `ProfileImages/${userInfo?.uid}`);
+	// 		const response = await listAll(listRef);
+	// 		const paths = response.items.map((item) => item.fullPath);
 
-			paths.forEach((path) => {
-				const desertRef = ref(storage, path);
-				deleteObject(desertRef);
-			});
-		} catch (error) {
-			console.log(error);
-		}
-	};
+	// 		paths.forEach((path) => {
+	// 			const desertRef = ref(storage, path);
+	// 			deleteObject(desertRef);
+	// 		});
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 	}
+	// };
 
 	const onSubmit = async () => {
 		let requestData = {};
@@ -62,7 +62,7 @@ const EditProfile = ({ setIsEditing }: EditProfileProps) => {
 				requestData = { ...requestData, displayName: displayNameInput };
 			}
 			if (fileURLString) {
-				await clearStorage();
+				// await clearStorage();
 
 				const photoURL = await createRef();
 				requestData = { ...requestData, photoURL };
@@ -80,7 +80,6 @@ const EditProfile = ({ setIsEditing }: EditProfileProps) => {
 
 	return (
 		<>
-			<button onClick={clearStorage}>사진 전체 삭제</button>
 			<div>
 				<label htmlFor='displayName'>닉네임</label>
 				<input
