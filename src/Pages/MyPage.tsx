@@ -22,7 +22,7 @@ function MyPage() {
 	return (
 		<>
 			{userInfo && (
-				<div>
+				<div className='absolute top-[calc(61px)] min-h-[calc(100vh-61px)] w-screen p-5'>
 					<button
 						onClick={onEditProfileClick}
 						className='rounded border border-gray-400 bg-white py-2 px-4 font-semibold text-gray-800 hover:bg-gray-100'
