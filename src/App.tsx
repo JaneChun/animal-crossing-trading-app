@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { auth } from './fbase';
+import Header from './Components/Header';
 import Nav from './Pages/Nav';
 import Home from './Pages/Home';
 import Login from './Pages/Login';
@@ -21,6 +22,7 @@ function App() {
 
 	return (
 		<>
+			<Header />
 			<Nav isLoggedIn={isLoggedIn} />
 			<Outlet />
 		</>

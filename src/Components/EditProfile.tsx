@@ -10,11 +10,16 @@ interface EditProfileProps {
 
 const EditProfile = ({ setIsEditing }: EditProfileProps) => {
 	const [displayNameInput, setDisplayNameInput] = useState<string>('');
+	const [islandNameInput, setIslandNameInput] = useState<string>('');
 	const [fileURLString, setFileURLString] = useState<any>(null);
 	const userInfo = auth.currentUser;
 
 	const displayNameInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setDisplayNameInput(e.target.value);
+	};
+
+	const islandNameInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setIslandNameInput(e.target.value);
 	};
 
 	const fileInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,9 +63,22 @@ const EditProfile = ({ setIsEditing }: EditProfileProps) => {
 
 		try {
 			if (!userInfo) return;
-			if (displayNameInput !== '') {
-				requestData = { ...requestData, displayName: displayNameInput };
+			if (displayNameInput.includes(' ')) {
+				alert('닉네임에 공백 및 특수문자가 있어요.');
+				return;
 			}
+			if (islandNameInput.includes(' ')) {
+				alert('섬 이름에 공백 및 특수문자가 있어요.');
+				return;
+			}
+
+			if (!displayNameInput || !islandNameInput) {
+				alert('닉네임과 섬 이름을 입력해주세요.');
+				return;
+			}
+
+			requestData = { ...requestData, displayName: displayNameInput + ' ' + islandNameInput };
+
 			if (fileURLString) {
 				// await clearStorage();
 
@@ -68,31 +86,46 @@ const EditProfile = ({ setIsEditing }: EditProfileProps) => {
 				requestData = { ...requestData, photoURL };
 			}
 			await updateProfile(userInfo, requestData);
-		} catch (error) {
-			console.log(error);
-		} finally {
+
 			setDisplayNameInput('');
 			setFileURLString(null);
+			setIsEditing(false);
+		} catch (error) {
+			console.log(error);
 		}
-
-		setIsEditing(false);
 	};
 
 	return (
 		<>
-			<div>
-				<label htmlFor='displayName'>닉네임</label>
+			<div className='flex items-center'>
+				<label htmlFor='displayName' className='mr-3 block text-sm font-medium text-gray-900 dark:text-white'>
+					닉네임
+				</label>
 				<input
 					onChange={displayNameInputChangeHandler}
 					value={displayNameInput}
 					type='text'
 					id='displayName'
-					className='block min-w-0 flex-1 rounded-none rounded-r-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
+					className='block min-w-0 flex-1 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
 					placeholder='닉네임을 입력해주세요'
 				/>
 			</div>
 
-			<div className='flex w-full items-center justify-center'>
+			<div className='mt-3 flex items-center'>
+				<label htmlFor='islandName' className='mr-2 block text-sm font-medium text-gray-900 dark:text-white'>
+					섬 이름
+				</label>
+				<input
+					onChange={islandNameInputChangeHandler}
+					value={islandNameInput}
+					type='text'
+					id='islandName'
+					className='block min-w-0 flex-1 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
+					placeholder='섬 이름을 입력해주세요'
+				/>
+			</div>
+
+			<div className='relative flex w-full items-center justify-center p-5'>
 				<label
 					htmlFor='dropzone-file'
 					className='dark:hover:bg-bray-800 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600'
@@ -120,12 +153,23 @@ const EditProfile = ({ setIsEditing }: EditProfileProps) => {
 					</div>
 					<input onChange={fileInputHandler} id='dropzone-file' type='file' className='hidden' />
 				</label>
-				{fileURLString && <img className='w-20' src={fileURLString} />}
+				{fileURLString && <img className='absolute h-64 w-full object-cover px-5' src={fileURLString} />}
 			</div>
 
-			<button onClick={onSubmit} className='rounded bg-gray-300 py-2 px-4 font-bold text-gray-800 hover:bg-gray-400'>
-				변경
-			</button>
+			<div className='flex'>
+				<button
+					onClick={onSubmit}
+					className='mr-3 inline-flex items-center rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+				>
+					변경
+				</button>
+				<button
+					onClick={() => setIsEditing(false)}
+					className='inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-700'
+				>
+					취소
+				</button>
+			</div>
 		</>
 	);
 };
