@@ -8,6 +8,7 @@ import PostUnit from '../Components/PostUnit';
 
 export interface doc {
 	id: string;
+	type?: string;
 	title?: string;
 	body?: string;
 	creatorDisplayName?: string;
@@ -52,6 +53,7 @@ function Home() {
 									<PostUnit
 										key={doc.id}
 										page={'Home'}
+										type={doc.type}
 										title={doc.title}
 										createdAt={doc.createdAt}
 										creatorDisplayName={doc.creatorDisplayName}

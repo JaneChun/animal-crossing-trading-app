@@ -37,6 +37,7 @@ function MyPosts() {
 								<PostUnit
 									key={doc.id}
 									page={'MyPosts'}
+									type={doc.type}
 									title={doc.title}
 									createdAt={doc.createdAt}
 									creatorDisplayName={doc.creatorDisplayName}

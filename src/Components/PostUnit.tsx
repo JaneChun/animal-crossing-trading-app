@@ -4,13 +4,14 @@ import { useNavigate } from 'react-router-dom';
 
 interface postProps {
 	page: string;
+	type?: string;
 	title?: string;
 	createdAt: number;
 	creatorDisplayName?: string;
 	creatorId?: string;
 }
 
-const PostUnit = ({ page, title, createdAt, creatorDisplayName, creatorId }: postProps) => {
+const PostUnit = ({ page, type, title, createdAt, creatorDisplayName, creatorId }: postProps) => {
 	const navigate = useNavigate();
 
 	const onCreatorDisplayNameClick = () => {
@@ -26,11 +27,22 @@ const PostUnit = ({ page, title, createdAt, creatorDisplayName, creatorId }: pos
 					<img className='h-8 w-8 rounded-md' src='https://content-resized.nookea.com/s1024/qPlJRRKAhoxDNPQnuFLzb' alt='Neil image' />
 				</div>
 				<div className='min-w-0 flex-1'>
-					<p className='truncate text-sm font-semibold text-gray-900 dark:text-white'>{title}</p>
-					<span onClick={onCreatorDisplayNameClick} className='mr-2 truncate text-sm text-gray-500 dark:text-gray-400'>
-						{creatorDisplayName?.split(' ')[0]}
-					</span>
-					{createdAt && <span className='truncate text-sm text-gray-500 dark:text-gray-400'>{elapsedTime(createdAt)}</span>}
+					<p className='text-md truncate font-semibold text-gray-900 dark:text-white'>
+						{type === 'sell' ? (
+							<span className='mr-2 rounded-sm border border-gray-200 bg-white py-0.5 px-1 text-xs font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400'>
+								팔아요
+							</span>
+						) : (
+							<span className='mr-2 rounded-sm bg-blue-700 px-1 py-0.5 text-center text-xs font-medium text-white  dark:bg-blue-600'>구해요</span>
+						)}
+						<span>{title}</span>
+					</p>
+					<p>
+						<span onClick={onCreatorDisplayNameClick} className='mr-2 truncate text-sm text-gray-500 dark:text-gray-400'>
+							{creatorDisplayName?.split(' ')[0]}
+						</span>
+						{createdAt && <span className='truncate text-sm text-gray-500 dark:text-gray-400'>{elapsedTime(createdAt)}</span>}
+					</p>
 				</div>
 				<div className='text-center font-semibold text-gray-900 dark:text-white'>
 					<p className='text-xs'>댓글</p>
