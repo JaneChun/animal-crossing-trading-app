@@ -1,32 +1,90 @@
 import React, { useState } from 'react';
-import { auth } from '../fbase';
+import { auth, storage } from '../fbase';
 import { updateProfile } from 'firebase/auth';
+import { v4 as uuidv4 } from 'uuid';
+import { ref, uploadString, getDownloadURL, listAll, deleteObject } from 'firebase/storage';
 
 interface EditProfileProps {
 	setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function EditProfile({ setIsEditing }: EditProfileProps) {
+const EditProfile = ({ setIsEditing }: EditProfileProps) => {
 	const [displayNameInput, setDisplayNameInput] = useState<string>('');
+	const [fileURLString, setFileURLString] = useState<any>(null);
 	const userInfo = auth.currentUser;
 
-	const onDisplayNameInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const displayNameInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setDisplayNameInput(e.target.value);
 	};
 
-	const saveChange = async () => {
-		if (userInfo && userInfo?.displayName !== displayNameInput) {
-			await updateProfile(userInfo, { displayName: displayNameInput });
+	const fileInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const files = e.target.files;
+		if (files) {
+			const file = files[0];
+
+			const reader = new FileReader();
+			reader.onloadend = () => {
+				setFileURLString(reader.result);
+			};
+			reader.readAsDataURL(file);
 		}
+	};
+
+	const createRef = async () => {
+		const fileRef: any = ref(storage, `ProfileImages/${userInfo?.uid}/${uuidv4()}`);
+		await uploadString(fileRef, fileURLString, 'data_url');
+		const profileImageUrl = await getDownloadURL(ref(storage, fileRef));
+
+		return profileImageUrl;
+	};
+
+	const clearStorage = async () => {
+		try {
+			const listRef = ref(storage, `ProfileImages/${userInfo?.uid}`);
+			const response = await listAll(listRef);
+			const paths = response.items.map((item) => item.fullPath);
+
+			paths.forEach((path) => {
+				const desertRef = ref(storage, path);
+				deleteObject(desertRef);
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const onSubmit = async () => {
+		let requestData = {};
+
+		try {
+			if (!userInfo) return;
+			if (displayNameInput !== '') {
+				requestData = { ...requestData, displayName: displayNameInput };
+			}
+			if (fileURLString) {
+				await clearStorage();
+
+				const photoURL = await createRef();
+				requestData = { ...requestData, photoURL };
+			}
+			await updateProfile(userInfo, requestData);
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setDisplayNameInput('');
+			setFileURLString(null);
+		}
+
 		setIsEditing(false);
 	};
 
 	return (
 		<>
+			<button onClick={clearStorage}>사진 전체 삭제</button>
 			<div>
 				<label htmlFor='displayName'>닉네임</label>
 				<input
-					onChange={onDisplayNameInputChange}
+					onChange={displayNameInputChangeHandler}
 					value={displayNameInput}
 					type='text'
 					id='displayName'
@@ -50,9 +108,9 @@ function EditProfile({ setIsEditing }: EditProfileProps) {
 							xmlns='http://www.w3.org/2000/svg'
 						>
 							<path
-								stroke-linecap='round'
-								stroke-linejoin='round'
-								stroke-width='2'
+								strokeLinecap='round'
+								strokeLinejoin='round'
+								strokeWidth='2'
 								d='M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12'
 							></path>
 						</svg>
@@ -61,15 +119,16 @@ function EditProfile({ setIsEditing }: EditProfileProps) {
 						</p>
 						<p className='text-xs text-gray-500 dark:text-gray-400'>SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
 					</div>
-					<input id='dropzone-file' type='file' className='hidden' />
+					<input onChange={fileInputHandler} id='dropzone-file' type='file' className='hidden' />
 				</label>
+				{fileURLString && <img className='w-20' src={fileURLString} />}
 			</div>
 
-			<button onClick={saveChange} className='rounded bg-gray-300 py-2 px-4 font-bold text-gray-800 hover:bg-gray-400'>
+			<button onClick={onSubmit} className='rounded bg-gray-300 py-2 px-4 font-bold text-gray-800 hover:bg-gray-400'>
 				변경
 			</button>
 		</>
 	);
-}
+};
 
 export default EditProfile;

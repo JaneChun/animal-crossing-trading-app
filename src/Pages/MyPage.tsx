@@ -41,7 +41,7 @@ function MyPage() {
 					<div>displayName: {userInfo.displayName}</div>
 					<div>email: {userInfo.email}</div>
 					<div>uid: {userInfo.uid}</div>
-					{profileImage && <img className='h-10 w-10 rounded-full' src={profileImage} />}
+					{profileImage && <img className='h-10 w-10 rounded-full object-cover' src={profileImage} />}
 					{/* <div className='h-10 w-10 rounded-full bg-basic-profile bg-cover'></div> */}
 				</div>
 			)}
