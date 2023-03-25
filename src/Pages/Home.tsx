@@ -14,6 +14,7 @@ export interface doc {
 	creatorDisplayName?: string;
 	creatorId?: string;
 	createdAt?: number;
+	done?: boolean;
 }
 
 function Home() {
@@ -22,7 +23,6 @@ function Home() {
 	const userInfo = auth.currentUser;
 
 	useEffect(() => {
-		console.log('useEffect 실행');
 		getData();
 	}, []);
 
@@ -39,7 +39,7 @@ function Home() {
 	};
 
 	return (
-		<div className='absolute top-[calc(61px)]  min-h-[calc(100vh-61px)] w-screen'>
+		<div className='absolute top-[calc(61px)] min-h-[calc(100vh-61px)] w-screen'>
 			<Carousel />
 			<div className='mb-[calc(61px)] py-5 px-7'>
 				<div className='mb-4 flex items-center justify-between'>
@@ -52,6 +52,7 @@ function Home() {
 								doc.createdAt && (
 									<PostUnit
 										key={doc.id}
+										id={doc.id}
 										page={'Home'}
 										type={doc.type}
 										title={doc.title}

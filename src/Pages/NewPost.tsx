@@ -1,8 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { auth, db } from '../fbase';
 import { doc, setDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios';
+
+interface item {
+	UniqueEntryID: string;
+	imageUrl: string;
+	name: string;
+	color?: string;
+}
 
 const NewPost = () => {
 	const navigate = useNavigate();
@@ -10,6 +18,55 @@ const NewPost = () => {
 	const [title, setTitle] = useState<string>('');
 	const [body, setBody] = useState<string>('');
 	const userInfo = auth.currentUser;
+	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+	const [category, setCategory] = useState<string>('');
+	const [itemData, setItemData] = useState<item[]>([]);
+	const [cart, setCart] = useState<item[]>([]);
+	const [searchInput, setSearchInput] = useState<string>('');
+	const [filteredData, setFilteredData] = useState<item[]>([]);
+
+	const databaseURL = process.env.REACT_APP_DATABASE_URL;
+
+	useEffect(() => {
+		getData();
+	}, [category]);
+
+	useEffect(() => {
+		const filtered = itemData.filter((item) => item.name.includes(searchInput));
+		setFilteredData(filtered);
+	}, [searchInput]);
+
+	const getData = async () => {
+		if (!category) return;
+
+		const response = await axios.get(`${databaseURL}/items/${category}.json`);
+		if (response.status === 200) {
+			setItemData(response.data);
+		} else {
+			throw new Error(response.statusText);
+		}
+	};
+
+	const addItemToCart = (item: item) => {
+		const isAdded = cart.find((cartItem) => cartItem.UniqueEntryID === item.UniqueEntryID);
+		if (isAdded === undefined) {
+			setCart((cart) => [...cart, item]);
+		}
+	};
+
+	const deleteItemFromCart = (id: string) => {
+		setCart(cart.filter((item) => item.UniqueEntryID !== id));
+	};
+
+	const searchInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setSearchInput(e.target.value);
+	};
+
+	const categorySelectHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+		const { value } = e.target as HTMLButtonElement;
+		setCategory(value);
+		setIsDropdownOpen(false);
+	};
 
 	const typeHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
 		const { name } = e.target as HTMLButtonElement;
@@ -29,12 +86,19 @@ const NewPost = () => {
 			type,
 			title,
 			body,
+			cart,
 			createdAt: Date.now(),
 			creatorDisplayName: userInfo?.displayName,
 			creatorId: userInfo?.uid,
+			done: false,
 		};
 
 		if (!userInfo) return;
+
+		if (type === '') {
+			alert('거래 종류를 선택해주세요.');
+			return;
+		}
 
 		if (title === '' || body === '') {
 			alert('제목이나 내용이 비어있는지 확인해주세요.');
@@ -42,7 +106,7 @@ const NewPost = () => {
 		}
 		try {
 			await setDoc(doc(db, 'Boards', `/${uuidv4()}`), requestData);
-			alert('작성헀습니다.');
+			alert('작성했습니다.');
 			navigate('/');
 		} catch (error) {
 			console.log(error);
@@ -59,7 +123,9 @@ const NewPost = () => {
 					onClick={typeHandler}
 					name='buy'
 					type='button'
-					className='rounded-l-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-blue-500'
+					className={`${
+						type === 'buy' ? 'bg-gray-100 text-blue-700' : 'bg-white text-gray-900'
+					} rounded-l-lg border border-gray-200  px-4 py-2 text-sm font-medium  hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-blue-500`}
 				>
 					구해요
 				</button>
@@ -73,7 +139,9 @@ const NewPost = () => {
 					onClick={typeHandler}
 					name='sell'
 					type='button'
-					className='rounded-r-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-blue-500'
+					className={`${
+						type === 'sell' ? 'bg-gray-100 text-blue-700' : 'bg-white text-gray-900'
+					} rounded-r-lg border border-gray-200  px-4 py-2 text-sm font-medium  hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-blue-500`}
 				>
 					팔아요
 				</button>
@@ -109,21 +177,40 @@ const NewPost = () => {
 			<label htmlFor='default-textarea' className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'>
 				아이템
 			</label>
-
 			<button
+				onClick={() => setIsDropdownOpen(!isDropdownOpen)}
 				id='dropdownSearchButton'
 				data-dropdown-toggle='dropdownSearch'
 				data-dropdown-placement='bottom'
 				className='inline-flex items-center rounded-lg bg-blue-700 px-4 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
 				type='button'
 			>
-				아이템 선택
+				{category === '' ? '아이템 선택' : categories.find((item) => item.EN === category)?.KR}
 				<svg className='ml-2 h-4 w-4' aria-hidden='true' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
 					<path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7'></path>
 				</svg>
 			</button>
 
-			<div id='dropdownSearch' className='z-10 w-60 rounded-lg bg-white shadow dark:bg-gray-700'>
+			<div
+				id='dropdown'
+				className={`${!isDropdownOpen && 'hidden'} + z-10 mt-2 w-36 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700`}
+			>
+				<ul className='h-48 overflow-y-auto py-2 text-sm text-gray-700 dark:text-gray-200' aria-labelledby='multiLevelDropdownButton'>
+					{categories.map((category) => (
+						<li key={category.EN}>
+							<button
+								onClick={categorySelectHandler}
+								value={category.EN}
+								className='block w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
+							>
+								{category.KR}
+							</button>
+						</li>
+					))}
+				</ul>
+			</div>
+
+			<div id='dropdownSearch' className={`${(!category || isDropdownOpen) && 'hidden'} z-10 w-72 rounded-lg bg-white shadow dark:bg-gray-700`}>
 				<div className='p-3'>
 					<label htmlFor='input-group-search' className='sr-only'>
 						Search
@@ -145,125 +232,201 @@ const NewPost = () => {
 							</svg>
 						</div>
 						<input
+							onChange={searchInputHandler}
+							value={searchInput}
 							type='text'
 							id='input-group-search'
 							className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-							placeholder='Search user'
+							placeholder='Search'
 						/>
 					</div>
 				</div>
-				<ul className='h-48 overflow-y-auto px-3 pb-3 text-sm text-gray-700 dark:text-gray-200' aria-labelledby='dropdownSearchButton'>
-					<li>
-						<div className='flex items-center rounded pl-2 hover:bg-gray-100 dark:hover:bg-gray-600'>
-							<input
-								id='checkbox-item-11'
-								type='checkbox'
-								value=''
-								className='h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700'
-							/>
-							<label htmlFor='checkbox-item-11' className='ml-2 w-full rounded py-2 text-sm font-medium text-gray-900 dark:text-gray-300'>
-								Bonnie Green
-							</label>
-						</div>
-					</li>
-					<li>
-						<div className='flex items-center rounded pl-2 hover:bg-gray-100 dark:hover:bg-gray-600'>
-							<input
-								id='checkbox-item-12'
-								type='checkbox'
-								value=''
-								className='h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700'
-							/>
-							<label htmlFor='checkbox-item-12' className='ml-2 w-full rounded py-2 text-sm font-medium text-gray-900 dark:text-gray-300'>
-								Jese Leos
-							</label>
-						</div>
-					</li>
-					<li>
-						<div className='flex items-center rounded pl-2 hover:bg-gray-100 dark:hover:bg-gray-600'>
-							<input
-								id='checkbox-item-13'
-								type='checkbox'
-								value=''
-								className='h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700'
-							/>
-							<label htmlFor='checkbox-item-13' className='ml-2 w-full rounded py-2 text-sm font-medium text-gray-900 dark:text-gray-300'>
-								Michael Gough
-							</label>
-						</div>
-					</li>
-					<li>
-						<div className='flex items-center rounded pl-2 hover:bg-gray-100 dark:hover:bg-gray-600'>
-							<input
-								id='checkbox-item-14'
-								type='checkbox'
-								value=''
-								className='h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700'
-							/>
-							<label htmlFor='checkbox-item-14' className='ml-2 w-full rounded py-2 text-sm font-medium text-gray-900 dark:text-gray-300'>
-								Robert Wall
-							</label>
-						</div>
-					</li>
-					<li>
-						<div className='flex items-center rounded pl-2 hover:bg-gray-100 dark:hover:bg-gray-600'>
-							<input
-								id='checkbox-item-15'
-								type='checkbox'
-								value=''
-								className='h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700'
-							/>
-							<label htmlFor='checkbox-item-15' className='ml-2 w-full rounded py-2 text-sm font-medium text-gray-900 dark:text-gray-300'>
-								Joseph Mcfall
-							</label>
-						</div>
-					</li>
-					<li>
-						<div className='flex items-center rounded pl-2 hover:bg-gray-100 dark:hover:bg-gray-600'>
-							<input
-								id='checkbox-item-16'
-								type='checkbox'
-								value=''
-								className='h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700'
-							/>
-							<label htmlFor='checkbox-item-16' className='ml-2 w-full rounded py-2 text-sm font-medium text-gray-900 dark:text-gray-300'>
-								Leslie Livingston
-							</label>
-						</div>
-					</li>
-					<li>
-						<div className='flex items-center rounded pl-2 hover:bg-gray-100 dark:hover:bg-gray-600'>
-							<input
-								id='checkbox-item-17'
-								type='checkbox'
-								value=''
-								className='h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-700'
-							/>
-							<label htmlFor='checkbox-item-17' className='ml-2 w-full rounded py-2 text-sm font-medium text-gray-900 dark:text-gray-300'>
-								Roberta Casas
-							</label>
-						</div>
-					</li>
+
+				<ul className='h-60 overflow-y-auto px-3 pb-3 text-sm text-gray-700 dark:text-gray-200' aria-labelledby='dropdownSearchButton'>
+					{category &&
+						itemData &&
+						(searchInput
+							? filteredData.map((item: item) => <ListUnit key={item.UniqueEntryID} item={item} addItemToCart={addItemToCart} />)
+							: itemData.map((item: item) => <ListUnit key={item.UniqueEntryID} item={item} addItemToCart={addItemToCart} />))}
 				</ul>
-				<a
-					href='#'
-					className='flex items-center rounded-b-lg border-t border-gray-200 bg-gray-50 p-3 text-sm font-medium text-red-600 hover:bg-gray-100 hover:underline dark:border-gray-600 dark:bg-gray-700 dark:text-red-500 dark:hover:bg-gray-600'
-				>
-					<svg className='mr-1 h-5 w-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'>
-						<path d='M11 6a3 3 0 11-6 0 3 3 0 016 0zM14 17a6 6 0 00-12 0h12zM13 8a1 1 0 100 2h4a1 1 0 100-2h-4z'></path>
-					</svg>
-					Delete user
-				</a>
 			</div>
 
-			<button
-				onClick={onSubmit}
-				className='mt-5 rounded border border-blue-500 bg-transparent py-2 px-4 font-semibold text-blue-700 hover:border-transparent hover:bg-blue-500 hover:text-white'
-			>
-				작성
-			</button>
+			{/* Cart */}
+			<div className='mt-5 flex flex-wrap'>
+				{cart &&
+					cart.map((item) => (
+						<div>
+							<div className='relative m-3 block h-28 w-28 rounded-lg border border-gray-200 bg-white p-3 shadow hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700'>
+								<button
+									onClick={() => deleteItemFromCart(item.UniqueEntryID)}
+									type='button'
+									className='absolute top-0 right-0 ml-auto inline-flex items-center rounded-lg bg-transparent p-1.5 text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white'
+									data-modal-hide='defaultModal'
+								>
+									<svg aria-hidden='true' className='h-5 w-5' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'>
+										<path
+											fill-rule='evenodd'
+											d='M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z'
+											clip-rule='evenodd'
+										></path>
+									</svg>
+									<span className='sr-only'>Close modal</span>
+								</button>
+
+								<img className='mx-auto h-14 w-14' src={item.imageUrl} />
+								<p className='truncate whitespace-nowrap text-center text-xs text-gray-700 dark:text-gray-400'>{item.name}</p>
+								<p className='mt-1 truncate whitespace-nowrap text-center text-xs text-gray-400 dark:text-gray-400'>
+									{item.color && `${item.color}`}
+								</p>
+							</div>
+
+							{/* Counter */}
+							{/* <div className='custom-number-input mx-auto h-10 w-24'>
+								<div className='relative mt-1 flex h-8 w-full flex-row rounded-lg bg-transparent'>
+									<button
+										data-action='decrement'
+										className=' h-full w-20 cursor-pointer rounded-l-full bg-gray-100 text-gray-600 outline-none hover:bg-gray-200 hover:text-gray-700'
+									>
+										<span className='mr-1.5 flex items-center justify-end'>
+											<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24'>
+												<path fill='currentColor' d='M18 12.998H6a1 1 0 0 1 0-2h12a1 1 0 0 1 0 2z' />
+											</svg>
+										</span>
+									</button>
+									<input
+										type='number'
+										className='md:text-basecursor-default flex w-7 items-center bg-gray-100 text-center text-sm font-semibold text-gray-700  outline-none outline-none hover:text-black focus:text-black  focus:outline-none'
+										name='custom-input-number'
+										value='0'
+									></input>
+									<button
+										data-action='increment'
+										className='h-full w-20 cursor-pointer rounded-r-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-700'
+									>
+										<span className='ml-1.5 flex items-center justify-start'>
+											<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24'>
+												<path fill='currentColor' d='M18 12.998h-5v5a1 1 0 0 1-2 0v-5H6a1 1 0 0 1 0-2h5v-5a1 1 0 0 1 2 0v5h5a1 1 0 0 1 0 2z' />
+											</svg>
+										</span>
+									</button>
+								</div>
+							</div> */}
+						</div>
+					))}
+			</div>
+
+			<div className='mt-5 mb-[calc(41px)] flex justify-end'>
+				<button
+					onClick={onSubmit}
+					className='mb-5 rounded border border-blue-500 bg-transparent py-2 px-4 font-semibold text-blue-700 hover:border-transparent hover:bg-blue-500 hover:text-white'
+				>
+					작성
+				</button>
+			</div>
 		</div>
 	);
 };
 
 export default NewPost;
+
+interface listUnitProps {
+	item: item;
+	addItemToCart: (item: item) => void;
+}
+
+const ListUnit = ({ item, addItemToCart }: listUnitProps) => {
+	return (
+		<li key={item.UniqueEntryID}>
+			<button
+				onClick={() => addItemToCart(item)}
+				className='flex w-full items-center whitespace-nowrap px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
+			>
+				<img className='mr-2 h-6 w-6 rounded-full' src={item.imageUrl} alt='Jese image' />
+				{item.name} {item.color && `(${item.color})`}
+			</button>
+		</li>
+	);
+};
+
+const categories = [
+	{
+		KR: '가구',
+		EN: 'Houswares',
+	},
+	{
+		KR: '잡화',
+		EN: 'Miscellaneous',
+	},
+	{
+		KR: '벽걸이',
+		EN: 'Wallmounted',
+	},
+	{
+		KR: '레시피',
+		EN: 'Recipes',
+	},
+	{
+		KR: '요리',
+		EN: 'Food',
+	},
+	{
+		KR: '모자',
+		EN: 'Headwear',
+	},
+	{
+		KR: '상의',
+		EN: 'Tops',
+	},
+	{
+		KR: '하의',
+		EN: 'Bottoms',
+	},
+	{
+		KR: '원피스',
+		EN: 'DressUp',
+	},
+	{
+		KR: '양말',
+		EN: 'Socks',
+	},
+	{
+		KR: '가방',
+		EN: 'Bags',
+	},
+	{
+		KR: '신발',
+		EN: 'Shoes',
+	},
+	{
+		KR: '악세사리',
+		EN: 'Accessories',
+	},
+	{
+		KR: '우산',
+		EN: 'Umbrellas',
+	},
+	{
+		KR: '천장',
+		EN: 'CeilingDecor',
+	},
+	{
+		KR: '벽지',
+		EN: 'Wallpaper',
+	},
+	{
+		KR: '바닥',
+		EN: 'Floors',
+	},
+	{
+		KR: '러그',
+		EN: 'Rugs',
+	},
+	{
+		KR: '음악',
+		EN: 'Music',
+	},
+	{
+		KR: '토용',
+		EN: 'Gyroids',
+	},
+];

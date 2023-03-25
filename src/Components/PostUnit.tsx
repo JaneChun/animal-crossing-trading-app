@@ -3,6 +3,7 @@ import { elapsedTime } from '../Utilities/elapsedTime';
 import { useNavigate } from 'react-router-dom';
 
 interface postProps {
+	id: string;
 	page: string;
 	type?: string;
 	title?: string;
@@ -11,7 +12,7 @@ interface postProps {
 	creatorId?: string;
 }
 
-const PostUnit = ({ page, type, title, createdAt, creatorDisplayName, creatorId }: postProps) => {
+const PostUnit = ({ id, page, type, title, createdAt, creatorDisplayName, creatorId }: postProps) => {
 	const navigate = useNavigate();
 
 	const onCreatorDisplayNameClick = () => {
@@ -35,7 +36,7 @@ const PostUnit = ({ page, type, title, createdAt, creatorDisplayName, creatorId 
 						) : (
 							<span className='mr-2 rounded-sm bg-blue-700 px-1 py-0.5 text-center text-xs font-medium text-white  dark:bg-blue-600'>구해요</span>
 						)}
-						<span>{title}</span>
+						<span onClick={() => navigate(`/post/${id}`)}>{title}</span>
 					</p>
 					<p>
 						<span onClick={onCreatorDisplayNameClick} className='mr-2 truncate text-sm text-gray-500 dark:text-gray-400'>

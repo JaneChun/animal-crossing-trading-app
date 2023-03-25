@@ -56,7 +56,7 @@ function MyPage() {
 					</div>
 				</div>
 
-				<MyPosts />
+				{!isEditing && <MyPosts />}
 			</div>
 		)
 	);

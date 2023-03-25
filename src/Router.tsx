@@ -5,6 +5,8 @@ import Login from './Pages/Login';
 import MyPage from './Pages/MyPage';
 import NewPost from './Pages/NewPost';
 import UserPage from './Pages/UserPage';
+import Search from './Pages/Search';
+import PostDetail from './Pages/PostDetail';
 
 const router = createBrowserRouter([
 	{
@@ -31,6 +33,14 @@ const router = createBrowserRouter([
 			{
 				path: '/user/:uid',
 				element: <UserPage />,
+			},
+			{
+				path: '/search',
+				element: <Search />,
+			},
+			{
+				path: '/post/:id',
+				element: <PostDetail />,
 			},
 		],
 	},

@@ -117,7 +117,7 @@ function Nav({ isLoggedIn }: NavProps) {
 					<div className='tooltip-arrow' data-popper-arrow></div>
 				</div>
 				<button
-					onClick={() => navigate('/')}
+					onClick={() => navigate('/search')}
 					data-tooltip-target='tooltip-search'
 					type='button'
 					className='group inline-flex flex-col items-center justify-center p-4 hover:bg-gray-50 dark:hover:bg-gray-800'

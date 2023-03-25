@@ -25,7 +25,7 @@ function MyPosts() {
 	};
 
 	return (
-		<div className='mt-5 p-3'>
+		<div className='mb-[calc(41px)] mt-5 p-3'>
 			<div className='mb-4 flex items-center justify-between'>
 				<div className='text-md font-bold leading-none text-gray-900 dark:text-white'>작성한 글</div>
 			</div>
@@ -36,6 +36,7 @@ function MyPosts() {
 							doc.createdAt && (
 								<PostUnit
 									key={doc.id}
+									id={doc.id}
 									page={'MyPosts'}
 									type={doc.type}
 									title={doc.title}
