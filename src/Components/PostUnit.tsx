@@ -30,7 +30,8 @@ const PostUnit = ({ id, page, type, title, createdAt, creatorDisplayName, creato
 				<div className='min-w-0 flex-1'>
 					<p className='text-md truncate font-semibold text-gray-900 dark:text-white'>
 						{type === 'sell' ? (
-							<span className='mr-2 rounded-sm border border-gray-200 bg-white py-0.5 px-1 text-xs font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400'>
+							<span className='mr-2 rounded-sm border border-blue-100 bg-blue-100 py-0.5 px-1 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-300'>
+								{/* 거래 완료 - <span className='mr-2 rounded-sm border border-gray-200 bg-white py-0.5 px-1 text-xs font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400'> */}
 								팔아요
 							</span>
 						) : (
