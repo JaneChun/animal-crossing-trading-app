@@ -30,6 +30,7 @@ const NewPost = () => {
 	const [cart, setCart] = useState<cartItem[]>([]);
 	const [searchInput, setSearchInput] = useState<string>('');
 	const [filteredData, setFilteredData] = useState<item[]>([]);
+	const [userAddInput, setUserAddInput] = useState<string>('');
 
 	const databaseURL = process.env.REACT_APP_DATABASE_URL;
 
@@ -51,6 +52,22 @@ const NewPost = () => {
 		} else {
 			throw new Error(response.statusText);
 		}
+	};
+
+	const userAddInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setUserAddInput(e.target.value);
+	};
+
+	const addUserInputItemToCart = () => {
+		if (userAddInput) {
+			const userInputItem: item = {
+				UniqueEntryID: uuidv4(),
+				imageUrl: 'https://dodo.ac/np/images/thumb/5/55/Furniture_Leaf_NH_Category_Icon.png/120px-Furniture_Leaf_NH_Category_Icon.png',
+				name: userAddInput,
+			};
+			setCart((cart) => [...cart, { ...userInputItem, quantity: 1, price: 1 }]);
+		}
+		setUserAddInput('');
 	};
 
 	const addItemToCart = (item: item) => {
@@ -193,6 +210,7 @@ const NewPost = () => {
 				</svg>
 			</button>
 
+			{/* Category Dropdown */}
 			<div
 				id='dropdown'
 				className={`${!isDropdownOpen && 'hidden'} + z-10 mt-2 w-36 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700`}
@@ -211,7 +229,9 @@ const NewPost = () => {
 					))}
 				</ul>
 			</div>
+			{/* Category Dropdown */}
 
+			{/* Item Search Dropdown */}
 			<div id='dropdownSearch' className={`${(!category || isDropdownOpen) && 'hidden'} z-10 w-72 rounded-lg bg-white shadow dark:bg-gray-700`}>
 				<div className='p-3'>
 					<label htmlFor='input-group-search' className='sr-only'>
@@ -233,6 +253,7 @@ const NewPost = () => {
 								></path>
 							</svg>
 						</div>
+
 						<input
 							onChange={searchInputHandler}
 							value={searchInput}
@@ -241,17 +262,60 @@ const NewPost = () => {
 							className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
 							placeholder='Search'
 						/>
+
+						{searchInput !== '' && (
+							<button onClick={() => setSearchInput('')} className='absolute inset-y-0 right-0 flex cursor-pointer items-center pr-2 text-gray-500'>
+								<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'>
+									<path
+										fill='none'
+										stroke='currentColor'
+										stroke-linecap='round'
+										stroke-linejoin='round'
+										stroke-width='2'
+										d='M12 12L6 6m6 6l6 6m-6-6l6-6m-6 6l-6 6'
+									/>
+								</svg>
+							</button>
+						)}
 					</div>
 				</div>
 
 				<ul className='h-60 overflow-y-auto px-3 pb-3 text-sm text-gray-700 dark:text-gray-200' aria-labelledby='dropdownSearchButton'>
 					{category &&
 						itemData &&
-						(searchInput
-							? filteredData.map((item: item) => <ListUnit key={item.UniqueEntryID} item={item} addItemToCart={addItemToCart} />)
-							: itemData.map((item: item) => <ListUnit key={item.UniqueEntryID} item={item} addItemToCart={addItemToCart} />))}
+						(!searchInput ? (
+							itemData.map((item: item) => <ListUnit key={item.UniqueEntryID} item={item} addItemToCart={addItemToCart} />)
+						) : filteredData.length > 0 ? (
+							filteredData.map((item: item) => <ListUnit key={item.UniqueEntryID} item={item} addItemToCart={addItemToCart} />)
+						) : (
+							<div>
+								<label htmlFor='user-add-input' className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'>
+									직접 추가하기
+								</label>
+
+								<div className='relative flex w-full'>
+									<input
+										onChange={userAddInputHandler}
+										value={userAddInput}
+										type='text'
+										id='user-add-input'
+										className='block grow rounded-lg border border-gray-300 bg-gray-50 p-2 pl-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
+										placeholder='아이템 이름을 입력하세요'
+									/>
+									<button
+										onClick={addUserInputItemToCart}
+										className='ml-2 flex h-[calc(38px)] w-[calc(38px)] items-center justify-center rounded-lg border border-blue-700 bg-blue-700 text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+									>
+										<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
+											<path fill='currentColor' d='M18 12.998h-5v5a1 1 0 0 1-2 0v-5H6a1 1 0 0 1 0-2h5v-5a1 1 0 0 1 2 0v5h5a1 1 0 0 1 0 2z' />
+										</svg>
+									</button>
+								</div>
+							</div>
+						))}
 				</ul>
 			</div>
+			{/* Item Search Dropdown */}
 
 			{/* Cart */}
 			<div className='mt-5 flex flex-wrap'>
