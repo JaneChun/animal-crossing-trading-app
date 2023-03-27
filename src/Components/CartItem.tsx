@@ -14,11 +14,12 @@ function CartItem({ item, cart, setCart }: CartItemProps) {
 
 	useEffect(() => {
 		item.quantity = quantityInput;
+		item.price = milesTicketInput;
 
 		if (item.quantity === 0) {
 			deleteItemFromCart();
 		}
-	}, [quantityInput]);
+	}, [quantityInput, milesTicketInput]);
 
 	const deleteItemFromCart = () => {
 		setCart(cart.filter((cartItem) => cartItem.UniqueEntryID !== item.UniqueEntryID));
@@ -33,6 +34,7 @@ function CartItem({ item, cart, setCart }: CartItemProps) {
 	};
 
 	const onMilesTicketDecrement = () => {
+		if (milesTicketInput === 0) return;
 		setMilesTicketInput((milesTicketInput) => milesTicketInput - 1);
 	};
 
@@ -67,36 +69,36 @@ function CartItem({ item, cart, setCart }: CartItemProps) {
 			{/* Image Card */}
 
 			{/* Quantity Counter */}
-			<div className='custom-number-input mx-auto h-10 w-24'>
-				<div className='relative mt-1 flex h-8 w-full flex-row rounded-lg bg-transparent'>
+			<div className='custom-number-input mx-auto h-10 w-20'>
+				<div className='relative mt-1 flex h-8 w-full flex-row rounded-lg border bg-transparent'>
 					<button
 						onClick={onQuantityDecrement}
 						data-action='decrement'
-						className='h-full w-20 cursor-pointer rounded-l-full bg-gray-100 text-gray-600 outline-none hover:bg-gray-200 hover:text-gray-700'
+						className='flex w-7 cursor-pointer items-center justify-center rounded-br text-gray-400 hover:bg-gray-200 hover:text-gray-700 focus:outline-none '
 					>
-						<span className='mr-1.5 flex items-center justify-end'>
-							<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24'>
-								<path fill='currentColor' d='M18 12.998H6a1 1 0 0 1 0-2h12a1 1 0 0 1 0 2z' />
-							</svg>
-						</span>
+						<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'>
+							<path fill='currentColor' d='M18 12.998H6a1 1 0 0 1 0-2h12a1 1 0 0 1 0 2z' />
+						</svg>
 					</button>
-					<input
-						readOnly
-						type='number'
-						className='outlineNone focus:outlineNone flex w-7 cursor-default items-center bg-gray-100 text-center text-sm font-semibold  text-gray-700  hover:text-black focus:text-black  md:text-base'
-						name='custom-input-number'
-						value={quantityInput.toString()}
-					></input>
+
+					<div className='flex w-7 items-center'>
+						<input
+							readOnly
+							type='number'
+							className='outlineNone focus:outlineNone w-full cursor-default  bg-transparent text-center text-sm  font-semibold  text-gray-700 hover:text-black  focus:text-black md:text-base'
+							name='custom-input-number'
+							value={quantityInput.toString()}
+						/>
+					</div>
+
 					<button
 						onClick={onQuantityIncrement}
 						data-action='increment'
-						className='h-full w-20 cursor-pointer rounded-r-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-700'
+						className='flex w-7 cursor-pointer items-center justify-center rounded-tr text-gray-400 hover:bg-gray-200 hover:text-gray-700 focus:outline-none'
 					>
-						<span className='ml-1.5 flex items-center justify-start'>
-							<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24'>
-								<path fill='currentColor' d='M18 12.998h-5v5a1 1 0 0 1-2 0v-5H6a1 1 0 0 1 0-2h5v-5a1 1 0 0 1 2 0v5h5a1 1 0 0 1 0 2z' />
-							</svg>
-						</span>
+						<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'>
+							<path fill='currentColor' d='M18 12.998h-5v5a1 1 0 0 1-2 0v-5H6a1 1 0 0 1 0-2h5v-5a1 1 0 0 1 2 0v5h5a1 1 0 0 1 0 2z' />
+						</svg>
 					</button>
 				</div>
 			</div>
@@ -113,13 +115,13 @@ function CartItem({ item, cart, setCart }: CartItemProps) {
 							className='outlineNone focus:outlineNone w-full cursor-default  bg-transparent text-center text-sm  font-semibold  text-gray-700 hover:text-black  focus:text-black md:text-base'
 							name='custom-input-number'
 							value={milesTicketInput.toString()}
-						></input>
+						/>
 					</div>
 					<div className='flex h-full flex-col'>
 						<button
 							onClick={onMilesTicketIncrement}
 							data-action='increment'
-							className='flex h-1/2 w-7 cursor-pointer items-center justify-center rounded-tr hover:bg-gray-200 hover:text-gray-700 focus:outline-none'
+							className='flex h-1/2 w-7 cursor-pointer items-center justify-center rounded-tr text-gray-400 hover:bg-gray-200 hover:text-gray-700 focus:outline-none'
 						>
 							<span className='mt-1'>
 								<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'>
@@ -130,7 +132,7 @@ function CartItem({ item, cart, setCart }: CartItemProps) {
 						<button
 							onClick={onMilesTicketDecrement}
 							data-action='decrement'
-							className='flex h-1/2 w-7 cursor-pointer items-center justify-center rounded-br hover:bg-gray-200 hover:text-gray-700 focus:outline-none '
+							className='flex h-1/2 w-7 cursor-pointer items-center justify-center rounded-br text-gray-400 hover:bg-gray-200 hover:text-gray-700 focus:outline-none '
 						>
 							<span className='mb-1'>
 								<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'>

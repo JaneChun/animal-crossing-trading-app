@@ -15,6 +15,7 @@ export interface item {
 
 export interface cartItem extends item {
 	quantity: number;
+	price: number;
 }
 
 const NewPost = () => {
@@ -55,7 +56,7 @@ const NewPost = () => {
 	const addItemToCart = (item: item) => {
 		const isAdded = cart.find((cartItem) => cartItem.UniqueEntryID === item.UniqueEntryID);
 		if (isAdded === undefined) {
-			setCart((cart) => [...cart, { ...item, quantity: 1 }]);
+			setCart((cart) => [...cart, { ...item, quantity: 1, price: 1 }]);
 		}
 	};
 
