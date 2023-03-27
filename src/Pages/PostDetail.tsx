@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { db } from '../fbase';
 import { doc, getDoc, DocumentData } from 'firebase/firestore';
 import { elapsedTime } from '../Utilities/elapsedTime';
-import { item } from './NewPost';
+import { cartItem } from './NewPost';
 
 function PostDetail() {
 	const { id } = useParams();
@@ -24,7 +24,7 @@ function PostDetail() {
 			console.log('no such document!');
 		}
 	};
-
+	console.log(data);
 	return (
 		<div className='absolute top-[calc(61px)] min-h-[calc(100vh-61px)] w-screen p-5'>
 			{data && (
@@ -48,12 +48,18 @@ function PostDetail() {
 					<div className='mt-4 mb-4 p-1 text-base font-normal text-gray-500 dark:text-gray-400'>{data.body}</div>
 
 					<ul className='h-auto overflow-y-auto py-2 text-gray-700 dark:text-gray-200' aria-labelledby='dropdownUsersButton'>
-						{data.cart?.map((item: item) => (
-							<li key={item.UniqueEntryID}>
-								<div className='flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
-									<img className='mr-2 h-6 w-6 rounded-full' src={item.imageUrl} alt={item.name} />
-									<span className='mr-2 text-base font-semibold'>{item.name}</span>
-									<span className='text-sm font-normal text-gray-400 dark:text-gray-400'>{item.color && item.color}</span>
+						{data.cart?.map((item: cartItem) => (
+							<li className='mb-2 rounded-md bg-gray-100' key={item.UniqueEntryID}>
+								<div className='flex justify-between px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
+									<div className='flex items-center'>
+										<img className='mr-2 h-6 w-6 rounded-full' src={item.imageUrl} alt={item.name} />
+										<span className='mr-2 text-base font-semibold'>{item.name}</span>
+										<span className='text-sm font-normal text-gray-400 dark:text-gray-400'>{item.color && item.color}</span>
+									</div>
+
+									<div>
+										<span className='text-xs'>{item.quantity}개</span>
+									</div>
 								</div>
 							</li>
 						))}
