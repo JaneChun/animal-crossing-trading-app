@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { auth } from '../fbase';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
@@ -6,10 +6,12 @@ import EditProfile from '../Components/EditProfile';
 import MyPosts from '../Components/MyPosts';
 
 function MyPage() {
-	const [isEditing, setIsEditing] = useState<boolean>(false);
 	const navigate = useNavigate();
 	const userInfo = auth.currentUser;
 	const profileImage = userInfo?.photoURL;
+	const [isEditing, setIsEditing] = useState<boolean>(false);
+	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+	const modalRef = useRef<HTMLButtonElement | null>(null);
 
 	const onEditProfileClick = () => {
 		setIsEditing((isEditing) => !isEditing);
@@ -20,13 +22,26 @@ function MyPage() {
 		navigate('/');
 	};
 
+	const handleModal = () => {
+		setIsModalOpen(!isModalOpen);
+	};
+
+	const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
+		const target = e.target as any;
+		if (isModalOpen && !modalRef.current?.contains(target)) {
+			setIsModalOpen(false);
+		}
+	};
+
 	return (
 		userInfo && (
-			<div className='absolute top-[calc(61px)] mb-[calc(61px)] min-h-[calc(100vh-61px)] w-screen p-5'>
+			<div onClick={handleOutsideClick} className='absolute top-[calc(61px)] mb-[calc(61px)] min-h-[calc(100vh-61px)] w-screen p-5'>
 				<div className='w-full max-w-sm rounded-lg border border-gray-200 bg-white shadow dark:border-gray-700 dark:bg-gray-800'>
-					<div className='flex justify-end px-4 pt-4'>
+					<div className='relative flex justify-end px-4 pt-4'>
+						{/* Dots Button */}
 						<button
-							onClick={onLogOutClick}
+							ref={modalRef}
+							onClick={handleModal}
 							id='dropdownButton'
 							data-dropdown-toggle='dropdown'
 							className='inline-block rounded-lg p-1.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700'
@@ -37,6 +52,24 @@ function MyPage() {
 								<path d='M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z'></path>
 							</svg>
 						</button>
+						{/* Dots Button */}
+
+						{/* Dropdown */}
+						<div
+							id='dropdownDots'
+							className={`${
+								!isModalOpen && 'hidden'
+							} + absolute top-14 right-4 z-10 w-auto divide-y divide-gray-100 rounded-lg bg-white shadow dark:divide-gray-600 dark:bg-gray-700`}
+						>
+							<ul className='text-sm text-gray-700 dark:text-gray-200' aria-labelledby='dropdownMenuIconButton'>
+								<li>
+									<button onClick={onLogOutClick} className='block px-6 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
+										로그아웃
+									</button>
+								</li>
+							</ul>
+						</div>
+						{/* Dropdown */}
 					</div>
 
 					<div className='flex flex-col items-center pb-10'>
