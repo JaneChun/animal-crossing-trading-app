@@ -43,7 +43,7 @@ function CartItem({ item, cart, setCart }: CartItemProps) {
 	};
 
 	return (
-		<div>
+		<div className='my-3'>
 			{/* Image Card */}
 			<div className='relative m-3 block h-28 w-28 rounded-lg border border-gray-200 bg-white p-3 shadow hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700'>
 				<button
