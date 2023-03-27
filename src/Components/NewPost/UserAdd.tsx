@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { item, cartItem } from '../Pages/NewPost';
+import { item, cartItem } from '../../Pages/NewPost';
 
 interface UserAddProps {
 	setCart: React.Dispatch<React.SetStateAction<cartItem[]>>;
@@ -17,7 +17,8 @@ const UserAdd = ({ setCart }: UserAddProps) => {
 		if (userAddInput) {
 			const userInputItem: item = {
 				UniqueEntryID: uuidv4(),
-				imageUrl: 'https://dodo.ac/np/images/thumb/5/55/Furniture_Leaf_NH_Category_Icon.png/120px-Furniture_Leaf_NH_Category_Icon.png',
+				imageUrl:
+					'https://firebasestorage.googleapis.com/v0/b/animal-crossing-trade-app.appspot.com/o/Src%2F120px-Furniture_Leaf_NH_Category_Icon.png?alt=media&token=0d4a9b43-88bf-4d15-a44d-8f1e588011af',
 				name: userAddInput,
 			};
 			setCart((cart) => [...cart, { ...userInputItem, quantity: 1, price: 1 }]);

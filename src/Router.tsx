@@ -7,6 +7,7 @@ import NewPost from './Pages/NewPost';
 import UserPage from './Pages/UserPage';
 import Search from './Pages/Search';
 import PostDetail from './Pages/PostDetail';
+import PostEdit from './Components/PostDetail/PostEdit';
 
 const router = createBrowserRouter([
 	{
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
 			{
 				path: '/post/:id',
 				element: <PostDetail />,
+			},
+			{
+				path: '/post-edit/:id',
+				element: <PostEdit />,
 			},
 		],
 	},

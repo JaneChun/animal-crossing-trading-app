@@ -26,6 +26,7 @@ function MyPage() {
 				<div className='w-full max-w-sm rounded-lg border border-gray-200 bg-white shadow dark:border-gray-700 dark:bg-gray-800'>
 					<div className='flex justify-end px-4 pt-4'>
 						<button
+							onClick={onLogOutClick}
 							id='dropdownButton'
 							data-dropdown-toggle='dropdown'
 							className='inline-block rounded-lg p-1.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700'
@@ -39,7 +40,13 @@ function MyPage() {
 					</div>
 
 					<div className='flex flex-col items-center pb-10'>
-						{profileImage && <img className='mb-3 h-24 w-24 rounded-full object-cover shadow-lg' src={profileImage} alt='Bonnie image' />}
+						{profileImage && (
+							<img
+								className='mb-3 h-24 w-24 rounded-full object-cover shadow-lg'
+								src={profileImage}
+								alt={`${userInfo.displayName}'s profile image`}
+							/>
+						)}
 						<h5 className='mb-1 text-xl font-medium text-gray-900 dark:text-white'>{userInfo.displayName?.split(' ')[0]}</h5>
 						<span className='text-sm text-gray-500 dark:text-gray-400'>🏝 {userInfo.displayName?.split(' ')[1] || '어떤 섬에 사시나요?'}</span>
 						<div className='mt-4 flex space-x-3 md:mt-6'>

@@ -1,31 +1,39 @@
-import React, { useState } from 'react';
-import { auth, db } from '../fbase';
-import { doc, setDoc } from 'firebase/firestore';
-import { useNavigate } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
-import CartItem from '../Components/NewPost/CartItem';
-import ItemSelect from '../Components/NewPost/ItemSelect';
+import React, { useState, useEffect } from 'react';
+import { auth, db } from '../../fbase';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { useNavigate, useLocation } from 'react-router-dom';
+import CartItem from '../../Components/NewPost/CartItem';
+import ItemSelect from '../../Components/NewPost/ItemSelect';
+import { cartItem } from '../../Pages/NewPost';
 
-export interface item {
-	UniqueEntryID: string;
-	imageUrl: string;
-	name: string;
-	color?: string;
-}
-
-export interface cartItem extends item {
-	quantity: number;
-	price: number;
-}
-
-const NewPost = () => {
+const PostEdit = () => {
 	const navigate = useNavigate();
+	const { state } = useLocation();
 	const [type, setType] = useState<string>('buy');
 	const [title, setTitle] = useState<string>('');
 	const [body, setBody] = useState<string>('');
 	const userInfo = auth.currentUser;
 	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 	const [cart, setCart] = useState<cartItem[]>([]);
+
+	useEffect(() => {
+		getData();
+	}, []);
+
+	const getData = async () => {
+		const docRef = doc(db, 'Boards', `${state.id}`);
+		const docSnap = await getDoc(docRef);
+
+		if (docSnap.exists()) {
+			const docData = docSnap.data();
+			setType(docData.type);
+			setTitle(docData.title);
+			setBody(docData.body);
+			setCart(docData.cart);
+		} else {
+			console.log('no such document!');
+		}
+	};
 
 	const typeHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
 		const { name } = e.target as HTMLButtonElement;
@@ -40,13 +48,16 @@ const NewPost = () => {
 		setBody(e.target.value);
 	};
 
+	const onCancel = () => {
+		navigate(`/post/${state.id}`);
+	};
+
 	const onSubmit = async () => {
 		const requestData = {
 			type,
 			title,
 			body,
 			cart,
-			createdAt: Date.now(),
 			creatorDisplayName: userInfo?.displayName,
 			creatorId: userInfo?.uid,
 			done: false,
@@ -64,9 +75,9 @@ const NewPost = () => {
 			return;
 		}
 		try {
-			await setDoc(doc(db, 'Boards', `/${uuidv4()}`), requestData);
-			alert('작성했습니다.');
-			navigate('/');
+			await updateDoc(doc(db, 'Boards', state.id), requestData);
+			alert('수정했습니다.');
+			navigate(`/post/${state.id}`);
 		} catch (error) {
 			console.log(error);
 		} finally {
@@ -149,14 +160,20 @@ const NewPost = () => {
 
 			<div className='mt-5 mb-[calc(41px)] flex justify-end'>
 				<button
+					onClick={onCancel}
+					className='mr-2 mb-5 rounded border border-blue-500 bg-transparent py-2 px-4 font-semibold text-blue-700 hover:border-transparent hover:bg-blue-500 hover:text-white'
+				>
+					취소
+				</button>
+				<button
 					onClick={onSubmit}
 					className='mb-5 rounded border border-blue-500 bg-transparent py-2 px-4 font-semibold text-blue-700 hover:border-transparent hover:bg-blue-500 hover:text-white'
 				>
-					작성
+					수정
 				</button>
 			</div>
 		</div>
 	);
 };
 
-export default NewPost;
+export default PostEdit;

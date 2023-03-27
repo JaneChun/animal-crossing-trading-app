@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { item, cartItem } from '../Pages/NewPost';
-import Loading from './Loading';
+import { item, cartItem } from '../../Pages/NewPost';
+import Loading from '../Loading';
 import UserAdd from './UserAdd';
-import Toast from '../Components/Toast';
+import Toast from './Toast';
 
 interface ItemSelectProps {
 	isDropdownOpen: boolean;
@@ -140,9 +140,9 @@ const ItemSelect = ({ isDropdownOpen, setIsDropdownOpen, cart, setCart }: ItemSe
 									<path
 										fill='none'
 										stroke='currentColor'
-										stroke-linecap='round'
-										stroke-linejoin='round'
-										stroke-width='2'
+										strokeLinecap='round'
+										strokeLinejoin='round'
+										strokeWidth='2'
 										d='M12 12L6 6m6 6l6 6m-6-6l6-6m-6 6l-6 6'
 									/>
 								</svg>
