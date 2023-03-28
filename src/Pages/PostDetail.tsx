@@ -84,7 +84,7 @@ function PostDetail() {
 			setIsModalOpen(false);
 		}
 	};
-	console.log('comments', comments);
+
 	return (
 		<div onClick={handleOutsideClick} className='absolute top-[calc(61px)] min-h-[calc(100vh-61px)] w-screen p-5'>
 			{data && (
