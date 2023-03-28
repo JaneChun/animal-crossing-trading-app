@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { auth, db } from '../fbase';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, collection } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import CartItem from '../Components/NewPost/CartItem';
@@ -64,7 +64,9 @@ const NewPost = () => {
 			return;
 		}
 		try {
-			await setDoc(doc(db, 'Boards', `/${uuidv4()}`), requestData);
+			const docId = uuidv4();
+			const docRef = doc(db, 'Boards', docId);
+			await setDoc(docRef, requestData);
 			alert('작성했습니다.');
 			navigate('/');
 		} catch (error) {
@@ -147,7 +149,7 @@ const NewPost = () => {
 			</div>
 			{/* Cart */}
 
-			<div className='mt-5 mb-[calc(41px)] flex justify-end'>
+			<div className='mt-5 mb-[/41px] flex justify-end'>
 				<button
 					onClick={onSubmit}
 					className='mb-5 rounded border border-blue-500 bg-transparent py-2 px-4 font-semibold text-blue-700 hover:border-transparent hover:bg-blue-500 hover:text-white'

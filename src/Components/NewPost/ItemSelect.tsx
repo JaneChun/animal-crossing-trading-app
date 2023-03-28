@@ -180,7 +180,7 @@ interface listUnitProps {
 
 const ListUnit = ({ item, addItemToCart }: listUnitProps) => {
 	return (
-		<li>
+		<li key={item.UniqueEntryID}>
 			<button
 				onClick={() => addItemToCart(item)}
 				className='flex w-full items-center whitespace-nowrap px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'

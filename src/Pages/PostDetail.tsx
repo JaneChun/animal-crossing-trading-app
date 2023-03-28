@@ -1,23 +1,29 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { auth, db } from '../fbase';
-import { doc, getDoc, DocumentData, deleteDoc } from 'firebase/firestore';
+import { doc, getDoc, DocumentData, deleteDoc, collection, getDocs, query, orderBy, where } from 'firebase/firestore';
 import { elapsedTime } from '../Utilities/elapsedTime';
 import { cartItem } from './NewPost';
+import Comment from '../Components/PostDetail/Comment';
 
 function PostDetail() {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const [data, setData] = useState<DocumentData>({});
+	const [comments, setComments] = useState<DocumentData[]>([]);
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 	const modalRef = useRef<HTMLButtonElement | null>(null);
+	const userInfo = auth.currentUser;
 
 	useEffect(() => {
 		getData();
+		getComments();
 	}, []);
 
 	const getData = async () => {
-		const docRef = doc(db, 'Boards', `${id}`);
+		if (!id) return;
+
+		const docRef = doc(db, 'Boards', id);
 		const docSnap = await getDoc(docRef);
 
 		if (docSnap.exists()) {
@@ -26,6 +32,21 @@ function PostDetail() {
 		} else {
 			console.log('no such document!');
 		}
+	};
+
+	const getComments = async () => {
+		if (!id) return;
+
+		const q = query(collection(db, 'Boards', id, 'Comments'), orderBy('createdAt', 'desc'));
+		const querySnapshot = await getDocs(q);
+		console.log('querySnapshot', querySnapshot);
+		querySnapshot.forEach((doc) => {
+			const docObj = {
+				...doc.data(),
+				commentId: doc.id,
+			};
+			setComments((comments) => [...comments, docObj]);
+		});
 	};
 
 	const editPost = () => {
@@ -40,8 +61,9 @@ function PostDetail() {
 		const confirm = window.confirm('정말로 삭제하겠습니까?');
 
 		if (confirm) {
+			const docRef = doc(db, 'Boards', data.id);
 			try {
-				await deleteDoc(doc(db, 'Boards', data.id));
+				await deleteDoc(docRef);
 				// if (사진이 있다면) {
 				// 	const desertRef = ref(storage, 사진)
 				// 	await deleteObject(desertRef);
@@ -63,11 +85,12 @@ function PostDetail() {
 			setIsModalOpen(false);
 		}
 	};
-
+	console.log('data', data);
+	console.log('comments', comments);
 	return (
 		<div onClick={handleOutsideClick} className='absolute top-[calc(61px)] min-h-[calc(100vh-61px)] w-screen p-5'>
 			{data && (
-				<div className='relative mx-2 mb-10'>
+				<div className='relative mx-2'>
 					{/* Type */}
 					<div>
 						{data.type === 'sell' ? (
@@ -81,42 +104,46 @@ function PostDetail() {
 					</div>
 					{/* Type */}
 
-					{/* Dots Button */}
-					<button
-						ref={modalRef}
-						onClick={handleModal}
-						id='dropdownMenuIconButton'
-						data-dropdown-toggle='dropdownDots'
-						className='absolute top-0 right-0 inline-flex items-center rounded-lg bg-white p-1 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-50 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-600'
-						type='button'
-					>
-						<svg className='h-6 w-6' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'>
-							<path d='M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z'></path>
-						</svg>
-					</button>
-					{/* Dots Button */}
+					{data.creatorId === userInfo?.uid && (
+						<>
+							{/* Dots Button */}
+							<button
+								ref={modalRef}
+								onClick={handleModal}
+								id='dropdownMenuIconButton'
+								data-dropdown-toggle='dropdownDots'
+								className='absolute top-0 right-0 inline-flex items-center rounded-lg bg-white p-1 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-50 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-600'
+								type='button'
+							>
+								<svg className='h-6 w-6' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'>
+									<path d='M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z'></path>
+								</svg>
+							</button>
+							{/* Dots Button */}
 
-					{/* Dropdown */}
-					<div
-						id='dropdownDots'
-						className={`${
-							!isModalOpen && 'hidden'
-						} + absolute top-8 right-0 z-10 w-auto divide-y divide-gray-100 rounded-lg bg-white shadow dark:divide-gray-600 dark:bg-gray-700`}
-					>
-						<ul className='py-2 text-sm text-gray-700 dark:text-gray-200' aria-labelledby='dropdownMenuIconButton'>
-							<li>
-								<button onClick={editPost} className='block px-6 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
-									수정
-								</button>
-							</li>
-							<li>
-								<button onClick={deletePost} className='block px-6 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
-									삭제
-								</button>
-							</li>
-						</ul>
-					</div>
-					{/* Dropdown */}
+							{/* Dropdown */}
+							<div
+								id='dropdownDots'
+								className={`${
+									!isModalOpen && 'hidden'
+								} + absolute top-8 right-0 z-10 w-auto divide-y divide-gray-100 rounded-lg bg-white shadow dark:divide-gray-600 dark:bg-gray-700`}
+							>
+								<ul className='py-2 text-sm text-gray-700 dark:text-gray-200' aria-labelledby='dropdownMenuIconButton'>
+									<li>
+										<button onClick={editPost} className='block px-6 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
+											수정
+										</button>
+									</li>
+									<li>
+										<button onClick={deletePost} className='block px-6 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
+											삭제
+										</button>
+									</li>
+								</ul>
+								{/* Dropdown */}
+							</div>
+						</>
+					)}
 
 					{/* Text Data */}
 					<div className='mt-3 mb-1 text-xl font-semibold text-gray-900 dark:text-white'>{data.title}</div>
@@ -165,7 +192,7 @@ function PostDetail() {
 					{/* Item List */}
 
 					{/* Total MilesTicket Count */}
-					<div className='flex justify-end'>
+					<div className='mb-5 flex justify-end border-b border-gray-200'>
 						<div className='w-30 flex items-center justify-between p-3'>
 							<span className='mr-2 text-sm font-semibold'>일괄</span>
 
@@ -182,6 +209,7 @@ function PostDetail() {
 					</div>
 					{/* Total MilesTicket Count */}
 
+					<Comment comments={comments} id={data.id} getComments={getComments} />
 					{/* <a
 						href='#'
 						className='inline-flex items-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700'
