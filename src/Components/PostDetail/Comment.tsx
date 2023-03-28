@@ -1,6 +1,6 @@
 import React, { useState, useRef, SetStateAction } from 'react';
 import { auth, db } from '../../fbase';
-import { doc, DocumentData, setDoc, collection, deleteDoc } from 'firebase/firestore';
+import { doc, DocumentData, setDoc, collection, deleteDoc, where, query, getDocs } from 'firebase/firestore';
 import { elapsedTime } from '../../Utilities/elapsedTime';
 
 interface CommentProps {
@@ -43,12 +43,12 @@ const Comment = ({ id, comments, setComments, getComments }: CommentProps) => {
 			const commentRef = doc(collection(db, 'Boards', id, 'Comments'));
 			await setDoc(commentRef, requestData);
 			alert('작성했습니다.');
+			setComments([]);
+			getComments();
 		} catch (error) {
 			console.log(error);
 		} finally {
 			setCommentInput('');
-			setComments([]);
-			getComments();
 		}
 	};
 
@@ -57,10 +57,12 @@ const Comment = ({ id, comments, setComments, getComments }: CommentProps) => {
 	const deleteComment = async (commentId: string) => {
 		const confirm = window.confirm('정말로 삭제하겠습니까?');
 
-		if (confirm) {
-			const desertRef = doc(collection(db, 'Boards', `/${id}/Comments/${commentId}`));
+		if (confirm && id) {
+			const desertRef = doc(db, 'Boards', id, 'Comments', commentId);
 			try {
 				await deleteDoc(desertRef);
+				setComments([]);
+				getComments();
 			} catch (error) {
 				console.log(error);
 			}
@@ -126,7 +128,7 @@ const Comment = ({ id, comments, setComments, getComments }: CommentProps) => {
 										isModalOpen && clickedComment === comment.commentId ? 'visible' : 'hidden'
 									} + absolute top-8 right-0 z-10 w-auto divide-y divide-gray-100 rounded-lg bg-white shadow dark:divide-gray-600 dark:bg-gray-700`}
 								>
-									<ul className='py-2 text-sm text-gray-700 dark:text-gray-200' aria-labelledby='dropdownMenuIconButton'>
+									<ul className='text-sm text-gray-700 dark:text-gray-200' aria-labelledby='dropdownMenuIconButton'>
 										<li>
 											<button onClick={editComment} className='block px-6 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
 												수정
