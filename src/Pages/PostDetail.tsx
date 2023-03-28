@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { auth, db } from '../fbase';
-import { doc, getDoc, DocumentData, deleteDoc, collection, getDocs, query, orderBy, where } from 'firebase/firestore';
-import { elapsedTime } from '../Utilities/elapsedTime';
+import { doc, getDoc, DocumentData, deleteDoc, collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { cartItem } from './NewPost';
 import Comment from '../Components/PostDetail/Comment';
 
@@ -37,9 +36,9 @@ function PostDetail() {
 	const getComments = async () => {
 		if (!id) return;
 
-		const q = query(collection(db, 'Boards', id, 'Comments'), orderBy('createdAt', 'desc'));
+		// const q = query(collection(db, 'Boards', id, 'Comments'), orderBy('createdAt', 'desc'));
+		const q = query(collection(db, `Boards/${id}/Comments`), orderBy('createdAt', 'desc'));
 		const querySnapshot = await getDocs(q);
-		console.log('querySnapshot', querySnapshot);
 		querySnapshot.forEach((doc) => {
 			const docObj = {
 				...doc.data(),
@@ -85,7 +84,6 @@ function PostDetail() {
 			setIsModalOpen(false);
 		}
 	};
-	console.log('data', data);
 	console.log('comments', comments);
 	return (
 		<div onClick={handleOutsideClick} className='absolute top-[calc(61px)] min-h-[calc(100vh-61px)] w-screen p-5'>
@@ -140,8 +138,8 @@ function PostDetail() {
 										</button>
 									</li>
 								</ul>
-								{/* Dropdown */}
 							</div>
+							{/* Dropdown */}
 						</>
 					)}
 
@@ -209,7 +207,7 @@ function PostDetail() {
 					</div>
 					{/* Total MilesTicket Count */}
 
-					<Comment comments={comments} id={data.id} getComments={getComments} />
+					<Comment comments={comments} setComments={setComments} id={data.id} getComments={getComments} />
 					{/* <a
 						href='#'
 						className='inline-flex items-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700'
