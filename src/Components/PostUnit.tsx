@@ -11,9 +11,10 @@ interface postProps {
 	creatorDisplayName?: string;
 	creatorId?: string;
 	comments?: number;
+	done?: boolean;
 }
 
-const PostUnit = ({ id, page, type, title, createdAt, creatorDisplayName, creatorId, comments }: postProps) => {
+const PostUnit = ({ id, page, type, title, createdAt, creatorDisplayName, creatorId, comments, done }: postProps) => {
 	const navigate = useNavigate();
 
 	const onCreatorDisplayNameClick = () => {
@@ -30,15 +31,18 @@ const PostUnit = ({ id, page, type, title, createdAt, creatorDisplayName, creato
 				</div>
 				<div className='min-w-0 flex-1'>
 					<p onClick={() => navigate(`/post/${id}`)} className='text-md cursor-pointer truncate font-semibold text-gray-900 dark:text-white'>
-						{type === 'sell' ? (
+						{done === true ? (
+							<span className='mr-2 rounded-sm border border-gray-200 bg-white py-0.5 px-1 text-xs font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400'>
+								거래 완료
+							</span>
+						) : type === 'sell' ? (
 							<span className='mr-2 rounded-sm border border-blue-100 bg-blue-100 py-0.5 px-1 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-300'>
-								{/* 거래 완료 - <span className='mr-2 rounded-sm border border-gray-200 bg-white py-0.5 px-1 text-xs font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400'> */}
 								팔아요
 							</span>
 						) : (
 							<span className='mr-2 rounded-sm bg-blue-700 px-1 py-0.5 text-center text-xs font-medium text-white  dark:bg-blue-600'>구해요</span>
 						)}
-						<span>{title}</span>
+						<span className='text-gray-900'>{title}</span>
 					</p>
 					<p>
 						<span onClick={onCreatorDisplayNameClick} className='mr-2 truncate text-sm text-gray-500 dark:text-gray-400'>

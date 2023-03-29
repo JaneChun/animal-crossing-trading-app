@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { auth, db } from '../fbase';
-import { doc, getDoc, DocumentData, deleteDoc, collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { doc, getDoc, DocumentData, deleteDoc, collection, getDocs, query, orderBy, updateDoc } from 'firebase/firestore';
 import { cartItem } from './NewPost';
 import Comment from '../Components/PostDetail/Comment';
 
@@ -84,17 +84,36 @@ function PostDetail() {
 			setIsModalOpen(false);
 		}
 	};
-	console.log(data);
-	console.log('comments', comments.length);
+
+	const closePost = async () => {
+		if (!userInfo || !id) return;
+
+		const confirm = window.confirm('거래 완료로 변경하겠습니까?');
+
+		if (confirm) {
+			try {
+				const docRef = doc(db, 'Boards', id);
+				await updateDoc(docRef, {
+					done: true,
+				});
+			} catch (error) {
+				console.log(error);
+			}
+		}
+	};
+
 	return (
 		<div onClick={handleOutsideClick} className='absolute top-[calc(61px)] min-h-[calc(100vh-61px)] w-screen p-5'>
 			{data && (
 				<div className='relative mx-2'>
 					{/* Type */}
 					<div>
-						{data.type === 'sell' ? (
+						{data.done === true ? (
+							<span className='-ml-1 rounded-sm border border-gray-200 bg-white py-1 px-2 text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400'>
+								거래 완료
+							</span>
+						) : data.type === 'sell' ? (
 							<span className='-ml-1 rounded-sm border border-blue-100 bg-blue-100 py-1 px-2 text-sm font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-300'>
-								{/* 거래 완료 - <span className='-ml-1 rounded-sm border border-gray-200 bg-white py-1 px-2 text-sm font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400'> */}
 								팔아요
 							</span>
 						) : (
@@ -127,15 +146,29 @@ function PostDetail() {
 									!isModalOpen && 'hidden'
 								} + absolute top-8 right-0 z-10 w-auto divide-y divide-gray-100 rounded-lg bg-white shadow dark:divide-gray-600 dark:bg-gray-700`}
 							>
-								<ul className='text-sm text-gray-700 dark:text-gray-200' aria-labelledby='dropdownMenuIconButton'>
+								<ul className='text-sm text-gray-700 dark:text-gray-200'>
 									<li>
-										<button onClick={editPost} className='block px-6 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
+										<button
+											onClick={editPost}
+											className='block w-full px-6 py-2 text-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
+										>
 											수정
 										</button>
 									</li>
 									<li>
-										<button onClick={deletePost} className='block px-6 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
+										<button
+											onClick={deletePost}
+											className='block w-full px-6 py-2 text-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
+										>
 											삭제
+										</button>
+									</li>
+									<li>
+										<button
+											onClick={closePost}
+											className='block w-full px-6 py-2 text-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
+										>
+											거래 완료
 										</button>
 									</li>
 								</ul>
@@ -208,7 +241,14 @@ function PostDetail() {
 					</div>
 					{/* Total MilesTicket Count */}
 
-					<Comment postCreatorId={data.creatorId} comments={comments} setComments={setComments} id={data.id} getComments={getComments} />
+					<Comment
+						done={data.done}
+						postCreatorId={data.creatorId}
+						comments={comments}
+						setComments={setComments}
+						id={data.id}
+						getComments={getComments}
+					/>
 					{/* <a
 						href='#'
 						className='inline-flex items-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700'

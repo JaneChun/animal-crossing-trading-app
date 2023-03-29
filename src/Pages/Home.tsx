@@ -38,7 +38,7 @@ function Home() {
 			setData((data) => [...data, docObj]);
 		});
 	};
-	console.log('data in Home', data);
+
 	return (
 		<div className='absolute top-[calc(61px)] min-h-[calc(100vh-61px)] w-screen'>
 			<Carousel />
@@ -61,6 +61,7 @@ function Home() {
 										creatorDisplayName={doc.creatorDisplayName}
 										creatorId={doc.creatorId}
 										comments={doc.comments}
+										done={doc.done}
 									/>
 								)
 						)}
