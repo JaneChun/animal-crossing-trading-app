@@ -15,6 +15,7 @@ export interface doc {
 	creatorId?: string;
 	createdAt?: number;
 	done?: boolean;
+	comments?: number;
 }
 
 function Home() {
@@ -37,7 +38,7 @@ function Home() {
 			setData((data) => [...data, docObj]);
 		});
 	};
-
+	console.log('data in Home', data);
 	return (
 		<div className='absolute top-[calc(61px)] min-h-[calc(100vh-61px)] w-screen'>
 			<Carousel />
@@ -59,6 +60,7 @@ function Home() {
 										createdAt={doc.createdAt}
 										creatorDisplayName={doc.creatorDisplayName}
 										creatorId={doc.creatorId}
+										comments={doc.comments}
 									/>
 								)
 						)}

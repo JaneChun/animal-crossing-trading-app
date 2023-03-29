@@ -1,4 +1,4 @@
-import { deleteDoc, doc, DocumentData, updateDoc } from 'firebase/firestore';
+import { deleteDoc, doc, DocumentData, updateDoc, increment } from 'firebase/firestore';
 import React, { SetStateAction, useRef, useState } from 'react';
 import { db, auth } from '../../fbase';
 import { elapsedTime } from '../../Utilities/elapsedTime';
@@ -42,6 +42,17 @@ const CommentUnit = ({
 		}
 	};
 
+	const updateCommentsLength = async () => {
+		const docRef = doc(db, 'Boards', id);
+		try {
+			await updateDoc(docRef, {
+				comments: increment(-1),
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	const editComment = async () => {
 		if (newCommentInput === '') {
 			alert('내용이 비어있는지 확인해주세요.');
@@ -73,6 +84,7 @@ const CommentUnit = ({
 			const desertRef = doc(db, 'Boards', id, 'Comments', commentId);
 			try {
 				await deleteDoc(desertRef);
+				updateCommentsLength();
 				setComments([]);
 				getComments();
 			} catch (error) {

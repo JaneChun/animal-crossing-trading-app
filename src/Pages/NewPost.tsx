@@ -50,6 +50,7 @@ const NewPost = () => {
 			creatorDisplayName: userInfo?.displayName,
 			creatorId: userInfo?.uid,
 			done: false,
+			comments: 0,
 		};
 
 		if (!userInfo) return;
@@ -149,10 +150,10 @@ const NewPost = () => {
 			</div>
 			{/* Cart */}
 
-			<div className='mt-5 mb-[/41px] flex justify-end'>
+			<div className='mt-5 mb-20 flex justify-end'>
 				<button
 					onClick={onSubmit}
-					className='mb-5 rounded border border-blue-500 bg-transparent py-2 px-4 font-semibold text-blue-700 hover:border-transparent hover:bg-blue-500 hover:text-white'
+					className='rounded border border-blue-500 bg-transparent py-2 px-4 font-semibold text-blue-700 hover:border-transparent hover:bg-blue-500 hover:text-white'
 				>
 					작성
 				</button>

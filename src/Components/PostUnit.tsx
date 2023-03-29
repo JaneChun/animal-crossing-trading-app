@@ -10,9 +10,10 @@ interface postProps {
 	createdAt: number;
 	creatorDisplayName?: string;
 	creatorId?: string;
+	comments?: number;
 }
 
-const PostUnit = ({ id, page, type, title, createdAt, creatorDisplayName, creatorId }: postProps) => {
+const PostUnit = ({ id, page, type, title, createdAt, creatorDisplayName, creatorId, comments }: postProps) => {
 	const navigate = useNavigate();
 
 	const onCreatorDisplayNameClick = () => {
@@ -48,7 +49,7 @@ const PostUnit = ({ id, page, type, title, createdAt, creatorDisplayName, creato
 				</div>
 				<div className='text-center font-semibold text-gray-900 dark:text-white'>
 					<p className='text-xs'>댓글</p>
-					<p className='text-base'>0</p>
+					<p className='text-base'>{comments}</p>
 				</div>
 			</div>
 		</li>

@@ -1,4 +1,4 @@
-import { collection, doc, DocumentData, setDoc } from 'firebase/firestore';
+import { collection, doc, DocumentData, setDoc, updateDoc, increment } from 'firebase/firestore';
 import React, { SetStateAction, useRef, useState } from 'react';
 import { auth, db } from '../../fbase';
 import CommentUnit from './CommentUnit';
@@ -23,6 +23,17 @@ const Comment = ({ id, comments, setComments, getComments, isCreator }: CommentP
 		setCommentInput(e.target.value);
 	};
 
+	const updateCommentsLength = async () => {
+		const docRef = doc(db, 'Boards', id);
+		try {
+			await updateDoc(docRef, {
+				comments: increment(1),
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	const onSubmit = async () => {
 		const requestData = {
 			comment: commentInput,
@@ -44,6 +55,7 @@ const Comment = ({ id, comments, setComments, getComments, isCreator }: CommentP
 			const commentRef = doc(collection(db, 'Boards', id, 'Comments'));
 			await setDoc(commentRef, requestData);
 			alert('작성했습니다.');
+			updateCommentsLength();
 			setComments([]);
 			getComments();
 		} catch (error) {
