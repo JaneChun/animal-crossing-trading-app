@@ -49,6 +49,8 @@ function PostDetail() {
 	};
 
 	const editPost = () => {
+		if (data.done) return;
+
 		navigate(`/post-edit/${id}`, {
 			state: {
 				id,
@@ -86,7 +88,7 @@ function PostDetail() {
 	};
 
 	const closePost = async () => {
-		if (!userInfo || !id) return;
+		if (!userInfo || !id || data.done) return;
 
 		const confirm = window.confirm('거래 완료로 변경하겠습니까?');
 
@@ -147,14 +149,16 @@ function PostDetail() {
 								} + absolute top-8 right-0 z-10 w-auto divide-y divide-gray-100 rounded-lg bg-white shadow dark:divide-gray-600 dark:bg-gray-700`}
 							>
 								<ul className='text-sm text-gray-700 dark:text-gray-200'>
-									<li>
-										<button
-											onClick={editPost}
-											className='block w-full px-6 py-2 text-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
-										>
-											수정
-										</button>
-									</li>
+									{!data.done && (
+										<li>
+											<button
+												onClick={editPost}
+												className='block w-full px-6 py-2 text-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
+											>
+												수정
+											</button>
+										</li>
+									)}
 									<li>
 										<button
 											onClick={deletePost}
@@ -163,14 +167,16 @@ function PostDetail() {
 											삭제
 										</button>
 									</li>
-									<li>
-										<button
-											onClick={closePost}
-											className='block w-full px-6 py-2 text-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
-										>
-											거래 완료
-										</button>
-									</li>
+									{!data.done && (
+										<li>
+											<button
+												onClick={closePost}
+												className='block w-full px-6 py-2 text-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
+											>
+												거래 완료
+											</button>
+										</li>
+									)}
 								</ul>
 							</div>
 							{/* Dropdown */}

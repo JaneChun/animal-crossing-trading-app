@@ -153,7 +153,7 @@ const NewPost = () => {
 			<div className='mt-5 mb-20 flex justify-end'>
 				<button
 					onClick={onSubmit}
-					className='rounded border border-blue-500 bg-transparent py-2 px-4 font-semibold text-blue-700 hover:border-transparent hover:bg-blue-500 hover:text-white'
+					className='rounded-lg border border-blue-500 bg-transparent py-2 px-4 font-semibold text-blue-700 hover:border-transparent hover:bg-blue-500 hover:text-white'
 				>
 					작성
 				</button>
