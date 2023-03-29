@@ -85,17 +85,17 @@ const Comment = ({ id, comments, setComments, getComments }: CommentProps) => {
 
 			{/* Comment Write */}
 			<div className='mb-[calc(61px)] flex rounded-lg bg-gray-100 px-4 py-3 dark:bg-gray-700'>
-				<div className='flex flex-col items-center justify-center'>
-					{profileImage && <img className='h-11 w-11 rounded-full border' src={profileImage} alt='Robert image' />}
-					{/* <div className='mt-1 text-sm font-semibold text-gray-900 dark:text-white'>{userInfo?.displayName?.split(' ')[0]}</div> */}
-				</div>
+				{/* <div className='mr-2 flex flex-col items-center justify-center'> */}
+				{/* {profileImage && <img className='h-11 w-11 rounded-full border' src={profileImage} alt='Robert image' />} */}
+				{/* <div className='mt-1 text-sm font-semibold text-gray-900 dark:text-white'>{userInfo?.displayName?.split(' ')[0]}</div> */}
+				{/* </div> */}
 				<div className='flex grow items-center'>
 					<textarea
 						value={commentInput}
 						onChange={commentInputHandler}
-						placeholder='일괄 판매합니다. 채팅 주세요!'
+						placeholder='댓글을 작성하세요.'
 						id='default-textarea'
-						className='sm:text-md ml-2 block grow resize-none rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
+						className='sm:text-md block grow resize-none rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
 					/>
 					<button
 						onClick={onSubmit}
