@@ -8,9 +8,10 @@ interface CommentProps {
 	comments: DocumentData[];
 	setComments: React.Dispatch<SetStateAction<DocumentData[]>>;
 	getComments: () => Promise<void>;
+	isCreator: boolean;
 }
 
-const Comment = ({ id, comments, setComments, getComments }: CommentProps) => {
+const Comment = ({ id, comments, setComments, getComments, isCreator }: CommentProps) => {
 	const modalRef = useRef<HTMLButtonElement | null>(null);
 	const userInfo = auth.currentUser;
 	const profileImage = userInfo?.photoURL;
@@ -79,6 +80,7 @@ const Comment = ({ id, comments, setComments, getComments }: CommentProps) => {
 						clickedComment={clickedComment}
 						setClickedComment={setClickedComment}
 						modalRef={modalRef}
+						isVisible={isCreator}
 					/>
 				))}
 			</ul>
