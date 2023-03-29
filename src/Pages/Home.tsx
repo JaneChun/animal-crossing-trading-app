@@ -40,9 +40,9 @@ function Home() {
 	};
 
 	return (
-		<div className='absolute top-[calc(61px)] min-h-[calc(100vh-61px)] w-screen'>
+		<div className='absolute top-[calc(61px)] h-[calc(100vh-121px)] w-screen overflow-y-auto'>
 			<Carousel />
-			<div className='mb-[calc(61px)] py-5 px-7'>
+			<div className='p-7'>
 				<div className='mb-4 flex items-center justify-between'>
 					<div className='text-lg font-bold leading-none text-gray-900 dark:text-white'>거래글</div>
 				</div>

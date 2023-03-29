@@ -79,7 +79,7 @@ const NewPost = () => {
 	};
 
 	return (
-		<div className='absolute top-[calc(61px)] min-h-[calc(100vh-61px)] w-screen p-5'>
+		<div className='absolute top-[calc(61px)] h-[calc(100vh-121px)] w-screen overflow-y-auto p-5'>
 			<div className='inline-flex rounded-md shadow-sm' role='group'>
 				{/* Type */}
 				<button
@@ -150,7 +150,7 @@ const NewPost = () => {
 			</div>
 			{/* Cart */}
 
-			<div className='mt-5 mb-20 flex justify-end'>
+			<div className='mt-3 flex justify-end'>
 				<button
 					onClick={onSubmit}
 					className='rounded-lg border border-blue-500 bg-transparent py-2 px-4 font-semibold text-blue-700 hover:border-transparent hover:bg-blue-500 hover:text-white'

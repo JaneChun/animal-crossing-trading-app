@@ -8,6 +8,7 @@ import UserPage from './Pages/UserPage';
 import Search from './Pages/Search';
 import PostDetail from './Pages/PostDetail';
 import PostEdit from './Components/PostDetail/PostEdit';
+import Chat from './Pages/Chat';
 
 const router = createBrowserRouter([
 	{
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
 			{
 				path: '/post-edit/:id',
 				element: <PostEdit />,
+			},
+			{
+				path: '/chat',
+				element: <Chat />,
 			},
 		],
 	},

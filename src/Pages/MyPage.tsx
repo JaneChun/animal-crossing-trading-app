@@ -35,7 +35,7 @@ function MyPage() {
 
 	return (
 		userInfo && (
-			<div onClick={handleOutsideClick} className='absolute top-[calc(61px)] mb-[calc(61px)] min-h-[calc(100vh-61px)] w-screen p-5'>
+			<div onClick={handleOutsideClick} className='absolute top-[calc(61px)] h-[calc(100vh-121px)] w-screen overflow-y-auto p-5'>
 				<div className='w-full max-w-sm rounded-lg border border-gray-200 bg-white shadow dark:border-gray-700 dark:bg-gray-800'>
 					<div className='relative flex justify-end px-4 pt-4'>
 						{/* Dots Button */}

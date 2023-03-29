@@ -24,13 +24,13 @@ const PostUnit = ({ id, page, type, title, createdAt, creatorDisplayName, creato
 	};
 
 	return (
-		<li className='py-3 sm:py-4'>
+		<li className='py-3.5 sm:py-4'>
 			<div className='flex items-center space-x-4'>
 				<div className='flex-shrink-0'>
 					<img className='h-8 w-8 rounded-md' src='https://content-resized.nookea.com/s1024/qPlJRRKAhoxDNPQnuFLzb' alt='Neil image' />
 				</div>
 				<div className='min-w-0 flex-1'>
-					<p onClick={() => navigate(`/post/${id}`)} className='text-md cursor-pointer truncate font-semibold text-gray-900 dark:text-white'>
+					<p onClick={() => navigate(`/post/${id}`)} className='text-md cursor-pointer truncate py-0.5 font-semibold text-gray-900 dark:text-white'>
 						{done === true ? (
 							<span className='mr-2 rounded-sm border border-gray-200 bg-white py-0.5 px-1 text-xs font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400'>
 								거래 완료
@@ -48,7 +48,7 @@ const PostUnit = ({ id, page, type, title, createdAt, creatorDisplayName, creato
 						<span onClick={onCreatorDisplayNameClick} className='mr-2 truncate text-sm text-gray-500 dark:text-gray-400'>
 							{creatorDisplayName?.split(' ')[0]}
 						</span>
-						{createdAt && <span className='truncate text-sm text-gray-500 dark:text-gray-400'>{elapsedTime(createdAt)}</span>}
+						{createdAt && <span className='truncate text-xs text-gray-500 dark:text-gray-400'>{elapsedTime(createdAt)}</span>}
 					</p>
 				</div>
 				<div className='text-center font-semibold text-gray-900 dark:text-white'>
