@@ -13,7 +13,7 @@ interface CommentUnitProps {
 	clickedComment: string;
 	setClickedComment: React.Dispatch<SetStateAction<string>>;
 	modalRef: React.RefObject<HTMLButtonElement>;
-	isVisible: boolean;
+	postCreatorId: string;
 }
 
 const CommentUnit = ({
@@ -26,7 +26,7 @@ const CommentUnit = ({
 	clickedComment,
 	setClickedComment,
 	modalRef,
-	isVisible,
+	postCreatorId,
 }: CommentUnitProps) => {
 	const commentRef = useRef<HTMLLIElement | null>(null);
 	const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -120,6 +120,11 @@ const CommentUnit = ({
 					<div className='w-full pl-3'>
 						<div className='mb-1.5  text-sm text-gray-500 dark:text-gray-400'>
 							<span className='font-semibold text-gray-900 dark:text-white'>{comment?.creatorDisplayName?.split(' ')[0]}</span>
+							{postCreatorId === comment.creatorId && (
+								<span className='ml-2 rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-300'>
+									작성자
+								</span>
+							)}
 
 							{comment.creatorId === userInfo?.uid && (
 								<>
@@ -172,7 +177,7 @@ const CommentUnit = ({
 						</div>
 						<div className='flex justify-between'>
 							<div className='pb-3 text-xs text-blue-600 dark:text-blue-500'>{elapsedTime(comment.createdAt)}</div>
-							{isVisible && (
+							{postCreatorId === userInfo?.uid && postCreatorId !== comment.creatorId && (
 								<button className='inline-flex items-center rounded-lg border border-gray-200 bg-white px-2 py-1.5 text-xs font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700'>
 									채팅하기
 									<svg className='ml-0.5 h-3 w-3' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'>

@@ -23,8 +23,8 @@ function App() {
 	return (
 		<>
 			<Header />
-			<Nav isLoggedIn={isLoggedIn} />
 			<Outlet />
+			<Nav isLoggedIn={isLoggedIn} />
 		</>
 	);
 }
