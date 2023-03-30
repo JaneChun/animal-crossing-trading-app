@@ -116,7 +116,7 @@ const CommentUnit = ({
 			const response = await getDoc(doc(db, 'Chats', combinedId));
 			// 이미 둘이 채팅한 적이 없다면 새로 만든다.
 			if (!response.exists()) {
-				await setDoc(doc(db, 'Chats', combinedId), { message: [] });
+				await setDoc(doc(db, 'Chats', combinedId), { messages: [] });
 			}
 
 			await updateDoc(doc(db, 'UserChats', userInfo.uid), {

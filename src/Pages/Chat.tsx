@@ -1,78 +1,84 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { auth, db } from '../fbase';
-import { doc, setDoc, collection, getDocs, DocumentData, onSnapshot, query, orderBy, addDoc } from 'firebase/firestore';
-import { useParams, useLocation } from 'react-router-dom';
-import { uuidv4 } from '@firebase/util';
+import { arrayUnion, doc, DocumentData, getDocs, onSnapshot, serverTimestamp, Timestamp, updateDoc } from 'firebase/firestore';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import { ChatContext } from '../context/ChatContext';
+import { db } from '../fbase';
+import { uuidv4 } from '@firebase/util';
 
 const Chat = () => {
-	const chatId = useParams().id;
-	const { state } = useLocation();
 	const { userInfo } = useContext(AuthContext);
+	const { data } = useContext(ChatContext);
 	const [chatInput, setChatInput] = useState('');
-	const [data, setData] = useState<DocumentData[]>([]);
+	const [messages, setMessages] = useState<DocumentData[]>([]);
 
 	useEffect(() => {
-		getMessages();
-	}, []);
+		console.log('useEffect 실행');
+		console.log('chatId', data.chatId);
+		const unsub = onSnapshot(doc(db, 'Chats', data.chatId), (doc: DocumentData) => {
+			doc.exists() && setMessages(doc.data().messages);
 
-	const getMessages = () => {
-		// const q = query(collection(db, 'Chats', chatId, 'Messages'));
-		// const unsubscribe = onSnapshot(q, (querySnapshot) => {
-		// 	querySnapshot.forEach((doc) => {
-		// 		const docObj = {
-		// 			...doc.data(),
-		// 			messageId: doc.id,
-		// 		};
-		// 		setData((message) => [...message, docObj]);
-		// 	});
-		// });
-	};
+			return () => {
+				unsub();
+			};
+		});
+	}, [data.chatId]);
 
 	const chatInputHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setChatInput(e.target.value);
 	};
 
 	const onSubmit = async () => {
-		if (!userInfo) return;
-
-		const counterPartData = {
-			creatorId: state.creatorId,
-			creatorDisplayName: state.creatorDisplayName,
-			creatorPhotoURL: state.creatorPhotoURL,
-		};
-
 		const requestData = {
-			message: chatInput,
-			createdAt: Date.now(),
+			messages: arrayUnion({
+				id: uuidv4(),
+				senderId: userInfo.uid,
+				text: chatInput,
+				date: Timestamp.now(),
+			}),
 		};
 
 		try {
-			// 유저 아이디로 도큐멘트 추가
-			await setDoc(doc(db, 'Chats', userInfo.uid), counterPartData);
-			// 유저 도큐멘트에 하위 컬렉션 생성, 이때 하위 컬렉션 안에 있는 문서 이름은 상대방 아이디
-			const chatDocRef = doc(collection(db, 'Chats', userInfo.uid, 'Messages'));
-			await setDoc(chatDocRef, requestData);
+			// 둘의 채팅방에 추가
+			await updateDoc(doc(db, 'Chats', data.chatId), requestData);
+
+			// 나의 채팅방에 추가
+			await updateDoc(doc(db, 'UserChats', userInfo.uid), {
+				[data.chatId + '.id']: uuidv4(),
+				[data.chatId + '.lastMessage']: {
+					text: chatInput,
+					id: uuidv4(),
+				},
+				[data.chatId + '.date']: serverTimestamp(),
+			});
+
+			// 상대의 채팅방에 추가
+			await updateDoc(doc(db, 'UserChats', data.user.uid), {
+				[data.chatId + '.id']: uuidv4(),
+				[data.chatId + '.lastMessage']: {
+					text: chatInput,
+				},
+				[data.chatId + '.date']: serverTimestamp(),
+			});
 		} catch (error) {
 			console.log(error);
 		} finally {
 			setChatInput('');
 		}
 	};
-
-	console.log('data', data);
+	console.log('context data', data);
+	console.log('messages', messages);
 	return (
 		<div className='absolute top-[calc(61px)] flex h-[calc(100vh-121px)] w-screen flex-col items-end'>
 			{/* Conversation */}
 			<div className='flex w-full flex-1 grow flex-col justify-between overflow-y-auto sm:p-6'>
 				<div className='border-b-1 flex justify-between border p-5 sm:items-center'>
 					<div className='relative flex w-full items-center space-x-4'>
-						<img src={state.creatorPhotoURL} className='h-10 w-10 rounded-full' />
+						<img src={data.user.photoURL} className='h-10 w-10 rounded-full' />
 
 						<div className='flex w-full items-center justify-between'>
 							<div className='flex flex-col leading-tight'>
-								<span className='text-md mt-1  mr-3 mb-1 font-semibold text-gray-700'>{state.creatorDisplayName.split(' ')[0]}</span>
-								<span className='text-sm text-gray-600'>🏝 {state.creatorDisplayName.split(' ')[1]}</span>
+								<span className='text-md mt-1  mr-3 mb-1 font-semibold text-gray-700'>{data.user.displayName}</span>
+								{/* <span className='text-sm text-gray-600'>🏝 {state.creatorDisplayName.split(' ')[1]}</span> */}
 							</div>
 							<div>평점</div>
 						</div>
@@ -80,11 +86,29 @@ const Chat = () => {
 				</div>
 
 				<div id='messages' className='flex flex-col space-y-5 overflow-y-auto p-5'>
-					{data.map((message) =>
-						message.creatorId === userInfo?.uid ? (
-							<MyMessage key={message.messageId} message={message} />
+					{messages.map((message) =>
+						message.senderId === userInfo.uid ? (
+							<div key={message.id} className='chat-message'>
+								<div className='flex items-end justify-end'>
+									<div className='order-1 mx-2 flex max-w-xs flex-col items-end space-y-2 text-xs'>
+										<div>
+											<span className='inline-block rounded-lg rounded-br-none bg-blue-600 px-4 py-2 text-white '>{message.text}</span>
+										</div>
+									</div>
+									<img src={userInfo.photoURL} alt={`${userInfo.displayName}'s profile image`} className='order-2 h-10 w-10 rounded-full' />
+								</div>
+							</div>
 						) : (
-							<YourMessage key={message.messageId} message={message} />
+							<div key={message.id} className='chat-message'>
+								<div className='flex items-end'>
+									<div className='order-2 mx-2 flex max-w-xs flex-col items-start space-y-2 text-xs'>
+										<div>
+											<span className='inline-block rounded-lg rounded-bl-none bg-gray-300 px-4 py-2 text-gray-600'>{message.text}</span>
+										</div>
+									</div>
+									<img src={data.user.photoURL} alt={`${data.user.displayName}'s profile image`} className='order-1 h-10 w-10 rounded-full' />
+								</div>
+							</div>
 						)
 					)}
 				</div>
@@ -129,41 +153,3 @@ const Chat = () => {
 };
 
 export default Chat;
-
-interface messageProps {
-	message: DocumentData;
-}
-
-const YourMessage = ({ message }: messageProps) => {
-	const profileImage = message.creatorPhotoURL;
-
-	return (
-		<div key={message.messageId} className='chat-message'>
-			<div className='flex items-end'>
-				<div className='order-2 mx-2 flex max-w-xs flex-col items-start space-y-2 text-xs'>
-					<div>
-						<span className='inline-block rounded-lg rounded-bl-none bg-gray-300 px-4 py-2 text-gray-600'>{message.message}</span>
-					</div>
-				</div>
-				<img src={profileImage} alt={`${message.creatorDisplayName}'s profile image`} className='order-1 h-10 w-10 rounded-full' />
-			</div>
-		</div>
-	);
-};
-
-const MyMessage = ({ message }: messageProps) => {
-	const profileImage = message.creatorPhotoURL;
-
-	return (
-		<div className='chat-message'>
-			<div className='flex items-end justify-end'>
-				<div className='order-1 mx-2 flex max-w-xs flex-col items-end space-y-2 text-xs'>
-					<div>
-						<span className='inline-block rounded-lg rounded-br-none bg-blue-600 px-4 py-2 text-white '>{message.message}</span>
-					</div>
-				</div>
-				<img src={profileImage} alt={`${message.creatorDisplayName}'s profile image`} className='order-2 h-10 w-10 rounded-full' />
-			</div>
-		</div>
-	);
-};
