@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const LoginModal = ({ onGoogleClick, onFacebookClick }) => {
+const LoginModal = ({ onSocialClick }) => {
 	const navigate = useNavigate();
 
 	return (
@@ -38,7 +38,8 @@ const LoginModal = ({ onGoogleClick, onFacebookClick }) => {
 						<p className='text-sm font-normal text-gray-500 dark:text-gray-400'>소셜 계정으로 간편하게 로그인하세요.</p>
 						<div className='mt-7 space-y-3'>
 							<div
-								onClick={onGoogleClick}
+								id='google'
+								onClick={onSocialClick}
 								className='group flex cursor-pointer items-center rounded-lg bg-gray-50 p-3 text-base font-bold text-gray-900 hover:bg-gray-100 hover:shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500'
 							>
 								<svg className='mr-2 h-5 w-5' xmlns='http://www.w3.org/2000/svg' width='256' height='262' viewBox='0 0 256 262'>
@@ -63,8 +64,8 @@ const LoginModal = ({ onGoogleClick, onFacebookClick }) => {
 							</div>
 
 							<div
-								name='facebook'
-								onClick={onFacebookClick}
+								id='facebook'
+								onClick={onSocialClick}
 								className='group flex cursor-pointer items-center rounded-lg bg-gray-50 p-3 text-base font-bold text-gray-900 hover:bg-gray-100 hover:shadow dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500'
 							>
 								<svg className='mr-2 h-5 w-5' xmlns='http://www.w3.org/2000/svg' width='256' height='256' viewBox='0 0 256 256'>

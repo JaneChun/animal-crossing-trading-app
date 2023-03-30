@@ -49,7 +49,7 @@ const router = createBrowserRouter([
 				element: <PostEdit />,
 			},
 			{
-				path: '/chat',
+				path: '/chat/:id',
 				element: <Chat />,
 			},
 		],

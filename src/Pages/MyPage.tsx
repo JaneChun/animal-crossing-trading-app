@@ -1,9 +1,10 @@
-import React, { useRef, useState } from 'react';
-import { auth } from '../fbase';
+import React, { useEffect, useRef, useState } from 'react';
+import { auth, db } from '../fbase';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import EditProfile from '../Components/EditProfile';
 import MyPosts from '../Components/MyPosts';
+import { doc, getDoc } from 'firebase/firestore';
 
 function MyPage() {
 	const navigate = useNavigate();
@@ -12,6 +13,23 @@ function MyPage() {
 	const [isEditing, setIsEditing] = useState<boolean>(false);
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 	const modalRef = useRef<HTMLButtonElement | null>(null);
+	const [islandName, setIslandName] = useState<string>('');
+
+	useEffect(() => {
+		getUsersData();
+	}, []);
+
+	const getUsersData = async () => {
+		const docRef = doc(db, 'Users', `${userInfo?.uid}`);
+		const docSnap = await getDoc(docRef);
+
+		if (docSnap.exists()) {
+			const docData = docSnap.data();
+			setIslandName(docData.islandName);
+		} else {
+			console.log('no such document!');
+		}
+	};
 
 	const onEditProfileClick = () => {
 		setIsEditing((isEditing) => !isEditing);
@@ -80,8 +98,8 @@ function MyPage() {
 								alt={`${userInfo.displayName}'s profile image`}
 							/>
 						)}
-						<h5 className='mb-1 text-xl font-medium text-gray-900 dark:text-white'>{userInfo.displayName?.split(' ')[0]}</h5>
-						<span className='text-sm text-gray-500 dark:text-gray-400'>🏝 {userInfo.displayName?.split(' ')[1] || '어떤 섬에 사시나요?'}</span>
+						<h5 className='mb-1 text-xl font-medium text-gray-900 dark:text-white'>{userInfo.displayName}</h5>
+						<span className='text-sm text-gray-500 dark:text-gray-400'>🏝 {islandName || '섬 이름을 입력해주세요.'}</span>
 						<div className='mt-4 flex space-x-3 md:mt-6'>
 							{!isEditing && (
 								<button
@@ -92,7 +110,9 @@ function MyPage() {
 								</button>
 							)}
 						</div>
-						{isEditing && <EditProfile setIsEditing={setIsEditing} />}
+						{isEditing && (
+							<EditProfile displayName={userInfo.displayName!} islandName={islandName} getUsersData={getUsersData} setIsEditing={setIsEditing} />
+						)}
 					</div>
 				</div>
 

@@ -36,15 +36,15 @@ const Comment = ({ done, id, comments, setComments, getComments, postCreatorId }
 	};
 
 	const onSubmit = async () => {
+		if (!userInfo || !id || done) return;
+
 		const requestData = {
 			comment: commentInput,
 			createdAt: Date.now(),
-			creatorDisplayName: userInfo?.displayName,
-			creatorPhotoURL: userInfo?.photoURL,
-			creatorId: userInfo?.uid,
+			creatorDisplayName: userInfo.displayName,
+			creatorPhotoURL: userInfo.photoURL,
+			creatorId: userInfo.uid,
 		};
-
-		if (!userInfo || !id || done) return;
 
 		if (commentInput === '') {
 			alert('내용이 비어있는지 확인해주세요.');

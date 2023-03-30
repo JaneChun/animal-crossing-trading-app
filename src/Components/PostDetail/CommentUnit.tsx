@@ -1,6 +1,7 @@
-import { deleteDoc, doc, DocumentData, updateDoc, increment } from 'firebase/firestore';
-import React, { SetStateAction, useRef, useState } from 'react';
-import { db, auth } from '../../fbase';
+import { deleteDoc, doc, DocumentData, getDoc, increment, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import React, { SetStateAction, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { auth, db } from '../../fbase';
 import { elapsedTime } from '../../Utilities/elapsedTime';
 
 interface CommentUnitProps {
@@ -28,7 +29,7 @@ const CommentUnit = ({
 	modalRef,
 	postCreatorId,
 }: CommentUnitProps) => {
-	const commentRef = useRef<HTMLLIElement | null>(null);
+	const navigate = useNavigate();
 	const [isEditing, setIsEditing] = useState<boolean>(false);
 	const [newCommentInput, setNewCommentInput] = useState(comment.comment);
 	const userInfo = auth.currentUser;
@@ -105,13 +106,47 @@ const CommentUnit = ({
 		}
 	};
 
+	const onChatClick = async (comment: DocumentData) => {
+		if (!id || !userInfo) return;
+		// 이미 존재하는 채팅방인지 확인한다.
+		const combinedId = userInfo.uid > comment.creatorId ? userInfo.uid + comment.creatorId : comment.creatorId + userInfo.uid;
+
+		try {
+			const response = await getDoc(doc(db, 'Chats', combinedId));
+			// 이미 둘이 채팅한 적이 없다면 새로 만든다.
+			if (!response.exists()) {
+				await setDoc(doc(db, 'Chats', combinedId), { message: [] });
+			}
+
+			await updateDoc(doc(db, 'UserChats', userInfo.uid), {
+				[combinedId + '.userInfo']: {
+					uid: comment.creatorId,
+					displayName: comment.creatorDisplayName,
+					photoURL: comment.creatorPhotoURL,
+				},
+				[combinedId + '.date']: serverTimestamp(),
+			});
+
+			await updateDoc(doc(db, 'UserChats', comment.creatorId), {
+				[combinedId + '.userInfo']: {
+					uid: userInfo.uid,
+					displayName: userInfo.displayName,
+					photoURL: userInfo.photoURL,
+				},
+				[combinedId + '.date']: serverTimestamp(),
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	return (
 		<li key={comment.commentId} className='relative flex px-4 py-3'>
 			{!isEditing ? (
 				<>
 					<div className='flex-shrink-0'>
 						<img
-							className='h-11 w-11 rounded-full border'
+							className='h-11 w-11 rounded-full border object-cover'
 							src={comment.creatorPhotoURL}
 							alt={`${comment.creatorDisplayName.split(' ')[0]}'s profile image`}
 						/>
@@ -178,7 +213,10 @@ const CommentUnit = ({
 						<div className='flex justify-between'>
 							<div className='pb-3 text-xs text-blue-600 dark:text-blue-500'>{elapsedTime(comment.createdAt)}</div>
 							{postCreatorId === userInfo?.uid && postCreatorId !== comment.creatorId && (
-								<button className='inline-flex items-center rounded-lg border border-gray-200 bg-white px-2 py-1.5 text-xs font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700'>
+								<button
+									onClick={() => onChatClick(comment)}
+									className='inline-flex items-center rounded-lg border border-gray-200 bg-white px-2 py-1.5 text-xs font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700'
+								>
 									채팅하기
 									<svg className='ml-0.5 h-3 w-3' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'>
 										<path

@@ -1,16 +1,20 @@
-import React, { useState } from 'react';
-import { auth, storage } from '../fbase';
+import React, { useState, useEffect } from 'react';
+import { auth, storage, db } from '../fbase';
 import { updateProfile } from 'firebase/auth';
 // import { v4 as uuidv4 } from 'uuid';
 import { ref, uploadString, getDownloadURL, listAll, deleteObject } from 'firebase/storage';
+import { updateDoc, doc } from 'firebase/firestore';
 
 interface EditProfileProps {
+	displayName: string;
+	islandName: string;
 	setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+	getUsersData: () => void;
 }
 
-const EditProfile = ({ setIsEditing }: EditProfileProps) => {
-	const [displayNameInput, setDisplayNameInput] = useState<string>('');
-	const [islandNameInput, setIslandNameInput] = useState<string>('');
+const EditProfile = ({ displayName, islandName, getUsersData, setIsEditing }: EditProfileProps) => {
+	const [displayNameInput, setDisplayNameInput] = useState<string>(displayName);
+	const [islandNameInput, setIslandNameInput] = useState<string>(islandName);
 	const [fileURLString, setFileURLString] = useState<any>(null);
 	const userInfo = auth.currentUser;
 
@@ -63,33 +67,41 @@ const EditProfile = ({ setIsEditing }: EditProfileProps) => {
 
 		try {
 			if (!userInfo) return;
-			if (displayNameInput.includes(' ')) {
-				alert('닉네임에 공백 및 특수문자가 있어요.');
-				return;
-			}
-			if (islandNameInput.includes(' ')) {
-				alert('섬 이름에 공백 및 특수문자가 있어요.');
-				return;
+
+			// 섬 이름 바뀌었을 때
+			if (islandNameInput !== islandName) {
+				if (islandNameInput.includes(' ')) {
+					alert('섬 이름에 공백 및 특수문자가 있어요.');
+					return;
+				}
+				const docRef = doc(db, 'Users', userInfo.uid);
+				await updateDoc(docRef, {
+					islandName: islandNameInput,
+				});
 			}
 
-			if (!displayNameInput || !islandNameInput) {
-				alert('닉네임과 섬 이름을 입력해주세요.');
-				return;
+			// 이름 바뀌었을 때
+			if (displayNameInput !== userInfo.displayName) {
+				if (displayNameInput.includes(' ')) {
+					alert('닉네임에 공백 및 특수문자가 있어요.');
+					return;
+				}
+				requestData = { ...requestData, displayName: displayNameInput };
 			}
 
-			requestData = { ...requestData, displayName: displayNameInput + ' ' + islandNameInput };
-
+			// 사진 바뀌었을 때
 			if (fileURLString) {
-				// await clearStorage();
-
 				const photoURL = await createRef();
 				requestData = { ...requestData, photoURL };
 			}
-			await updateProfile(userInfo, requestData);
 
+			if (Object.keys(requestData).length !== 0) {
+				await updateProfile(userInfo, requestData);
+			}
 			setDisplayNameInput('');
 			setFileURLString(null);
 			setIsEditing(false);
+			getUsersData();
 		} catch (error) {
 			console.log(error);
 		}

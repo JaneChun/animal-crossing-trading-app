@@ -1,20 +1,27 @@
-import React from 'react';
-import { auth } from '../fbase';
+import React, { useState } from 'react';
+import { auth, db } from '../fbase';
 import { signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
 import { AuthProvider } from '@firebase/auth-types';
 import { useNavigate } from 'react-router-dom';
 import LoginModal from '../Components/LoginModal';
+import { setDoc, doc, getDoc } from 'firebase/firestore';
 
 function Login() {
 	const navigate = useNavigate();
 
-	const onGoogleClick = async () => {
-		let provider: AuthProvider = new GoogleAuthProvider();
-		signInWithPopup(auth, provider)
+	const onSocialClick = async (e: React.MouseEvent<HTMLDivElement>) => {
+		const { id } = e.target as HTMLDivElement;
+		let provider: AuthProvider;
+		if (id === 'google') {
+			provider = new GoogleAuthProvider();
+		} else {
+			provider = new FacebookAuthProvider();
+		}
+
+		await signInWithPopup(auth, provider)
 			.then((result) => {
-				const credential = GoogleAuthProvider.credentialFromResult(result);
-				const token = credential?.accessToken;
 				const user = result.user;
+				checkUsersData(user.uid);
 				navigate('/');
 			})
 			.catch((error) => {
@@ -22,19 +29,47 @@ function Login() {
 			});
 	};
 
-	const onFacebookClick = async () => {
-		let provider: AuthProvider = new FacebookAuthProvider();
-		signInWithPopup(auth, provider).then((result) => {
-			const credential = FacebookAuthProvider.credentialFromResult(result);
-			const token = credential?.accessToken;
-			const user = result.user;
-			navigate('/');
-		});
+	const checkUsersData = async (userUid: string) => {
+		const UsersdocRef = doc(db, 'Users', userUid);
+		const UsersResponse = await getDoc(UsersdocRef);
+		if (!UsersResponse.exists()) {
+			await setDoc(UsersdocRef, { islandName: '' });
+		}
+
+		const UserChatsDocRef = doc(db, 'UserChats', userUid);
+		const UserChatsResponse = await getDoc(UserChatsDocRef);
+		if (!UserChatsResponse.exists()) {
+			await setDoc(UserChatsDocRef, {});
+		}
 	};
+
+	// const onGoogleClick = async () => {
+	// 	let provider: AuthProvider = new GoogleAuthProvider();
+	// 	signInWithPopup(auth, provider)
+	// 		.then((result) => {
+	// 			const credential = GoogleAuthProvider.credentialFromResult(result);
+	// 			const token = credential?.accessToken;
+	// 			const user = result.user;
+	// 			navigate('/');
+	// 		})
+	// 		.catch((error) => {
+	// 			console.log(error);
+	// 		});
+	// };
+
+	// const onFacebookClick = async () => {
+	// 	let provider: AuthProvider = new FacebookAuthProvider();
+	// 	signInWithPopup(auth, provider).then((result) => {
+	// 		const credential = FacebookAuthProvider.credentialFromResult(result);
+	// 		const token = credential?.accessToken;
+	// 		const user = result.user;
+	// 		navigate('/');
+	// 	});
+	// };
 
 	return (
 		<div className='h-screen'>
-			<LoginModal onGoogleClick={onGoogleClick} onFacebookClick={onFacebookClick} />
+			<LoginModal onSocialClick={onSocialClick} />
 		</div>
 	);
 }
