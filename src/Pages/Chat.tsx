@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { auth, db } from '../fbase';
 import { doc, setDoc, collection, getDocs, DocumentData, onSnapshot, query, orderBy, addDoc } from 'firebase/firestore';
 import { useParams, useLocation } from 'react-router-dom';
 import { uuidv4 } from '@firebase/util';
+import { AuthContext } from '../context/AuthContext';
 
 const Chat = () => {
 	const chatId = useParams().id;
 	const { state } = useLocation();
-	const userInfo = auth.currentUser;
+	const { userInfo } = useContext(AuthContext);
 	const [chatInput, setChatInput] = useState('');
 	const [data, setData] = useState<DocumentData[]>([]);
 

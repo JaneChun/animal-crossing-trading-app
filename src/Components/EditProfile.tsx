@@ -1,22 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { auth, storage, db } from '../fbase';
 import { updateProfile } from 'firebase/auth';
 // import { v4 as uuidv4 } from 'uuid';
 import { ref, uploadString, getDownloadURL, listAll, deleteObject } from 'firebase/storage';
 import { updateDoc, doc } from 'firebase/firestore';
+import { AuthContext } from '../context/AuthContext';
 
 interface EditProfileProps {
-	displayName: string;
 	islandName: string;
 	setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 	getUsersData: () => void;
 }
 
-const EditProfile = ({ displayName, islandName, getUsersData, setIsEditing }: EditProfileProps) => {
-	const [displayNameInput, setDisplayNameInput] = useState<string>(displayName);
+const EditProfile = ({ islandName, getUsersData, setIsEditing }: EditProfileProps) => {
+	const { userInfo } = useContext(AuthContext);
+	const [displayNameInput, setDisplayNameInput] = useState<string>(userInfo.displayName);
 	const [islandNameInput, setIslandNameInput] = useState<string>(islandName);
 	const [fileURLString, setFileURLString] = useState<any>(null);
-	const userInfo = auth.currentUser;
 
 	const displayNameInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setDisplayNameInput(e.target.value);

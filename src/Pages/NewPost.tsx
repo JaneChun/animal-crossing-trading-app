@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { auth, db } from '../fbase';
 import { doc, setDoc, collection } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import CartItem from '../Components/NewPost/CartItem';
 import ItemSelect from '../Components/NewPost/ItemSelect';
+import { AuthContext } from '../context/AuthContext';
 
 export interface item {
 	UniqueEntryID: string;
@@ -23,7 +24,7 @@ const NewPost = () => {
 	const [type, setType] = useState<string>('buy');
 	const [title, setTitle] = useState<string>('');
 	const [body, setBody] = useState<string>('');
-	const userInfo = auth.currentUser;
+	const { userInfo } = useContext(AuthContext);
 	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 	const [cart, setCart] = useState<cartItem[]>([]);
 

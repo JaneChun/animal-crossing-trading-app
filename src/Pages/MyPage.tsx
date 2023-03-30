@@ -1,14 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { auth, db } from '../fbase';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import EditProfile from '../Components/EditProfile';
 import MyPosts from '../Components/MyPosts';
 import { doc, getDoc } from 'firebase/firestore';
+import { AuthContext } from '../context/AuthContext';
 
 function MyPage() {
 	const navigate = useNavigate();
-	const userInfo = auth.currentUser;
+	const { userInfo } = useContext(AuthContext);
 	const profileImage = userInfo?.photoURL;
 	const [isEditing, setIsEditing] = useState<boolean>(false);
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -110,9 +111,7 @@ function MyPage() {
 								</button>
 							)}
 						</div>
-						{isEditing && (
-							<EditProfile displayName={userInfo.displayName!} islandName={islandName} getUsersData={getUsersData} setIsEditing={setIsEditing} />
-						)}
+						{isEditing && <EditProfile islandName={islandName} getUsersData={getUsersData} setIsEditing={setIsEditing} />}
 					</div>
 				</div>
 

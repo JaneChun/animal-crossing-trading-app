@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { auth, db } from '../fbase';
 import { doc, getDoc, DocumentData, deleteDoc, collection, getDocs, query, orderBy, updateDoc } from 'firebase/firestore';
 import { cartItem } from './NewPost';
 import Comment from '../Components/PostDetail/Comment';
+import { AuthContext } from '../context/AuthContext';
 
 function PostDetail() {
 	const { id } = useParams();
@@ -12,7 +13,7 @@ function PostDetail() {
 	const [comments, setComments] = useState<DocumentData[]>([]);
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 	const modalRef = useRef<HTMLButtonElement | null>(null);
-	const userInfo = auth.currentUser;
+	const { userInfo } = useContext(AuthContext);
 
 	useEffect(() => {
 		getData();

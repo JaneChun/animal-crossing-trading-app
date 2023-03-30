@@ -1,5 +1,6 @@
 import { collection, doc, DocumentData, setDoc, updateDoc, increment } from 'firebase/firestore';
-import React, { SetStateAction, useRef, useState } from 'react';
+import React, { SetStateAction, useContext, useRef, useState } from 'react';
+import { AuthContext } from '../../context/AuthContext';
 import { auth, db } from '../../fbase';
 import CommentUnit from './CommentUnit';
 
@@ -14,8 +15,8 @@ interface CommentProps {
 
 const Comment = ({ done, id, comments, setComments, getComments, postCreatorId }: CommentProps) => {
 	const modalRef = useRef<HTMLButtonElement | null>(null);
-	const userInfo = auth.currentUser;
-	const profileImage = userInfo?.photoURL;
+	const { userInfo } = useContext(AuthContext);
+	const profileImage = userInfo.photoURL;
 	const [commentInput, setCommentInput] = useState('');
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 	const [clickedComment, setClickedComment] = useState<string>('');

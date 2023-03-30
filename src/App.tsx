@@ -1,30 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { Outlet } from 'react-router-dom';
-import { auth } from './fbase';
 import Header from './Components/Header';
 import Nav from './Pages/Nav';
 import Home from './Pages/Home';
 import Login from './Pages/Login';
 import MyPage from './Pages/MyPage';
+import { AuthContext } from './context/AuthContext';
 
 function App() {
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-	useEffect(() => {
-		auth.onAuthStateChanged((user) => {
-			if (user) {
-				setIsLoggedIn(true);
-			} else {
-				setIsLoggedIn(false);
-			}
-		});
-	}, []);
+	const { userInfo } = useContext(AuthContext);
+	console.log('user in App', userInfo);
 
 	return (
 		<>
 			<Header />
 			<Outlet />
-			<Nav isLoggedIn={isLoggedIn} />
+			<Nav />
 		</>
 	);
 }

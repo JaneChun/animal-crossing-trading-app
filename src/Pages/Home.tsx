@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Footer from '../Components/Footer';
 import Carousel from '../Components/Carousel';
 import { auth, db } from '../fbase';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import PostUnit from '../Components/PostUnit';
+import { AuthContext } from '../context/AuthContext';
 
 export interface doc {
 	id: string;
@@ -21,7 +22,7 @@ export interface doc {
 function Home() {
 	const navigate = useNavigate();
 	const [data, setData] = useState<doc[]>([]);
-	const userInfo = auth.currentUser;
+	const { userInfo } = useContext(AuthContext);
 
 	useEffect(() => {
 		getData();

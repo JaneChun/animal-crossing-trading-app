@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { auth, db } from '../../fbase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useNavigate, useLocation } from 'react-router-dom';
 import CartItem from '../../Components/NewPost/CartItem';
 import ItemSelect from '../../Components/NewPost/ItemSelect';
 import { cartItem } from '../../Pages/NewPost';
+import { AuthContext } from '../../context/AuthContext';
 
 const PostEdit = () => {
 	const navigate = useNavigate();
@@ -12,7 +13,7 @@ const PostEdit = () => {
 	const [type, setType] = useState<string>('buy');
 	const [title, setTitle] = useState<string>('');
 	const [body, setBody] = useState<string>('');
-	const userInfo = auth.currentUser;
+	const { userInfo } = useContext(AuthContext);
 	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 	const [cart, setCart] = useState<cartItem[]>([]);
 

@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { auth, db } from '../fbase';
 import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 import { doc } from '../Pages/Home';
 import PostUnit from './PostUnit';
+import { AuthContext } from '../context/AuthContext';
 
 function MyPosts() {
 	const [data, setData] = useState<doc[]>([]);
-	const userInfo = auth.currentUser;
+	const { userInfo } = useContext(AuthContext);
 
 	useEffect(() => {
 		getData();

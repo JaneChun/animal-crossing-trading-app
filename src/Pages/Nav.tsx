@@ -1,12 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
-interface NavProps {
-	isLoggedIn: boolean;
-}
-
-function Nav({ isLoggedIn }: NavProps) {
+function Nav() {
 	const navigate = useNavigate();
+	const { userInfo } = useContext(AuthContext);
 
 	return (
 		// <nav>
@@ -145,7 +143,7 @@ function Nav({ isLoggedIn }: NavProps) {
 					Search
 					<div className='tooltip-arrow' data-popper-arrow></div>
 				</div>
-				{isLoggedIn ? (
+				{userInfo ? (
 					<>
 						<button
 							onClick={() => navigate('/mypage')}

@@ -1,6 +1,7 @@
 import { deleteDoc, doc, DocumentData, getDoc, increment, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
-import React, { SetStateAction, useState } from 'react';
+import React, { SetStateAction, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
 import { auth, db } from '../../fbase';
 import { elapsedTime } from '../../Utilities/elapsedTime';
 
@@ -32,7 +33,7 @@ const CommentUnit = ({
 	const navigate = useNavigate();
 	const [isEditing, setIsEditing] = useState<boolean>(false);
 	const [newCommentInput, setNewCommentInput] = useState(comment.comment);
-	const userInfo = auth.currentUser;
+	const { userInfo } = useContext(AuthContext);
 
 	const handleModal = (commentId: string) => {
 		if (!isModalOpen) {
