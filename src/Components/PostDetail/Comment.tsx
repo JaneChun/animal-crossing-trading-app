@@ -1,4 +1,4 @@
-import { collection, doc, DocumentData, setDoc, updateDoc, increment } from 'firebase/firestore';
+import { collection, doc, DocumentData, setDoc, updateDoc, increment, serverTimestamp } from 'firebase/firestore';
 import React, { SetStateAction, useContext, useRef, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { auth, db } from '../../fbase';
@@ -41,7 +41,7 @@ const Comment = ({ done, id, comments, setComments, getComments, postCreatorId }
 
 		const requestData = {
 			comment: commentInput,
-			createdAt: Date.now(),
+			createdAt: serverTimestamp(),
 			creatorDisplayName: userInfo.displayName,
 			creatorPhotoURL: userInfo.photoURL,
 			creatorId: userInfo.uid,

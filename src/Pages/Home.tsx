@@ -1,11 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
-import Footer from '../Components/Footer';
-import Carousel from '../Components/Carousel';
-import { auth, db } from '../fbase';
-import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Carousel from '../Components/Carousel';
 import PostUnit from '../Components/PostUnit';
 import { AuthContext } from '../context/AuthContext';
+import { db } from '../fbase';
 
 export interface doc {
 	id: string;

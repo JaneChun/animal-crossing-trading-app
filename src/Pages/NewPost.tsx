@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { auth, db } from '../fbase';
-import { doc, setDoc, collection } from 'firebase/firestore';
+import { doc, setDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import CartItem from '../Components/NewPost/CartItem';
@@ -47,7 +47,7 @@ const NewPost = () => {
 			title,
 			body,
 			cart,
-			createdAt: Date.now(),
+			createdAt: serverTimestamp(),
 			creatorDisplayName: userInfo?.displayName,
 			creatorId: userInfo?.uid,
 			done: false,

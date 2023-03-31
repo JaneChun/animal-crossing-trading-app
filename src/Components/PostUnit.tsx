@@ -7,7 +7,7 @@ interface postProps {
 	page: string;
 	type?: string;
 	title?: string;
-	createdAt: number;
+	createdAt: any;
 	creatorDisplayName?: string;
 	creatorId?: string;
 	comments?: number;
@@ -48,7 +48,7 @@ const PostUnit = ({ id, page, type, title, createdAt, creatorDisplayName, creato
 						<span onClick={onCreatorDisplayNameClick} className='mr-2 truncate text-sm text-gray-500 dark:text-gray-400'>
 							{creatorDisplayName?.split(' ')[0]}
 						</span>
-						{createdAt && <span className='truncate text-xs text-gray-500 dark:text-gray-400'>{elapsedTime(createdAt)}</span>}
+						{createdAt && <span className='truncate text-xs text-gray-500 dark:text-gray-400'>{elapsedTime(createdAt.toDate())}</span>}
 					</p>
 				</div>
 				<div className='text-center font-semibold text-gray-900 dark:text-white'>
