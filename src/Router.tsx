@@ -17,20 +17,20 @@ const router = createBrowserRouter([
 		element: <App />,
 		children: [
 			{
-				path: '',
+				path: '/',
 				index: true,
 				element: <Home />,
 			},
 			{
-				path: 'login',
+				path: '/login',
 				element: <Login />,
 			},
 			{
-				path: 'mypage',
+				path: '/mypage',
 				element: <MyPage />,
 			},
 			{
-				path: 'newpost',
+				path: '/newpost',
 				element: <NewPost />,
 			},
 			{

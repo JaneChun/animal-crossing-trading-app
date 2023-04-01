@@ -10,7 +10,7 @@ import { AuthContext } from '../context/AuthContext';
 function MyPage() {
 	const navigate = useNavigate();
 	const { userInfo } = useContext(AuthContext);
-	const profileImage = userInfo?.photoURL;
+	const uid = localStorage.getItem('uid');
 	const [isEditing, setIsEditing] = useState<boolean>(false);
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 	const modalRef = useRef<HTMLButtonElement | null>(null);
@@ -21,7 +21,7 @@ function MyPage() {
 	}, []);
 
 	const getUsersData = async () => {
-		const docRef = doc(db, 'Users', `${userInfo?.uid}`);
+		const docRef = doc(db, 'Users', `${uid}`);
 		const docSnap = await getDoc(docRef);
 
 		if (docSnap.exists()) {
@@ -92,13 +92,7 @@ function MyPage() {
 					</div>
 
 					<div className='flex flex-col items-center pb-10'>
-						{profileImage && (
-							<img
-								className='mb-3 h-24 w-24 rounded-full object-cover shadow-lg'
-								src={profileImage}
-								alt={`${userInfo.displayName}'s profile image`}
-							/>
-						)}
+						<img className='mb-3 h-24 w-24 rounded-full object-cover shadow-lg' src={userInfo?.photoURL} />
 						<h5 className='mb-1 text-xl font-medium text-gray-900 dark:text-white'>{userInfo.displayName}</h5>
 						<span className='text-sm text-gray-500 dark:text-gray-400'>🏝 {islandName || '섬 이름을 입력해주세요.'}</span>
 						<div className='mt-4 flex space-x-3 md:mt-6'>

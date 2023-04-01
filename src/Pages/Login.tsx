@@ -21,6 +21,7 @@ function Login() {
 		await signInWithPopup(auth, provider)
 			.then((result) => {
 				const user = result.user;
+				localStorage.setItem('uid', user.uid);
 				checkUsersData(user.uid);
 				navigate('/');
 			})

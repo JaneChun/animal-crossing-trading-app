@@ -12,8 +12,6 @@ const Chat = () => {
 	const [messages, setMessages] = useState<DocumentData[]>([]);
 
 	useEffect(() => {
-		console.log('useEffect 실행');
-		console.log('chatId', data.chatId);
 		const unsub = onSnapshot(doc(db, 'Chats', data.chatId), (doc: DocumentData) => {
 			doc.exists() && setMessages(doc.data().messages);
 

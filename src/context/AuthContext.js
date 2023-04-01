@@ -9,7 +9,12 @@ export const AuthContextProvider = ({ children }) => {
 
 	useEffect(() => {
 		const unsub = onAuthStateChanged(auth, (user) => {
-			setUserInfo(user);
+			const data = {
+				displayName: user.displayName,
+				uid: user.uid,
+				photoURL: user.photoURL,
+			};
+			setUserInfo(data);
 		});
 
 		return () => {
