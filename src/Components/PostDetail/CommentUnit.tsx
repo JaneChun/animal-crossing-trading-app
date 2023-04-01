@@ -1,8 +1,10 @@
-import { deleteDoc, doc, DocumentData, getDoc, increment, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import { uuidv4 } from '@firebase/util';
+import { deleteDoc, doc, DocumentData, getDoc, increment, serverTimestamp, setDoc, Timestamp, updateDoc } from 'firebase/firestore';
 import React, { SetStateAction, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { auth, db } from '../../fbase';
+import { ChatContext } from '../../context/ChatContext';
+import { db } from '../../fbase';
 import { elapsedTime } from '../../Utilities/elapsedTime';
 
 interface CommentUnitProps {
@@ -34,6 +36,7 @@ const CommentUnit = ({
 	const [isEditing, setIsEditing] = useState<boolean>(false);
 	const [newCommentInput, setNewCommentInput] = useState(comment.comment);
 	const { userInfo } = useContext(AuthContext);
+	const { dispatch } = useContext(ChatContext);
 
 	const handleModal = (commentId: string) => {
 		if (!isModalOpen) {
@@ -113,29 +116,43 @@ const CommentUnit = ({
 		const combinedId = userInfo.uid > comment.creatorId ? userInfo.uid + comment.creatorId : comment.creatorId + userInfo.uid;
 
 		try {
+			// 채팅 기록이 있는지 확인
 			const response = await getDoc(doc(db, 'Chats', combinedId));
 			// 이미 둘이 채팅한 적이 없다면 새로 만든다.
 			if (!response.exists()) {
-				await setDoc(doc(db, 'Chats', combinedId), { messages: [] });
+				await setDoc(doc(db, 'Chats', combinedId), {
+					messages: [],
+				});
+
+				await updateDoc(doc(db, 'UserChats', userInfo.uid), {
+					[combinedId + '.userInfo']: {
+						uid: comment.creatorId,
+						displayName: comment.creatorDisplayName,
+						photoURL: comment.creatorPhotoURL,
+					},
+					[combinedId + '.date']: serverTimestamp(),
+				});
+
+				await updateDoc(doc(db, 'UserChats', comment.creatorId), {
+					[combinedId + '.userInfo']: {
+						uid: userInfo.uid,
+						displayName: userInfo.displayName,
+						photoURL: userInfo.photoURL,
+					},
+					[combinedId + '.date']: serverTimestamp(),
+				});
 			}
 
-			await updateDoc(doc(db, 'UserChats', userInfo.uid), {
-				[combinedId + '.userInfo']: {
+			dispatch({
+				type: 'CHANGE_USER',
+				payload: {
 					uid: comment.creatorId,
 					displayName: comment.creatorDisplayName,
 					photoURL: comment.creatorPhotoURL,
 				},
-				[combinedId + '.date']: serverTimestamp(),
 			});
 
-			await updateDoc(doc(db, 'UserChats', comment.creatorId), {
-				[combinedId + '.userInfo']: {
-					uid: userInfo.uid,
-					displayName: userInfo.displayName,
-					photoURL: userInfo.photoURL,
-				},
-				[combinedId + '.date']: serverTimestamp(),
-			});
+			navigate(`/chat/${comment.creatorId}`);
 		} catch (error) {
 			console.log(error);
 		}
