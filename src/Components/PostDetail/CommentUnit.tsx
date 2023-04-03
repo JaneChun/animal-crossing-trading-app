@@ -36,7 +36,7 @@ const CommentUnit = ({
 	const [isEditing, setIsEditing] = useState<boolean>(false);
 	const [newCommentInput, setNewCommentInput] = useState(comment.comment);
 	const { userInfo } = useContext(AuthContext);
-	const { dispatch } = useContext(ChatContext);
+	const { data, dispatch } = useContext(ChatContext);
 
 	const handleModal = (commentId: string) => {
 		if (!isModalOpen) {
@@ -122,24 +122,19 @@ const CommentUnit = ({
 			if (!response.exists()) {
 				await setDoc(doc(db, 'Chats', combinedId), {
 					messages: [],
-				});
-
-				await updateDoc(doc(db, 'UserChats', userInfo.uid), {
-					[combinedId + '.userInfo']: {
-						uid: comment.creatorId,
-						displayName: comment.creatorDisplayName,
-						photoURL: comment.creatorPhotoURL,
-					},
-					[combinedId + '.date']: serverTimestamp(),
-				});
-
-				await updateDoc(doc(db, 'UserChats', comment.creatorId), {
-					[combinedId + '.userInfo']: {
-						uid: userInfo.uid,
-						displayName: userInfo.displayName,
-						photoURL: userInfo.photoURL,
-					},
-					[combinedId + '.date']: serverTimestamp(),
+					participants: [userInfo.uid, comment.creatorId],
+					usersInfo: [
+						{
+							displayName: userInfo.displayName,
+							uid: userInfo.uid,
+							photoURL: userInfo.photoURL,
+						},
+						{
+							uid: comment.creatorId,
+							displayName: comment.creatorDisplayName,
+							photoURL: comment.creatorPhotoURL,
+						},
+					],
 				});
 			}
 

@@ -1,4 +1,15 @@
-import { arrayUnion, deleteField, doc, DocumentData, getDocs, onSnapshot, serverTimestamp, Timestamp, updateDoc } from 'firebase/firestore';
+import {
+	arrayUnion,
+	deleteDoc,
+	deleteField,
+	doc,
+	DocumentData,
+	getDocs,
+	onSnapshot,
+	serverTimestamp,
+	Timestamp,
+	updateDoc,
+} from 'firebase/firestore';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { ChatContext } from '../context/ChatContext';
@@ -14,10 +25,14 @@ const Chat = () => {
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 	const modalRef = useRef<HTMLButtonElement | null>(null);
 	const navigate = useNavigate();
+	const [participants, setParticipants] = useState([]);
 
 	useEffect(() => {
 		const unsub = onSnapshot(doc(db, 'Chats', data.chatId), (doc: DocumentData) => {
-			doc.exists() && setMessages(doc.data().messages);
+			if (doc.exists()) {
+				setMessages(doc.data().messages);
+				setParticipants(doc.data().participants);
+			}
 
 			return () => {
 				unsub();
@@ -30,6 +45,8 @@ const Chat = () => {
 	};
 
 	const onSubmit = async () => {
+		if (participants.length === 1) return;
+
 		const requestData = {
 			messages: arrayUnion({
 				id: uuidv4(),
@@ -41,19 +58,6 @@ const Chat = () => {
 
 		try {
 			// 둘의 채팅방에 추가
-			await updateDoc(doc(db, 'Chats', data.chatId), requestData);
-
-			// 나의 채팅방에 추가
-			await updateDoc(doc(db, 'UserChats', userInfo.uid), {
-				[data.chatId + '.id']: uuidv4(),
-				[data.chatId + '.lastMessage']: {
-					text: chatInput,
-					id: uuidv4(),
-				},
-				[data.chatId + '.date']: serverTimestamp(),
-			});
-
-			// 상대의 채팅방에 추가
 			await updateDoc(doc(db, 'Chats', data.chatId), requestData);
 		} catch (error) {
 			console.log(error);
@@ -78,26 +82,28 @@ const Chat = () => {
 		const confirm = window.confirm('정말로 나가겠습니까?');
 
 		if (confirm) {
-			await updateDoc(doc(db, 'UserChats', userInfo.uid), {
-				[data.chatId]: deleteField(),
-			});
+			if (participants.length === 1) {
+				deleteDoc(doc(db, 'Chats', data.chatId));
+			} else {
+				await updateDoc(doc(db, 'Chats', data.chatId), {
+					participants: [data.user.uid],
+				});
 
-			// 상대의 채팅방에서 메세지 못보내게 하기
-			const requestData = {
-				messages: arrayUnion({
-					id: uuidv4(),
-					senderId: 'system',
-					text: '거래가 종료되었어요 :)',
-					date: Timestamp.now(),
-				}),
-			};
-
-			await updateDoc(doc(db, 'Chats', data.chatId), requestData);
+				await updateDoc(doc(db, 'Chats', data.chatId), {
+					messages: arrayUnion({
+						id: uuidv4(),
+						senderId: 'system',
+						text: `${userInfo.displayName}님이 나가셨습니다.`,
+						date: Timestamp.now(),
+					}),
+				});
+			}
 
 			navigate('/chat');
 		}
 	};
-
+	console.log('messages in Chat', messages);
+	console.log('p', participants);
 	return (
 		<div onClick={handleOutsideClick} className='absolute top-[calc(61px)] flex h-[calc(100vh-121px)] w-screen flex-col items-end'>
 			{/* Conversation */}
@@ -138,7 +144,7 @@ const Chat = () => {
 								<ul className='text-sm text-gray-700 dark:text-gray-200'>
 									<li>
 										<button
-											onClick={deleteChat}
+											onClick={() => deleteChat()}
 											className='block w-full px-6 py-2 text-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
 										>
 											나가기
@@ -190,17 +196,20 @@ const Chat = () => {
 				</label>
 				<div className='flex items-center bg-gray-50 px-3 py-2 dark:bg-gray-700'>
 					<textarea
+						disabled={participants.length === 1 ? true : false}
 						id='chat'
 						value={chatInput}
 						onChange={chatInputHandler}
 						rows={1}
 						className='block w-full resize-none rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-						placeholder='메세지를 입력하세요.'
+						placeholder={participants.length === 1 ? '대화 상대가 없습니다.' : '메세지를 입력하세요.'}
 					></textarea>
 					<button
 						type='submit'
 						onClick={onSubmit}
-						className='inline-flex cursor-pointer justify-center rounded-full p-2 text-blue-600 hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600'
+						className={`${
+							participants.length === 1 ? 'text-gray-500' : 'text-blue-600 hover:bg-blue-100'
+						} inline-flex cursor-pointer justify-center rounded-full p-2  dark:text-blue-500 dark:hover:bg-gray-600`}
 					>
 						<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
 							<g fill='none'>
