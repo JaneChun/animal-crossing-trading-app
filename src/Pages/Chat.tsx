@@ -1,21 +1,10 @@
-import {
-	arrayUnion,
-	deleteDoc,
-	deleteField,
-	doc,
-	DocumentData,
-	getDocs,
-	onSnapshot,
-	serverTimestamp,
-	Timestamp,
-	updateDoc,
-} from 'firebase/firestore';
+import { uuidv4 } from '@firebase/util';
+import { arrayUnion, deleteDoc, doc, DocumentData, onSnapshot, Timestamp, updateDoc } from 'firebase/firestore';
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { ChatContext } from '../context/ChatContext';
 import { db } from '../fbase';
-import { uuidv4 } from '@firebase/util';
-import { useNavigate } from 'react-router-dom';
 
 const Chat = () => {
 	const { userInfo } = useContext(AuthContext);
@@ -26,6 +15,7 @@ const Chat = () => {
 	const modalRef = useRef<HTMLButtonElement | null>(null);
 	const navigate = useNavigate();
 	const [participants, setParticipants] = useState([]);
+	const messageEndRef = useRef<HTMLDivElement | null>(null);
 
 	useEffect(() => {
 		const unsub = onSnapshot(doc(db, 'Chats', data.chatId), (doc: DocumentData) => {
@@ -39,6 +29,12 @@ const Chat = () => {
 			};
 		});
 	}, [data.chatId]);
+
+	useEffect(() => {
+		if (messageEndRef.current) {
+			messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
+		}
+	}, [messages]);
 
 	const chatInputHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setChatInput(e.target.value);
@@ -54,6 +50,7 @@ const Chat = () => {
 				text: chatInput,
 				date: Timestamp.now(),
 			}),
+			lastUpdate: Timestamp.now(),
 		};
 
 		try {
@@ -86,7 +83,7 @@ const Chat = () => {
 				deleteDoc(doc(db, 'Chats', data.chatId));
 			} else {
 				await updateDoc(doc(db, 'Chats', data.chatId), {
-					participants: [data.user.uid],
+					participants: [data.counterpart.uid],
 				});
 
 				await updateDoc(doc(db, 'Chats', data.chatId), {
@@ -102,19 +99,27 @@ const Chat = () => {
 			navigate('/chat');
 		}
 	};
-	console.log('messages in Chat', messages);
-	console.log('p', participants);
+
 	return (
 		<div onClick={handleOutsideClick} className='absolute top-[calc(61px)] flex h-[calc(100vh-121px)] w-screen flex-col items-end'>
 			{/* Conversation */}
-			<div className='flex w-full flex-1 grow flex-col justify-between overflow-y-auto sm:p-6'>
-				<div className='border-b-1 flex justify-between border p-5 sm:items-center'>
-					<div className='relative flex w-full items-center space-x-4'>
-						<img src={data.user.photoURL} className='h-10 w-10 rounded-full' />
+			<div className='-mb-6 flex w-full flex-1 grow flex-col justify-between overflow-y-auto'>
+				<div className='flex justify-between border-b p-3 sm:items-center'>
+					<div className='relative flex w-full items-center'>
+						<button onClick={() => navigate('/chat')}>
+							<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'>
+								<path
+									fill='currentColor'
+									d='M9.125 21.1L.7 12.7q-.15-.15-.213-.325T.425 12q0-.2.063-.375T.7 11.3l8.425-8.425q.35-.35.875-.35t.9.375q.375.375.375.875t-.375.875L3.55 12l7.35 7.35q.35.35.35.863t-.375.887q-.375.375-.875.375t-.875-.375Z'
+								/>
+							</svg>
+						</button>
+
+						<img src={data.counterpart.photoURL} className='h-8 w-8 rounded-full' />
 
 						<div className='flex w-full items-center justify-between'>
 							<div className='flex flex-col leading-tight'>
-								<span className='text-md mt-1  mr-3 mb-1 font-semibold text-gray-700'>{data.user.displayName}</span>
+								<span className='text-md my-1 ml-3 font-semibold text-gray-700'>{data.counterpart.displayName}</span>
 								{/* <span className='text-sm text-gray-600'>🏝 {state.creatorDisplayName.split(' ')[1]}</span> */}
 							</div>
 							<div className='mr-10'>평점</div>
@@ -125,7 +130,7 @@ const Chat = () => {
 								onClick={handleModal}
 								id='dropdownMenuIconButton'
 								data-dropdown-toggle='dropdownDots'
-								className='absolute top-0 right-0 inline-flex items-center rounded-lg bg-white p-1 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-50 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-600'
+								className='absolute top-0 -right-1 inline-flex items-center rounded-lg bg-white p-1 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-50 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-600'
 								type='button'
 							>
 								<svg className='h-5 w-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'>
@@ -164,12 +169,13 @@ const Chat = () => {
 						) : message.senderId === userInfo.uid ? (
 							<div key={message.id} className='chat-message'>
 								<div className='flex items-end justify-end'>
-									<div className='order-1 mx-2 flex max-w-xs flex-col items-end space-y-2 text-xs'>
+									<div className='order-1 flex max-w-xs flex-col items-end space-y-2 text-xs'>
 										<div>
+											<span className='mr-2 text-xs text-gray-400'>{message.date.toDate().toLocaleTimeString().slice(0, -3)}</span>
 											<span className='inline-block rounded-lg rounded-br-none bg-blue-600 px-4 py-2 text-white '>{message.text}</span>
 										</div>
 									</div>
-									<img src={userInfo.photoURL} alt={`${userInfo.displayName}'s profile image`} className='order-2 h-10 w-10 rounded-full' />
+									{/* <img src={userInfo.photoURL} alt={`${userInfo.displayName}'s profile image`} className='order-2 h-10 w-10 rounded-full' /> */}
 								</div>
 							</div>
 						) : (
@@ -178,13 +184,19 @@ const Chat = () => {
 									<div className='order-2 mx-2 flex max-w-xs flex-col items-start space-y-2 text-xs'>
 										<div>
 											<span className='inline-block rounded-lg rounded-bl-none bg-gray-300 px-4 py-2 text-gray-600'>{message.text}</span>
+											<span className='ml-2 text-xs text-gray-400'>{message.date.toDate().toLocaleTimeString().slice(0, -3)}</span>
 										</div>
 									</div>
-									<img src={data.user.photoURL} alt={`${data.user.displayName}'s profile image`} className='order-1 h-10 w-10 rounded-full' />
+									<img
+										src={data.counterpart.photoURL}
+										alt={`${data.counterpart.displayName}'s profile image`}
+										className='order-1 h-10 w-10 rounded-full'
+									/>
 								</div>
 							</div>
 						)
 					)}
+					<div ref={messageEndRef}></div>
 				</div>
 			</div>
 			{/* Conversation */}

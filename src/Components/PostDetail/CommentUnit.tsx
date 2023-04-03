@@ -112,11 +112,10 @@ const CommentUnit = ({
 
 	const onChatClick = async (comment: DocumentData) => {
 		if (!id || !userInfo) return;
+
 		// 이미 존재하는 채팅방인지 확인한다.
 		const combinedId = userInfo.uid > comment.creatorId ? userInfo.uid + comment.creatorId : comment.creatorId + userInfo.uid;
-
 		try {
-			// 채팅 기록이 있는지 확인
 			const response = await getDoc(doc(db, 'Chats', combinedId));
 			// 이미 둘이 채팅한 적이 없다면 새로 만든다.
 			if (!response.exists()) {
