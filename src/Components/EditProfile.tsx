@@ -9,10 +9,9 @@ import { AuthContext } from '../context/AuthContext';
 interface EditProfileProps {
 	islandName: string;
 	setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
-	getUsersData: () => void;
 }
 
-const EditProfile = ({ islandName, getUsersData, setIsEditing }: EditProfileProps) => {
+const EditProfile = ({ islandName, setIsEditing }: EditProfileProps) => {
 	const { userInfo } = useContext(AuthContext);
 	const [displayNameInput, setDisplayNameInput] = useState<string>(userInfo.displayName);
 	const [islandNameInput, setIslandNameInput] = useState<string>(islandName);
@@ -64,6 +63,7 @@ const EditProfile = ({ islandName, getUsersData, setIsEditing }: EditProfileProp
 
 	const onSubmit = async () => {
 		let requestData = {};
+		const userInfo = auth.currentUser;
 
 		try {
 			if (!userInfo) return;
@@ -101,7 +101,6 @@ const EditProfile = ({ islandName, getUsersData, setIsEditing }: EditProfileProp
 			setDisplayNameInput('');
 			setFileURLString(null);
 			setIsEditing(false);
-			getUsersData();
 		} catch (error) {
 			console.log(error);
 		}

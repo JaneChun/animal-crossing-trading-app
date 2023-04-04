@@ -14,23 +14,6 @@ function MyPage() {
 	const [isEditing, setIsEditing] = useState<boolean>(false);
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 	const modalRef = useRef<HTMLButtonElement | null>(null);
-	const [islandName, setIslandName] = useState<string>('');
-
-	useEffect(() => {
-		getUsersData();
-	}, []);
-
-	const getUsersData = async () => {
-		const docRef = doc(db, 'Users', `${uid}`);
-		const docSnap = await getDoc(docRef);
-
-		if (docSnap.exists()) {
-			const docData = docSnap.data();
-			setIslandName(docData.islandName);
-		} else {
-			console.log('no such document!');
-		}
-	};
 
 	const onEditProfileClick = () => {
 		setIsEditing((isEditing) => !isEditing);
@@ -94,7 +77,7 @@ function MyPage() {
 					<div className='flex flex-col items-center pb-10'>
 						<img className='mb-3 h-24 w-24 rounded-full object-cover shadow-lg' src={userInfo?.photoURL} />
 						<h5 className='mb-1 text-xl font-medium text-gray-900 dark:text-white'>{userInfo.displayName}</h5>
-						<span className='text-sm text-gray-500 dark:text-gray-400'>🏝 {islandName || '섬 이름을 입력해주세요.'}</span>
+						<span className='text-sm text-gray-500 dark:text-gray-400'>🏝 {userInfo.islandName || '섬 이름을 입력해주세요.'}</span>
 						<div className='mt-4 flex space-x-3 md:mt-6'>
 							{!isEditing && (
 								<button
@@ -105,7 +88,7 @@ function MyPage() {
 								</button>
 							)}
 						</div>
-						{isEditing && <EditProfile islandName={islandName} getUsersData={getUsersData} setIsEditing={setIsEditing} />}
+						{isEditing && <EditProfile islandName={userInfo.islandName} setIsEditing={setIsEditing} />}
 					</div>
 				</div>
 

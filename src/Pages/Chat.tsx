@@ -165,7 +165,9 @@ const Chat = () => {
 				<div id='messages' className='flex flex-col space-y-5 overflow-y-auto p-5'>
 					{messages.map((message) =>
 						message.senderId === 'system' ? (
-							<div>{message.text}</div>
+							<div key={message.id} className='py-3 text-center text-sm text-gray-400'>
+								{message.text}
+							</div>
 						) : message.senderId === userInfo.uid ? (
 							<div key={message.id} className='chat-message'>
 								<div className='flex items-end justify-end'>

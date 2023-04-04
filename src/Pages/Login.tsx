@@ -34,13 +34,7 @@ function Login() {
 		const UsersdocRef = doc(db, 'Users', userUid);
 		const UsersResponse = await getDoc(UsersdocRef);
 		if (!UsersResponse.exists()) {
-			await setDoc(UsersdocRef, { islandName: '' });
-		}
-
-		const UserChatsDocRef = doc(db, 'UserChats', userUid);
-		const UserChatsResponse = await getDoc(UserChatsDocRef);
-		if (!UserChatsResponse.exists()) {
-			await setDoc(UserChatsDocRef, {});
+			await setDoc(UsersdocRef, { islandName: '', rating: 0, count: 0 });
 		}
 	};
 
