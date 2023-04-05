@@ -59,6 +59,7 @@ const PostEdit = () => {
 			title,
 			body,
 			cart,
+			cartList: cart.map((item) => item.name),
 			creatorDisplayName: userInfo?.displayName,
 			creatorId: userInfo?.uid,
 			done: false,

@@ -1,22 +1,7 @@
-import {
-	collection,
-	DocumentData,
-	endBefore,
-	getDocs,
-	limit,
-	limitToLast,
-	orderBy,
-	query,
-	QueryDocumentSnapshot,
-	QuerySnapshot,
-	startAfter,
-	startAt,
-} from 'firebase/firestore';
-import { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { collection, getDocs, limit, orderBy, query, startAfter } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
 import Carousel from '../Components/Carousel';
 import PostUnit from '../Components/PostUnit';
-import { AuthContext } from '../context/AuthContext';
 import { db } from '../fbase';
 
 export interface doc {

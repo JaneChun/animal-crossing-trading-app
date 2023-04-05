@@ -1,11 +1,11 @@
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import React, { useContext, useState } from 'react';
-import { auth, db } from '../fbase';
-import { doc, setDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import CartItem from '../Components/NewPost/CartItem';
 import ItemSelect from '../Components/NewPost/ItemSelect';
 import { AuthContext } from '../context/AuthContext';
+import { db } from '../fbase';
 
 export interface item {
 	UniqueEntryID: string;
@@ -47,6 +47,7 @@ const NewPost = () => {
 			title,
 			body,
 			cart,
+			cartList: cart.map((item) => item.name),
 			createdAt: serverTimestamp(),
 			creatorDisplayName: userInfo?.displayName,
 			creatorId: userInfo?.uid,
