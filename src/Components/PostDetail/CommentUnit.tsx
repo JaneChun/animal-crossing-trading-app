@@ -124,14 +124,20 @@ const CommentUnit = ({
 					participants: [userInfo.uid, comment.creatorId],
 					usersInfo: [
 						{
-							displayName: userInfo.displayName,
 							uid: userInfo.uid,
+							displayName: userInfo.displayName,
+							islandName: userInfo.islandName,
 							photoURL: userInfo.photoURL,
+							rating: userInfo.rating,
+							count: userInfo.count,
 						},
 						{
 							uid: comment.creatorId,
 							displayName: comment.creatorDisplayName,
+							islandName: comment.creatorIslandName,
 							photoURL: comment.creatorPhotoURL,
+							rating: comment.creatorRating,
+							count: comment.creatorCount,
 						},
 					],
 				});
@@ -142,7 +148,10 @@ const CommentUnit = ({
 				payload: {
 					uid: comment.creatorId,
 					displayName: comment.creatorDisplayName,
+					islandName: comment.creatorIslandName,
 					photoURL: comment.creatorPhotoURL,
+					rating: comment.creatorRating,
+					count: comment.creatorCount,
 				},
 			});
 

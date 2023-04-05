@@ -1,10 +1,11 @@
 import { uuidv4 } from '@firebase/util';
-import { arrayUnion, deleteDoc, doc, DocumentData, onSnapshot, Timestamp, updateDoc } from 'firebase/firestore';
+import { arrayUnion, deleteDoc, doc, DocumentData, increment, onSnapshot, Timestamp, updateDoc } from 'firebase/firestore';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { ChatContext } from '../context/ChatContext';
 import { db } from '../fbase';
+import { FaStar } from 'react-icons/fa';
 
 const Chat = () => {
 	const { userInfo } = useContext(AuthContext);
@@ -16,6 +17,9 @@ const Chat = () => {
 	const navigate = useNavigate();
 	const [participants, setParticipants] = useState([]);
 	const messageEndRef = useRef<HTMLDivElement | null>(null);
+	const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
+	const [rating, setRating] = useState<number>(0);
+	const [hover, setHover] = useState<number>(0);
 
 	useEffect(() => {
 		const unsub = onSnapshot(doc(db, 'Chats', data.chatId), (doc: DocumentData) => {
@@ -74,37 +78,51 @@ const Chat = () => {
 		}
 	};
 
-	const deleteChat = async () => {
-		// UserChats 컬렉션에서 내 id 도큐멘트에 상대 이름의 필드 삭제
-		const confirm = window.confirm('정말로 나가겠습니까?');
-
+	const onLeaveClick = () => {
+		const confirm = window.confirm('정말 나가겠습니까?');
 		if (confirm) {
-			if (participants.length === 1) {
-				deleteDoc(doc(db, 'Chats', data.chatId));
-			} else {
-				await updateDoc(doc(db, 'Chats', data.chatId), {
-					participants: [data.counterpart.uid],
-				});
-
-				await updateDoc(doc(db, 'Chats', data.chatId), {
-					messages: arrayUnion({
-						id: uuidv4(),
-						senderId: 'system',
-						text: `${userInfo.displayName}님이 나가셨습니다.`,
-						date: Timestamp.now(),
-					}),
-				});
-			}
-
-			navigate('/chat');
+			setIsPopupOpen(true);
 		}
+	};
+
+	const deleteChat = async () => {
+		updateRating();
+		setIsPopupOpen(false);
+
+		if (participants.length === 1) {
+			deleteDoc(doc(db, 'Chats', data.chatId));
+		} else {
+			await updateDoc(doc(db, 'Chats', data.chatId), {
+				participants: [data.counterpart.uid],
+			});
+
+			await updateDoc(doc(db, 'Chats', data.chatId), {
+				messages: arrayUnion({
+					id: uuidv4(),
+					senderId: 'system',
+					text: `${userInfo.displayName}님이 나가셨습니다.`,
+					date: Timestamp.now(),
+				}),
+			});
+		}
+		navigate('/chat');
+	};
+
+	const updateRating = async () => {
+		const counterpartRating = Number(data.counterpart.rating);
+		const counterPartCount = Number(data.counterpart.count);
+		const docRef = doc(db, 'Users', data.counterpart.uid);
+		await updateDoc(docRef, {
+			rating: ((counterpartRating * counterPartCount + rating) / (counterPartCount + 1)).toFixed(1),
+			count: increment(1),
+		});
 	};
 
 	return (
 		<div onClick={handleOutsideClick} className='absolute top-[calc(61px)] flex h-[calc(100vh-121px)] w-screen flex-col items-end'>
 			{/* Conversation */}
 			<div className='-mb-6 flex w-full flex-1 grow flex-col justify-between overflow-y-auto'>
-				<div className='flex justify-between border-b p-3 sm:items-center'>
+				<div className='flex justify-between border-b p-5 sm:items-center'>
 					<div className='relative flex w-full items-center'>
 						<button onClick={() => navigate('/chat')}>
 							<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'>
@@ -115,14 +133,30 @@ const Chat = () => {
 							</svg>
 						</button>
 
-						<img src={data.counterpart.photoURL} className='h-8 w-8 rounded-full' />
+						<img src={data.counterpart.photoURL} className='h-10 w-10 rounded-full' />
 
 						<div className='flex w-full items-center justify-between'>
 							<div className='flex flex-col leading-tight'>
-								<span className='text-md my-1 ml-3 font-semibold text-gray-700'>{data.counterpart.displayName}</span>
-								{/* <span className='text-sm text-gray-600'>🏝 {state.creatorDisplayName.split(' ')[1]}</span> */}
+								<div className='ml-3 flex flex-col'>
+									<span className='text-md my-1 font-semibold text-gray-700'>{data.counterpart.displayName}</span>
+									<span className='text-sm text-gray-600'>🏝 {data.counterpart.islandName}</span>
+								</div>
 							</div>
-							<div className='mr-10'>평점</div>
+							<div className='mr-8'>
+								<div className='flex items-center text-sm text-gray-500 dark:text-gray-400'>
+									<span className='text-yellow-400'>
+										<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 26 26'>
+											<path
+												fill='currentColor'
+												d='m12 18.275l-4.15 2.5q-.275.175-.575.15t-.525-.2q-.225-.175-.35-.438t-.05-.587l1.1-4.725L3.775 11.8q-.25-.225-.312-.513t.037-.562q.1-.275.3-.45t.55-.225l4.85-.425l1.875-4.45q.125-.3.388-.45t.537-.15q.275 0 .537.15t.388.45l1.875 4.45l4.85.425q.35.05.55.225t.3.45q.1.275.038.563t-.313.512l-3.675 3.175l1.1 4.725q.075.325-.05.588t-.35.437q-.225.175-.525.2t-.575-.15l-4.15-2.5Z'
+											/>
+										</svg>
+									</span>
+									<span>
+										{Number(data.counterpart.rating).toFixed(1)} ({data.counterpart.count})
+									</span>
+								</div>
+							</div>
 
 							{/* Dots Button */}
 							<button
@@ -149,7 +183,7 @@ const Chat = () => {
 								<ul className='text-sm text-gray-700 dark:text-gray-200'>
 									<li>
 										<button
-											onClick={() => deleteChat()}
+											onClick={onLeaveClick}
 											className='block w-full px-6 py-2 text-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
 										>
 											나가기
@@ -239,6 +273,52 @@ const Chat = () => {
 				</div>
 			</div>
 			{/* Chat Input */}
+
+			{/* Rating PopUp */}
+			{isPopupOpen && (
+				<div
+					id='popup-modal'
+					className='fixed top-1/3 left-0 right-0 z-50 h-[calc(100%-1rem)] overflow-y-auto overflow-x-hidden p-4 md:inset-0 md:h-full'
+				>
+					<div className='relative h-full w-full max-w-md md:h-auto'>
+						<div className='relative rounded-lg bg-white shadow dark:bg-gray-700'>
+							<div className='p-6 text-center'>
+								<h3 className='text-md mb-2 font-normal text-gray-500 dark:text-gray-400'>상대방의 매너 점수는 어떤가요?</h3>
+
+								<div>
+									<ul className='mb-5 flex justify-center'>
+										{[...Array(5)].map((star, i) => {
+											const ratingValue = i + 1;
+
+											return (
+												<label>
+													<input className='hidden' onMouseOut={() => setHover(0)} type='radio' name='rating' value={ratingValue} />
+													<FaStar
+														onClick={() => setRating(ratingValue)}
+														onMouseEnter={() => setHover(ratingValue)}
+														className={`${ratingValue <= (hover || rating) ? 'text-yellow-400' : 'text-gray-200'} + cursor-pointer`}
+													/>
+												</label>
+											);
+										})}
+									</ul>
+								</div>
+
+								<button
+									onClick={deleteChat}
+									data-modal-hide='popup-modal'
+									type='button'
+									className='mr-2 inline-flex items-center rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800'
+								>
+									확인
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
+
+			{/* Rating PopUp */}
 		</div>
 	);
 };

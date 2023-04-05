@@ -43,8 +43,11 @@ const Comment = ({ done, id, comments, setComments, getComments, postCreatorId }
 			comment: commentInput,
 			createdAt: serverTimestamp(),
 			creatorDisplayName: userInfo.displayName,
+			creatorIslandName: userInfo.islandName,
 			creatorPhotoURL: userInfo.photoURL,
 			creatorId: userInfo.uid,
+			creatorRating: userInfo.rating,
+			creatorCount: userInfo.count,
 		};
 
 		if (commentInput === '') {
