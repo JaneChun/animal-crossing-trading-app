@@ -1,4 +1,17 @@
-import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import {
+	collection,
+	DocumentData,
+	endBefore,
+	getDocs,
+	limit,
+	limitToLast,
+	orderBy,
+	query,
+	QueryDocumentSnapshot,
+	QuerySnapshot,
+	startAfter,
+	startAt,
+} from 'firebase/firestore';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Carousel from '../Components/Carousel';
@@ -19,17 +32,25 @@ export interface doc {
 }
 
 function Home() {
-	const navigate = useNavigate();
 	const [data, setData] = useState<doc[]>([]);
-	const { userInfo } = useContext(AuthContext);
+	const [lastestDoc, setLastestDoc] = useState<any>();
+	const [isEnd, setIsEnd] = useState(false);
 
 	useEffect(() => {
 		getData();
 	}, []);
 
+	let q = query(collection(db, 'Boards'), orderBy('createdAt', 'desc'), limit(10));
+
 	const getData = async () => {
-		const q = query(collection(db, 'Boards'), orderBy('createdAt', 'desc'));
+		if (isEnd) return;
+
 		const querySnapshot = await getDocs(q);
+
+		if (querySnapshot.empty) {
+			setIsEnd(true);
+		}
+
 		querySnapshot.forEach((doc) => {
 			const docObj = {
 				...doc.data(),
@@ -37,6 +58,13 @@ function Home() {
 			};
 			setData((data) => [...data, docObj]);
 		});
+
+		setLastestDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
+	};
+
+	const nextPage = () => {
+		q = query(collection(db, 'Boards'), orderBy('createdAt', 'desc'), limit(10), startAfter(lastestDoc));
+		getData();
 	};
 
 	return (
@@ -46,26 +74,36 @@ function Home() {
 				<div className='mb-4 flex items-center justify-between'>
 					<div className='text-lg font-bold leading-none text-gray-900 dark:text-white'>거래글</div>
 				</div>
-				<div className='flow-root'>
-					<ul role='list' className='divide-y divide-gray-200 dark:divide-gray-700'>
-						{data.map(
-							(doc) =>
-								doc.createdAt && (
-									<PostUnit
-										key={doc.id}
-										id={doc.id}
-										page={'Home'}
-										type={doc.type}
-										title={doc.title}
-										createdAt={doc.createdAt}
-										creatorDisplayName={doc.creatorDisplayName}
-										creatorId={doc.creatorId}
-										comments={doc.comments}
-										done={doc.done}
-									/>
-								)
-						)}
-					</ul>
+				<ul role='list' className='divide-y divide-gray-200 dark:divide-gray-700'>
+					{data.map(
+						(doc) =>
+							doc.createdAt && (
+								<PostUnit
+									key={doc.id}
+									id={doc.id}
+									page={'Home'}
+									type={doc.type}
+									title={doc.title}
+									createdAt={doc.createdAt}
+									creatorDisplayName={doc.creatorDisplayName}
+									creatorId={doc.creatorId}
+									comments={doc.comments}
+									done={doc.done}
+								/>
+							)
+					)}
+				</ul>
+				<div className='flex justify-center'>
+					{isEnd ? (
+						<div className='mt-5 text-sm text-gray-400'>마지막 페이지입니다.</div>
+					) : (
+						<button
+							onClick={nextPage}
+							className='ml-3 inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
+						>
+							더 보기
+						</button>
+					)}
 				</div>
 			</div>
 			{/* <Footer /> */}
