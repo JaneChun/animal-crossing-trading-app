@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { item, cartItem } from '../../Pages/NewPost';
+import React, { useEffect, useState } from 'react';
+import { cartItem, item } from '../../Pages/NewPost';
 import Loading from '../Loading';
-import UserAdd from './UserAdd';
 import Toast from './Toast';
+import UserAdd from './UserAdd';
 
 interface ItemSelectProps {
 	isDropdownOpen: boolean;
@@ -66,13 +66,13 @@ const ItemSelect = ({ isDropdownOpen, setIsDropdownOpen, cart, setCart }: ItemSe
 			<div className='flex justify-center'>
 				<Toast isToastVisible={isToastVisible} />
 			</div>
-			<label htmlFor='item' className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'>
+			<label htmlFor='item' className='mb-2 block text-sm font-medium text-gray-900 '>
 				아이템
 			</label>
 			<button
 				id='item'
 				onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-				className='inline-flex items-center rounded-lg bg-blue-700 px-4 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+				className='inline-flex items-center rounded-lg bg-mint px-4 py-2.5 text-center text-sm font-medium text-white hover:bg-hover-mint focus:outline-none focus:ring-4 focus:ring-ring-mint'
 				type='button'
 			>
 				{category === '' ? '아이템 선택' : categories.find((item) => item.EN === category)?.KR}
@@ -82,15 +82,11 @@ const ItemSelect = ({ isDropdownOpen, setIsDropdownOpen, cart, setCart }: ItemSe
 			</button>
 
 			{/* Category Dropdown */}
-			<div className={`${!isDropdownOpen && 'hidden'} + z-10 mt-2 w-36 divide-y divide-gray-100 rounded-lg bg-white shadow dark:bg-gray-700`}>
-				<ul className='h-48 overflow-y-auto py-2 text-sm text-gray-700 dark:text-gray-200' aria-labelledby='multiLevelDropdownButton'>
+			<div className={`${!isDropdownOpen && 'hidden'} + z-10 mt-2 w-36 divide-y divide-gray-100 rounded-lg bg-white shadow`}>
+				<ul className='h-48 overflow-y-auto py-2 text-sm text-gray-700' aria-labelledby='multiLevelDropdownButton'>
 					{categories.map((category) => (
 						<li key={category.EN}>
-							<button
-								onClick={categorySelectHandler}
-								value={category.EN}
-								className='block w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
-							>
+							<button onClick={categorySelectHandler} value={category.EN} className='block w-full px-4 py-2 text-left hover:bg-gray-100'>
 								{category.KR}
 							</button>
 						</li>
@@ -100,7 +96,7 @@ const ItemSelect = ({ isDropdownOpen, setIsDropdownOpen, cart, setCart }: ItemSe
 			{/* Category Dropdown */}
 
 			{/* Item Search Dropdown */}
-			<div className={`${(!category || isDropdownOpen) && 'hidden'} w-72 rounded-lg bg-white shadow dark:bg-gray-700`}>
+			<div className={`${(!category || isDropdownOpen) && 'hidden'} w-72 rounded-lg bg-white shadow`}>
 				<div className='p-3'>
 					<label htmlFor='input-search' className='sr-only'>
 						Search
@@ -108,13 +104,7 @@ const ItemSelect = ({ isDropdownOpen, setIsDropdownOpen, cart, setCart }: ItemSe
 					<div className='relative'>
 						{/* Search Icon */}
 						<div className='pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3'>
-							<svg
-								className='h-5 w-5 text-gray-500 dark:text-gray-400'
-								aria-hidden='true'
-								fill='currentColor'
-								viewBox='0 0 20 20'
-								xmlns='http://www.w3.org/2000/svg'
-							>
+							<svg className='h-5 w-5 text-gray-500' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'>
 								<path
 									fillRule='evenodd'
 									d='M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z'
@@ -129,7 +119,7 @@ const ItemSelect = ({ isDropdownOpen, setIsDropdownOpen, cart, setCart }: ItemSe
 							value={searchInput}
 							type='text'
 							id='input-search'
-							className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
+							className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 pl-10 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-ring-mint'
 							placeholder='Search'
 						/>
 
@@ -151,7 +141,7 @@ const ItemSelect = ({ isDropdownOpen, setIsDropdownOpen, cart, setCart }: ItemSe
 					</div>
 				</div>
 
-				<ul className='h-60 overflow-y-auto px-3 pb-3 text-sm text-gray-700 dark:text-gray-200' aria-labelledby='dropdownSearchButton'>
+				<ul className='h-60 overflow-y-auto px-3 pb-3 text-sm text-gray-700' aria-labelledby='dropdownSearchButton'>
 					{category && itemData.length !== 0 ? (
 						!searchInput ? (
 							itemData.map((item: item) => <ListUnit key={item.UniqueEntryID} item={item} addItemToCart={addItemToCart} />)
@@ -181,10 +171,7 @@ interface listUnitProps {
 const ListUnit = ({ item, addItemToCart }: listUnitProps) => {
 	return (
 		<li key={item.UniqueEntryID}>
-			<button
-				onClick={() => addItemToCart(item)}
-				className='flex w-full items-center whitespace-nowrap px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
-			>
+			<button onClick={() => addItemToCart(item)} className='flex w-full items-center whitespace-nowrap px-4 py-2 hover:bg-gray-100'>
 				<img className='mr-2 h-6 w-6 rounded-full' src={item.imageUrl} alt='Jese image' />
 				{item.name} {item.color && `(${item.color})`}
 			</button>

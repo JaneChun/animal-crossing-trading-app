@@ -1,4 +1,4 @@
-import { collection, doc, DocumentData, getDocs, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { collection, DocumentData, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
@@ -39,8 +39,12 @@ const MyChat = () => {
 
 	return (
 		<div className='absolute top-[calc(61px)] h-[calc(100vh-121px)] w-screen overflow-y-auto p-5'>
-			<div className='pb-2 text-lg font-bold text-gray-900 dark:text-white'>채팅</div>
-			{chatData.length !== 0 &&
+			<div className='pb-2 text-lg font-bold text-gray-900 '>채팅</div>
+			{chatData.length === 0 ? (
+				<div className='flex h-full w-full items-center justify-center'>
+					<span className='text-sm text-gray-500'>참여 중인 채팅방이 없습니다.</span>
+				</div>
+			) : (
 				chatData.map((chat) => {
 					const { messages, usersInfo } = chat as any;
 					const counterpart = usersInfo.find((v: any) => v.uid !== userInfo.uid);
@@ -48,19 +52,20 @@ const MyChat = () => {
 						<div
 							key={chat.id}
 							onClick={() => handleSelect(counterpart)}
-							className='relative flex max-h-16 max-w-full border-b border-gray-100 px-4 py-3 hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-700'
+							className='relative flex max-h-16 max-w-full border-b border-gray-100 px-4 py-3 hover:bg-gray-100 '
 						>
 							<img className='h-11 w-11 rounded-full' src={counterpart.photoURL} />
 							<div className='w-32 grow pl-3'>
 								<div className='mb-1.5 flex  justify-between text-sm'>
-									<span className='font-semibold text-gray-900 dark:text-white'>{counterpart.displayName}</span>
-									<span className='text-xs text-blue-600 dark:text-blue-500'>{elapsedTime(messages[messages.length - 1]?.date.toDate())}</span>
+									<span className='font-semibold text-gray-900 '>{counterpart.displayName}</span>
+									<span className='text-xs text-hover-mint'>{elapsedTime(messages[messages.length - 1]?.date.toDate())}</span>
 								</div>
 								<div className='truncate whitespace-nowrap text-xs text-gray-500'>{messages[messages.length - 1]?.text}</div>
 							</div>
 						</div>
 					);
-				})}
+				})
+			)}
 		</div>
 	);
 };

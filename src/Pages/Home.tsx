@@ -1,6 +1,7 @@
 import { collection, getDocs, limit, orderBy, query, startAfter } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import Carousel from '../Components/Carousel';
+import Footer from '../Components/Footer';
 import PostUnit from '../Components/PostUnit';
 import { db } from '../fbase';
 
@@ -78,20 +79,20 @@ function Home() {
 							)
 					)}
 				</ul>
-				<div className='flex justify-center'>
+				<div className='mt-5 flex justify-center'>
 					{isEnd ? (
 						<div className='mt-5 text-sm text-gray-400'>마지막 페이지입니다.</div>
 					) : (
 						<button
 							onClick={nextPage}
-							className='ml-3 inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
+							className='inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200'
 						>
 							더 보기
 						</button>
 					)}
 				</div>
 			</div>
-			{/* <Footer /> */}
+			<Footer />
 		</div>
 	);
 }

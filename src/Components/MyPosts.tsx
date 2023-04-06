@@ -1,22 +1,32 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { auth, db } from '../fbase';
-import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
+import { collection, query, where, orderBy, getDocs, limit, startAfter } from 'firebase/firestore';
 import { doc } from '../Pages/Home';
 import PostUnit from './PostUnit';
 import { AuthContext } from '../context/AuthContext';
+import Footer from './Footer';
 
 function MyPosts() {
 	const [data, setData] = useState<doc[]>([]);
-	const { userInfo } = useContext(AuthContext);
+	const [lastestDoc, setLastestDoc] = useState<any>();
+	const [isEnd, setIsEnd] = useState(false);
 	const uid = localStorage.getItem('uid');
 
 	useEffect(() => {
 		getData();
 	}, []);
 
+	let q = query(collection(db, 'Boards'), where('creatorId', '==', uid), orderBy('createdAt', 'desc'), limit(5));
+
 	const getData = async () => {
-		const q = query(collection(db, 'Boards'), where('creatorId', '==', uid), orderBy('createdAt', 'desc'));
+		if (isEnd) return;
+
 		const querySnapshot = await getDocs(q);
+
+		if (querySnapshot.empty) {
+			setIsEnd(true);
+		}
+
 		querySnapshot.forEach((doc) => {
 			const docObj = {
 				...doc.data(),
@@ -24,6 +34,13 @@ function MyPosts() {
 			};
 			setData((data) => [...data, docObj]);
 		});
+
+		setLastestDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
+	};
+
+	const nextPage = () => {
+		q = query(collection(db, 'Boards'), orderBy('createdAt', 'desc'), limit(5), startAfter(lastestDoc));
+		getData();
 	};
 
 	return (
@@ -53,6 +70,19 @@ function MyPosts() {
 									)
 							)}
 						</ul>
+
+						<div className='flex justify-center'>
+							{isEnd ? (
+								<div className='mt-5 text-sm text-gray-400'>마지막 페이지입니다.</div>
+							) : (
+								<button
+									onClick={nextPage}
+									className='inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200'
+								>
+									더 보기
+								</button>
+							)}
+						</div>
 					</div>
 				</>
 			)}

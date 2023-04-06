@@ -2,11 +2,15 @@ import React from 'react';
 
 function Header() {
 	return (
-		<nav className='fixed top-0 left-0 z-20 w-full border-b border-gray-200 bg-white px-2 py-2.5 dark:border-gray-600 dark:bg-gray-900 sm:px-4'>
+		<nav className='fixed top-0 left-0 z-20 w-full border-b border-gray-200 bg-[#f9fafc] px-2 py-2.5 dark:border-gray-600 dark:bg-gray-900 sm:px-4'>
 			<div className='container mx-auto flex flex-wrap items-center justify-between'>
 				<a href='#' className='flex items-center'>
-					<img src='https://flowbite.com/docs/images/logo.svg' className='mr-3 h-6 sm:h-9' alt='Flowbite Logo' />
-					<span className='self-center whitespace-nowrap text-xl font-semibold dark:text-white'>모동숲 거래 사이트</span>
+					<img
+						src='https://firebasestorage.googleapis.com/v0/b/animal-crossing-trade-app.appspot.com/o/Src%2F120px-Furniture_NH_Inv_Icon.png?alt=media&token=b5e55a18-ddbf-49ce-8477-29ed012bbb2a'
+						className='mr-1 h-9'
+						alt='Logo'
+					/>
+					<span className='self-center whitespace-nowrap text-xl font-semibold dark:text-white'>모동숲 마켓</span>
 				</a>
 				<div className='flex md:order-2'>
 					{/* <button

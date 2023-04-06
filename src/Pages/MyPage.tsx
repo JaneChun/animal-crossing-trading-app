@@ -1,11 +1,10 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { auth, db } from '../fbase';
 import { signOut } from 'firebase/auth';
+import React, { useContext, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EditProfile from '../Components/EditProfile';
 import MyPosts from '../Components/MyPosts';
-import { doc, getDoc } from 'firebase/firestore';
 import { AuthContext } from '../context/AuthContext';
+import { auth } from '../fbase';
 
 function MyPage() {
 	const navigate = useNavigate();
@@ -38,7 +37,7 @@ function MyPage() {
 	return (
 		userInfo && (
 			<div onClick={handleOutsideClick} className='absolute top-[calc(61px)] h-[calc(100vh-121px)] w-screen overflow-y-auto p-5'>
-				<div className='w-full max-w-sm rounded-lg border border-gray-200 bg-white shadow dark:border-gray-700 dark:bg-gray-800'>
+				<div className='w-full max-w-sm rounded-lg border border-gray-200 bg-white shadow'>
 					<div className='relative flex justify-end px-4 pt-4'>
 						{/* Dots Button */}
 						<button
@@ -46,7 +45,7 @@ function MyPage() {
 							onClick={handleModal}
 							id='dropdownButton'
 							data-dropdown-toggle='dropdown'
-							className='inline-block rounded-lg p-1.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700'
+							className='inline-block rounded-lg p-1.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200'
 							type='button'
 						>
 							<span className='sr-only'>Open dropdown</span>
@@ -59,13 +58,11 @@ function MyPage() {
 						{/* Dropdown */}
 						<div
 							id='dropdownDots'
-							className={`${
-								!isModalOpen && 'hidden'
-							} + absolute top-14 right-4 z-10 w-auto divide-y divide-gray-100 rounded-lg bg-white shadow dark:divide-gray-600 dark:bg-gray-700`}
+							className={`${!isModalOpen && 'hidden'} + absolute top-14 right-4 z-10 w-auto divide-y divide-gray-100 rounded-lg bg-white shadow`}
 						>
-							<ul className='text-sm text-gray-700 dark:text-gray-200' aria-labelledby='dropdownMenuIconButton'>
+							<ul className='text-sm text-gray-700' aria-labelledby='dropdownMenuIconButton'>
 								<li>
-									<button onClick={onLogOutClick} className='block px-6 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'>
+									<button onClick={onLogOutClick} className='block px-6 py-2 hover:bg-gray-100 '>
 										로그아웃
 									</button>
 								</li>
@@ -76,9 +73,15 @@ function MyPage() {
 
 					<div className='flex flex-col items-center pb-10'>
 						<img className='mb-3 h-24 w-24 rounded-full object-cover shadow-lg' src={userInfo?.photoURL} />
-						<h5 className='mb-1 text-xl font-medium text-gray-900 dark:text-white'>{userInfo.displayName}</h5>
-						<span className='mb-1 text-sm text-gray-500 dark:text-gray-400'>🏝 {userInfo.islandName || '섬 이름을 입력해주세요.'}</span>
-						<div className='flex items-center text-sm text-gray-500 dark:text-gray-400'>
+						<h5 className='mb-1 text-xl font-medium text-gray-900'>{userInfo.displayName}</h5>
+						<div className='mb-1 flex items-end text-sm text-gray-500'>
+							<img
+								className='mr-0.5 h-5 w-5'
+								src='https://firebasestorage.googleapis.com/v0/b/animal-crossing-trade-app.appspot.com/o/Src%2FCoconut_Tree_NH_Inv_Icon.png?alt=media&token=cd997010-694e-49b0-9390-483772cdad8a'
+							/>
+							<span>{userInfo.islandName || '섬 이름을 입력해주세요.'}</span>
+						</div>
+						<div className='flex items-center text-sm text-gray-500'>
 							<span className='text-yellow-400'>
 								<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 26 26'>
 									<path
@@ -95,7 +98,7 @@ function MyPage() {
 							{!isEditing && (
 								<button
 									onClick={onEditProfileClick}
-									className='inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-700'
+									className='inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200'
 								>
 									프로필 수정
 								</button>

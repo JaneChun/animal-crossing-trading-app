@@ -1,11 +1,11 @@
 import { uuidv4 } from '@firebase/util';
 import { arrayUnion, deleteDoc, doc, DocumentData, increment, onSnapshot, Timestamp, updateDoc } from 'firebase/firestore';
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import { FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { ChatContext } from '../context/ChatContext';
 import { db } from '../fbase';
-import { FaStar } from 'react-icons/fa';
 
 const Chat = () => {
 	const { userInfo } = useContext(AuthContext);
@@ -45,7 +45,7 @@ const Chat = () => {
 	};
 
 	const onSubmit = async () => {
-		if (participants.length === 1) return;
+		if (participants.length === 1 || chatInput === '') return;
 
 		const requestData = {
 			messages: arrayUnion({
@@ -139,11 +139,17 @@ const Chat = () => {
 							<div className='flex flex-col leading-tight'>
 								<div className='ml-3 flex flex-col'>
 									<span className='text-md my-1 font-semibold text-gray-700'>{data.counterpart.displayName}</span>
-									<span className='text-sm text-gray-600'>🏝 {data.counterpart.islandName}</span>
+									<div className='mb-1 flex items-end text-sm text-gray-500'>
+										<img
+											className='mr-0.5 h-5 w-5'
+											src='https://firebasestorage.googleapis.com/v0/b/animal-crossing-trade-app.appspot.com/o/Src%2FCoconut_Tree_NH_Inv_Icon.png?alt=media&token=cd997010-694e-49b0-9390-483772cdad8a'
+										/>
+										<span>{data.counterpart.islandName}</span>
+									</div>
 								</div>
 							</div>
 							<div className='mr-8'>
-								<div className='flex items-center text-sm text-gray-500 dark:text-gray-400'>
+								<div className='flex items-center text-sm text-gray-500'>
 									<span className='text-yellow-400'>
 										<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 26 26'>
 											<path
@@ -164,7 +170,7 @@ const Chat = () => {
 								onClick={handleModal}
 								id='dropdownMenuIconButton'
 								data-dropdown-toggle='dropdownDots'
-								className='absolute top-0 -right-1 inline-flex items-center rounded-lg bg-white p-1 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-50 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-600'
+								className='absolute top-0 -right-1 inline-flex items-center rounded-lg bg-white p-1 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-50 '
 								type='button'
 							>
 								<svg className='h-5 w-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'>
@@ -176,16 +182,11 @@ const Chat = () => {
 							{/* Dropdown */}
 							<div
 								id='dropdownDots'
-								className={`${
-									!isModalOpen && 'hidden'
-								} + absolute top-8 right-0 z-10 w-auto divide-y divide-gray-100 rounded-lg bg-white shadow dark:divide-gray-600 dark:bg-gray-700`}
+								className={`${!isModalOpen && 'hidden'} + absolute top-8 right-0 z-10 w-auto divide-y divide-gray-100 rounded-lg bg-white shadow`}
 							>
-								<ul className='text-sm text-gray-700 dark:text-gray-200'>
+								<ul className='text-sm text-gray-700'>
 									<li>
-										<button
-											onClick={onLeaveClick}
-											className='block w-full px-6 py-2 text-center hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
-										>
+										<button onClick={onLeaveClick} className='block w-full px-6 py-2 text-center hover:bg-gray-100 '>
 											나가기
 										</button>
 									</li>
@@ -208,7 +209,7 @@ const Chat = () => {
 									<div className='order-1 flex max-w-xs flex-col items-end space-y-2 text-xs'>
 										<div>
 											<span className='mr-2 text-xs text-gray-400'>{message.date.toDate().toLocaleTimeString().slice(0, -3)}</span>
-											<span className='inline-block rounded-lg rounded-br-none bg-blue-600 px-4 py-2 text-white '>{message.text}</span>
+											<span className='inline-block rounded-lg rounded-br-none bg-mint px-4 py-2 text-white '>{message.text}</span>
 										</div>
 									</div>
 									{/* <img src={userInfo.photoURL} alt={`${userInfo.displayName}'s profile image`} className='order-2 h-10 w-10 rounded-full' /> */}
@@ -242,22 +243,22 @@ const Chat = () => {
 				<label htmlFor='chat' className='sr-only'>
 					Your message
 				</label>
-				<div className='flex items-center bg-gray-50 px-3 py-2 dark:bg-gray-700'>
+				<div className='flex items-center bg-gray-50 px-3 py-2'>
 					<textarea
 						disabled={participants.length === 1 ? true : false}
 						id='chat'
 						value={chatInput}
 						onChange={chatInputHandler}
 						rows={1}
-						className='block w-full resize-none rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
+						className='block w-full resize-none rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-ring-mint'
 						placeholder={participants.length === 1 ? '대화 상대가 없습니다.' : '메세지를 입력하세요.'}
 					></textarea>
 					<button
 						type='submit'
 						onClick={onSubmit}
 						className={`${
-							participants.length === 1 ? 'text-gray-500' : 'text-blue-600 hover:bg-blue-100'
-						} inline-flex cursor-pointer justify-center rounded-full p-2  dark:text-blue-500 dark:hover:bg-gray-600`}
+							participants.length === 1 ? 'text-gray-500' : 'text-mint hover:bg-[#0cc6b635]'
+						} inline-flex cursor-pointer justify-center rounded-full p-2 `}
 					>
 						<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
 							<g fill='none'>
@@ -281,9 +282,9 @@ const Chat = () => {
 					className='fixed top-1/3 left-0 right-0 z-50 h-[calc(100%-1rem)] overflow-y-auto overflow-x-hidden p-4 md:inset-0 md:h-full'
 				>
 					<div className='relative h-full w-full max-w-md md:h-auto'>
-						<div className='relative rounded-lg bg-white shadow dark:bg-gray-700'>
+						<div className='relative rounded-lg bg-white shadow'>
 							<div className='p-6 text-center'>
-								<h3 className='text-md mb-2 font-normal text-gray-500 dark:text-gray-400'>상대방의 매너 점수는 어떤가요?</h3>
+								<h3 className='text-md mb-2 font-normal text-gray-500'>상대방의 매너 점수는 어떤가요?</h3>
 
 								<div>
 									<ul className='mb-5 flex justify-center'>
@@ -308,7 +309,7 @@ const Chat = () => {
 									onClick={deleteChat}
 									data-modal-hide='popup-modal'
 									type='button'
-									className='mr-2 inline-flex items-center rounded-lg bg-blue-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800'
+									className='mr-2 inline-flex items-center rounded-lg bg-mint px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-hover-mint focus:outline-none focus:ring-4 focus:ring-ring-mint'
 								>
 									확인
 								</button>

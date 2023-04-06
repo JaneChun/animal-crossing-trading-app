@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { auth, storage, db } from '../fbase';
 import { updateProfile } from 'firebase/auth';
+import React, { useContext, useState } from 'react';
+import { auth, db, storage } from '../fbase';
 // import { v4 as uuidv4 } from 'uuid';
-import { ref, uploadString, getDownloadURL, listAll, deleteObject } from 'firebase/storage';
-import { updateDoc, doc } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
+import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import { AuthContext } from '../context/AuthContext';
 
 interface EditProfileProps {
@@ -109,7 +109,7 @@ const EditProfile = ({ islandName, setIsEditing }: EditProfileProps) => {
 	return (
 		<>
 			<div className='flex items-center'>
-				<label htmlFor='displayName' className='mr-3 block text-sm font-medium text-gray-900 dark:text-white'>
+				<label htmlFor='displayName' className='mr-3 block text-sm font-medium text-gray-900 '>
 					닉네임
 				</label>
 				<input
@@ -117,13 +117,13 @@ const EditProfile = ({ islandName, setIsEditing }: EditProfileProps) => {
 					value={displayNameInput}
 					type='text'
 					id='displayName'
-					className='block min-w-0 flex-1 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
+					className='block min-w-0 flex-1 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-ring-mint'
 					placeholder='닉네임을 입력해주세요'
 				/>
 			</div>
 
 			<div className='mt-3 flex items-center'>
-				<label htmlFor='islandName' className='mr-2 block text-sm font-medium text-gray-900 dark:text-white'>
+				<label htmlFor='islandName' className='mr-2 block text-sm font-medium text-gray-900 '>
 					섬 이름
 				</label>
 				<input
@@ -131,7 +131,7 @@ const EditProfile = ({ islandName, setIsEditing }: EditProfileProps) => {
 					value={islandNameInput}
 					type='text'
 					id='islandName'
-					className='block min-w-0 flex-1 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
+					className='block min-w-0 flex-1 rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-ring-mint'
 					placeholder='섬 이름을 입력해주세요'
 				/>
 			</div>
@@ -139,7 +139,7 @@ const EditProfile = ({ islandName, setIsEditing }: EditProfileProps) => {
 			<div className='relative flex w-full items-center justify-center p-5'>
 				<label
 					htmlFor='dropzone-file'
-					className='dark:hover:bg-bray-800 flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600'
+					className='flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100'
 				>
 					<div className='flex flex-col items-center justify-center pt-5 pb-6'>
 						<svg
@@ -157,10 +157,10 @@ const EditProfile = ({ islandName, setIsEditing }: EditProfileProps) => {
 								d='M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12'
 							></path>
 						</svg>
-						<p className='mb-2 text-sm text-gray-500 dark:text-gray-400'>
+						<p className='mb-2 text-sm text-gray-500'>
 							<span className='font-semibold'>Click to upload</span> or drag and drop
 						</p>
-						<p className='text-xs text-gray-500 dark:text-gray-400'>SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+						<p className='text-xs text-gray-500'>SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
 					</div>
 					<input onChange={fileInputHandler} id='dropzone-file' type='file' className='hidden' />
 				</label>
@@ -170,13 +170,13 @@ const EditProfile = ({ islandName, setIsEditing }: EditProfileProps) => {
 			<div className='flex'>
 				<button
 					onClick={onSubmit}
-					className='mr-3 inline-flex items-center rounded-lg bg-blue-700 px-4 py-2 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+					className='mr-2 rounded-lg border border-mint bg-mint py-2 px-4 text-sm font-semibold text-white hover:bg-hover-mint focus:ring-2 focus:ring-ring-mint'
 				>
 					변경
 				</button>
 				<button
 					onClick={() => setIsEditing(false)}
-					className='inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-700'
+					className='rounded-lg border border-mint bg-transparent py-2 px-4 text-sm font-semibold text-mint  hover:bg-gray-100 focus:ring-2 focus:ring-gray-300'
 				>
 					취소
 				</button>

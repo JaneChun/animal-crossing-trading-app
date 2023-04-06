@@ -28,7 +28,7 @@ const UserAdd = ({ setCart }: UserAddProps) => {
 
 	return (
 		<div>
-			<label htmlFor='user-add-input' className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'>
+			<label htmlFor='user-add-input' className='mb-2 block text-sm font-medium text-gray-900'>
 				직접 추가하기
 			</label>
 
@@ -38,12 +38,12 @@ const UserAdd = ({ setCart }: UserAddProps) => {
 					value={userAddInput}
 					type='text'
 					id='user-add-input'
-					className='block grow rounded-lg border border-gray-300 bg-gray-50 p-2 pl-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
+					className='block grow rounded-lg border border-gray-300 bg-gray-50 p-2 pl-2.5 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-ring-mint'
 					placeholder='아이템 이름을 입력하세요'
 				/>
 				<button
 					onClick={addUserInputItemToCart}
-					className='ml-2 flex h-[calc(38px)] w-[calc(38px)] items-center justify-center rounded-lg border border-blue-700 bg-blue-700 text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+					className='ml-2 flex h-[calc(38px)] w-[calc(38px)] items-center justify-center rounded-lg border border-mint bg-mint text-white hover:bg-hover-mint focus:outline-none focus:ring-4 focus:ring-ring-mint'
 				>
 					<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
 						<path fill='currentColor' d='M18 12.998h-5v5a1 1 0 0 1-2 0v-5H6a1 1 0 0 1 0-2h5v-5a1 1 0 0 1 2 0v5h5a1 1 0 0 1 0 2z' />

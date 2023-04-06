@@ -1,6 +1,5 @@
-import React from 'react';
-import { elapsedTime } from '../Utilities/elapsedTime';
 import { useNavigate } from 'react-router-dom';
+import { elapsedTime } from '../Utilities/elapsedTime';
 
 interface postProps {
 	id: string;
@@ -30,28 +29,24 @@ const PostUnit = ({ id, page, type, title, createdAt, creatorDisplayName, creato
 					<img className='h-8 w-8 rounded-md' src='https://content-resized.nookea.com/s1024/qPlJRRKAhoxDNPQnuFLzb' alt='Neil image' />
 				</div>
 				<div className='min-w-0 flex-1'>
-					<p onClick={() => navigate(`/post/${id}`)} className='text-md cursor-pointer truncate py-0.5 font-semibold text-gray-900 dark:text-white'>
+					<p onClick={() => navigate(`/post/${id}`)} className='text-md cursor-pointer truncate py-0.5 font-semibold text-gray-900'>
 						{done === true ? (
-							<span className='mr-2 rounded-sm border border-gray-200 bg-white py-0.5 px-1 text-xs font-medium text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400'>
-								거래 완료
-							</span>
+							<span className='mr-2 rounded-sm border border-gray-200 bg-white py-0.5 px-1 text-xs font-medium text-gray-800'>거래 완료</span>
 						) : type === 'sell' ? (
-							<span className='mr-2 rounded-sm border border-blue-100 bg-blue-100 py-0.5 px-1 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-300'>
-								팔아요
-							</span>
+							<span className='mr-2 rounded-sm border border-skyblue bg-skyblue py-0.5 px-1 text-xs font-medium text-dark-skyblue'>팔아요</span>
 						) : (
-							<span className='mr-2 rounded-sm bg-blue-700 px-1 py-0.5 text-center text-xs font-medium text-white  dark:bg-blue-600'>구해요</span>
+							<span className='mr-2 rounded-sm bg-lightgreen px-1 py-0.5 text-center text-xs font-medium text-dark-lightgreen'>구해요</span>
 						)}
 						<span className='text-gray-900'>{title}</span>
 					</p>
 					<p>
-						<span onClick={onCreatorDisplayNameClick} className='mr-2 truncate text-sm text-gray-500 dark:text-gray-400'>
+						<span onClick={onCreatorDisplayNameClick} className='mr-2 truncate text-sm text-gray-500'>
 							{creatorDisplayName?.split(' ')[0]}
 						</span>
-						{createdAt && <span className='truncate text-xs text-gray-500 dark:text-gray-400'>{elapsedTime(createdAt.toDate())}</span>}
+						{createdAt && <span className='truncate text-xs text-gray-500'>{elapsedTime(createdAt.toDate())}</span>}
 					</p>
 				</div>
-				<div className='text-center font-semibold text-gray-900 dark:text-white'>
+				<div className='text-center font-semibold text-gray-900'>
 					<p className='text-xs'>댓글</p>
 					<p className='text-base'>{comments}</p>
 				</div>

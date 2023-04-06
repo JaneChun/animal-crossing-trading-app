@@ -39,7 +39,7 @@ function Nav() {
 					className='group inline-flex flex-col items-center justify-center p-4 hover:bg-gray-50 dark:hover:bg-gray-800'
 				>
 					<svg
-						className='mb-1 h-6 w-6 text-gray-500 group-hover:text-blue-600 dark:text-gray-400 dark:group-hover:text-blue-500'
+						className='mb-1 h-6 w-6 text-gray-600 group-hover:text-mint dark:text-gray-400 dark:group-hover:text-blue-500'
 						fill='currentColor'
 						viewBox='0 0 20 20'
 						xmlns='http://www.w3.org/2000/svg'
@@ -64,7 +64,7 @@ function Nav() {
 					className='group inline-flex flex-col items-center justify-center p-4 hover:bg-gray-50 dark:hover:bg-gray-800'
 				>
 					<svg
-						className='mb-1 h-6 w-6 text-gray-500 group-hover:text-blue-600 dark:text-gray-400 dark:group-hover:text-blue-500'
+						className='mb-1 h-6 w-6 text-gray-600 group-hover:text-mint dark:text-gray-400 dark:group-hover:text-blue-500'
 						xmlns='http://www.w3.org/2000/svg'
 						width='24'
 						height='24'
@@ -92,7 +92,7 @@ function Nav() {
 					className='group inline-flex flex-col items-center justify-center p-4 hover:bg-gray-50 dark:hover:bg-gray-800'
 				>
 					<svg
-						className='mb-1 h-6 w-6 text-gray-500 group-hover:text-blue-600 dark:text-gray-400 dark:group-hover:text-blue-500'
+						className='mb-1 h-6 w-6 text-gray-600 group-hover:text-mint dark:text-gray-400 dark:group-hover:text-blue-500'
 						fill='currentColor'
 						viewBox='0 0 20 20'
 						xmlns='http://www.w3.org/2000/svg'
@@ -121,7 +121,7 @@ function Nav() {
 					className='group inline-flex flex-col items-center justify-center p-4 hover:bg-gray-50 dark:hover:bg-gray-800'
 				>
 					<svg
-						className='mb-1 h-6 w-6 text-gray-500 group-hover:text-blue-600 dark:text-gray-400 dark:group-hover:text-blue-500'
+						className='mb-1 h-6 w-6 text-gray-600 group-hover:text-mint dark:text-gray-400 dark:group-hover:text-blue-500'
 						fill='currentColor'
 						viewBox='0 0 20 20'
 						xmlns='http://www.w3.org/2000/svg'
@@ -152,7 +152,7 @@ function Nav() {
 							className='group inline-flex flex-col items-center justify-center p-4 hover:bg-gray-50 dark:hover:bg-gray-800'
 						>
 							<svg
-								className='mb-1 h-6 w-6 text-gray-500 group-hover:text-blue-600 dark:text-gray-400 dark:group-hover:text-blue-500'
+								className='mb-1 h-6 w-6 text-gray-600 group-hover:text-mint dark:text-gray-400 dark:group-hover:text-blue-500'
 								fill='currentColor'
 								viewBox='0 0 20 20'
 								xmlns='http://www.w3.org/2000/svg'
@@ -184,7 +184,7 @@ function Nav() {
 							className='group inline-flex flex-col items-center justify-center p-4 hover:bg-gray-50 dark:hover:bg-gray-800'
 						>
 							<svg
-								className='mb-1 h-6 w-6 text-gray-500 group-hover:text-blue-600 dark:text-gray-400 dark:group-hover:text-blue-500'
+								className='mb-1 h-6 w-6 text-gray-600 group-hover:text-mint dark:text-gray-400 dark:group-hover:text-blue-500'
 								xmlns='http://www.w3.org/2000/svg'
 								width='24'
 								height='24'

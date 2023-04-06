@@ -1,5 +1,4 @@
-import { uuidv4 } from '@firebase/util';
-import { deleteDoc, doc, DocumentData, getDoc, increment, serverTimestamp, setDoc, Timestamp, updateDoc } from 'firebase/firestore';
+import { deleteDoc, doc, DocumentData, getDoc, increment, setDoc, updateDoc } from 'firebase/firestore';
 import React, { SetStateAction, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
@@ -58,7 +57,9 @@ const CommentUnit = ({
 		}
 	};
 
-	const editComment = async () => {
+	const editComment = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
 		if (newCommentInput === '') {
 			alert('내용이 비어있는지 확인해주세요.');
 			return;
@@ -68,6 +69,7 @@ const CommentUnit = ({
 
 		if (comment.comment === newCommentInput) {
 			setIsEditing(false);
+			return;
 		}
 
 		const desertRef = doc(db, 'Boards', id, 'Comments', comment.commentId);
@@ -162,24 +164,22 @@ const CommentUnit = ({
 	};
 
 	return (
-		<li key={comment.commentId} className='relative flex px-4 py-3'>
+		<>
 			{!isEditing ? (
-				<>
+				<li key={comment.commentId} className='relative flex px-4 py-3'>
 					<div className='flex-shrink-0'>
 						<img
 							className='h-11 w-11 rounded-full border object-cover'
 							src={comment.creatorPhotoURL}
-							alt={`${comment.creatorDisplayName.split(' ')[0]}'s profile image`}
+							alt={`${comment.creatorDisplayName}'s profile image`}
 						/>
 					</div>
 
 					<div className='w-full pl-3'>
-						<div className='mb-1.5  text-sm text-gray-500 dark:text-gray-400'>
-							<span className='font-semibold text-gray-900 dark:text-white'>{comment?.creatorDisplayName?.split(' ')[0]}</span>
+						<div className='mb-1.5  text-sm text-gray-500'>
+							<span className='font-semibold text-gray-900'>{comment.creatorDisplayName}</span>
 							{postCreatorId === comment.creatorId && (
-								<span className='ml-2 rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-300'>
-									작성자
-								</span>
+								<span className='ml-2 rounded bg-lightcoral px-2 py-0.5 text-xs font-medium text-dark-lightcoral'>작성자</span>
 							)}
 
 							{comment.creatorId === userInfo?.uid && (
@@ -190,7 +190,7 @@ const CommentUnit = ({
 										onClick={() => handleModal(comment.commentId)}
 										id='dropdownMenuIconButton'
 										data-dropdown-toggle='dropdownDots'
-										className='absolute top-0 right-0 inline-flex items-center rounded-lg bg-white p-1 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-50 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-600'
+										className='absolute top-0 right-0 inline-flex items-center rounded-lg bg-white p-1 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-50'
 										type='button'
 									>
 										<svg className='h-4 w-4' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'>
@@ -204,22 +204,16 @@ const CommentUnit = ({
 										id='dropdownDots'
 										className={`${
 											isModalOpen && clickedComment === comment.commentId ? 'visible' : 'hidden'
-										} + absolute top-8 right-0 z-10 w-auto divide-y divide-gray-100 rounded-lg bg-white shadow dark:divide-gray-600 dark:bg-gray-700`}
+										} + absolute top-8 right-0 z-10 w-auto divide-y divide-gray-100 rounded-lg bg-white shadow`}
 									>
-										<ul className='text-sm text-gray-700 dark:text-gray-200' aria-labelledby='dropdownMenuIconButton'>
+										<ul className='text-sm text-gray-700' aria-labelledby='dropdownMenuIconButton'>
 											<li>
-												<button
-													onClick={() => setIsEditing(true)}
-													className='block px-6 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
-												>
+												<button onClick={() => setIsEditing(true)} className='block px-6 py-2 hover:bg-gray-100'>
 													수정
 												</button>
 											</li>
 											<li>
-												<button
-													onClick={() => deleteComment(comment.commentId)}
-													className='block px-6 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white'
-												>
+												<button onClick={() => deleteComment(comment.commentId)} className='block px-6 py-2 hover:bg-gray-100'>
 													삭제
 												</button>
 											</li>
@@ -232,11 +226,11 @@ const CommentUnit = ({
 							<div className='mt-1'>{comment.comment}</div>
 						</div>
 						<div className='flex justify-between'>
-							<div className='pb-3 text-xs text-blue-600 dark:text-blue-500'>{elapsedTime(comment.createdAt.toDate())}</div>
+							<div className='pb-3 text-xs text-hover-mint'>{elapsedTime(comment.createdAt.toDate())}</div>
 							{postCreatorId === userInfo?.uid && postCreatorId !== comment.creatorId && (
 								<button
 									onClick={() => onChatClick(comment)}
-									className='inline-flex items-center rounded-lg border border-gray-200 bg-white px-2 py-1.5 text-xs font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700'
+									className='inline-flex items-center rounded-lg border border-gray-200 bg-white px-2 py-1.5 text-xs font-medium text-gray-900 hover:bg-gray-100 hover:text-mint focus:z-10 focus:text-mint focus:outline-none focus:ring-4 focus:ring-gray-200'
 								>
 									채팅하기
 									<svg className='ml-0.5 h-3 w-3' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'>
@@ -250,47 +244,39 @@ const CommentUnit = ({
 							)}
 						</div>
 					</div>
-				</>
+				</li>
 			) : (
-				<div className='flex grow items-center'>
-					<textarea
-						value={newCommentInput}
-						onChange={newCommentInputHandler}
-						id='default-textarea'
-						className='sm:text-md h-18 block grow resize-none rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
-					/>
-					{/* <button
-						onClick={editComment}
-						type='button'
-						className='ml-2 inline-flex items-center rounded-full bg-blue-700 p-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
-					>
-						<svg aria-hidden='true' className='h-4 w-4' fill='currentColor' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'>
-							<path
-								fillRule='evenodd'
-								d='M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z'
-								clipRule='evenodd'
-							></path>
-						</svg>
-					</button> */}
-					<div className='ml-2 flex flex-col'>
-						<button
-							onClick={editComment}
-							type='button'
-							className='mb-1 rounded-lg border border-blue-700 bg-blue-700 px-2.5 py-1 text-center text-xs font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
-						>
-							수정
-						</button>
-						<button
-							onClick={editCancel}
-							type='button'
-							className='rounded-lg border border-blue-700 px-2.5 py-1 text-center text-xs font-medium text-blue-700 hover:bg-blue-800 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 dark:border-blue-500 dark:text-blue-500 dark:hover:bg-blue-500 dark:hover:text-white dark:focus:ring-blue-800'
-						>
-							취소
-						</button>
+				<form className='w-full' onSubmit={editComment}>
+					<div className='mt-4 w-full rounded-lg border border-gray-200 bg-gray-50'>
+						<div className='rounded-t-lg bg-white px-4 py-2'>
+							<textarea
+								onChange={newCommentInputHandler}
+								value={newCommentInput}
+								id='comment'
+								rows={3}
+								className='w-full resize-none border-0 bg-white py-2 text-sm text-gray-900 outline-none focus:ring-0'
+								placeholder='댓글을 작성하세요.'
+								required
+							></textarea>
+						</div>
+						<div className='flex items-center justify-end border-t px-3 py-2'>
+							<button
+								type='submit'
+								className='mr-2 rounded-lg border border-mint bg-mint py-1.5 px-3 text-sm font-semibold text-white hover:bg-hover-mint focus:ring-2 focus:ring-ring-mint'
+							>
+								수정
+							</button>
+							<button
+								onClick={editCancel}
+								className='rounded-lg border border-mint bg-transparent py-1.5 px-3 text-sm font-semibold text-mint  hover:bg-gray-100 focus:ring-2 focus:ring-gray-300'
+							>
+								취소
+							</button>
+						</div>
 					</div>
-				</div>
+				</form>
 			)}
-		</li>
+		</>
 	);
 };
 
