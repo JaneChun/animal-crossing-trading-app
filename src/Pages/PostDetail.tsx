@@ -186,13 +186,13 @@ function PostDetail() {
 							</div>
 						</div>
 					</div>
-					<div className='mt-4 mb-4 p-1 text-base font-normal text-gray-500'>{data.body}</div>
+					<div className='mt-4 mb-4 whitespace-pre-wrap p-3 text-base font-normal text-gray-500'>{data.body}</div>
 					{/* Text Data */}
 
 					{/* Item List */}
 					<ul className='h-auto overflow-y-auto py-2 text-gray-700 dark:text-gray-200' aria-labelledby='dropdownUsersButton'>
 						{data.cart?.map((item: cartItem) => (
-							<li className='mb-2 rounded-md bg-gray-100' key={item.UniqueEntryID}>
+							<li className='mb-2 rounded-md bg-lightgray' key={item.UniqueEntryID}>
 								<div className='flex justify-between px-4 py-2'>
 									<div className='flex items-center'>
 										<img className='mr-2 h-6 w-6 rounded-md' src={item.imageUrl} alt={item.name} />

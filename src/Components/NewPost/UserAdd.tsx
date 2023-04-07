@@ -18,7 +18,7 @@ const UserAdd = ({ setCart }: UserAddProps) => {
 			const userInputItem: item = {
 				UniqueEntryID: uuidv4(),
 				imageUrl:
-					'https://firebasestorage.googleapis.com/v0/b/animal-crossing-trade-app.appspot.com/o/Src%2F120px-Furniture_Leaf_NH_Category_Icon.png?alt=media&token=0d4a9b43-88bf-4d15-a44d-8f1e588011af',
+					'https://firebasestorage.googleapis.com/v0/b/animal-crossing-trade-app.appspot.com/o/Src%2F120px-Furniture_NH_Inv_Icon.png?alt=media&token=b5e55a18-ddbf-49ce-8477-29ed012bbb2a',
 				name: userAddInput,
 			};
 			setCart((cart) => [...cart, { ...userInputItem, quantity: 1, price: 1 }]);

@@ -1,80 +1,105 @@
 import React from 'react';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 const Carousel = () => {
+	const settings = {
+		dots: true,
+		arrows: true,
+		infinite: true,
+		speed: 3000,
+		autoplay: true,
+		autoplaySpeed: 3000,
+		slidesToShow: 1,
+		slidesToScroll: 1,
+		nextArrow: <NextArrow />,
+		prevArrow: <PrevArrow />,
+	};
+
 	return (
-		<div id='default-carousel' className='relative w-full bg-slate-200' data-carousel='slide'>
-			{/* Carousel wrapper  */}
-			<div className='relative h-56 overflow-hidden rounded-lg md:h-96'>
-				{/* Item 1  */}
-				<div className='hidden duration-700 ease-in-out' data-carousel-item>
-					<img src='../Images/image_1.png' className='absolute top-1/2 left-1/2 block w-full -translate-x-1/2 -translate-y-1/2' alt='...' />
+		<div className=''>
+			<Slider {...settings}>
+				<div className='h-56 bg-sky-100'>
+					<img
+						className='h-full w-full object-cover'
+						src='https://animalcrossingworld.com/wp-content/uploads/2020/01/animal-crossing-new-horizons-screenshot-january-1-autumn-scarecrow.jpg'
+					/>
 				</div>
-				{/* Item 2  */}
-				<div className='hidden duration-700 ease-in-out' data-carousel-item>
-					<img src='../Images/image_2.png' className='absolute top-1/2 left-1/2 block w-full -translate-x-1/2 -translate-y-1/2' alt='...' />
+				<div className='h-56 bg-pink-100'>
+					<img className='h-full  w-full object-cover' src='https://i.pinimg.com/originals/b6/96/42/b69642f9c7b9a77942dfc908fe90493c.jpg' />
 				</div>
-				{/* Item 3  */}
-				<div className='hidden duration-700 ease-in-out' data-carousel-item>
-					<img src='../Images/image_3.png' className='absolute top-1/2 left-1/2 block w-full -translate-x-1/2 -translate-y-1/2' alt='...' />
+				<div className='h-56 bg-yellow-100'>
+					<img
+						className='h-full  w-full object-cover'
+						src='https://nintendoeverything.com/wp-content/uploads/sites/1/nggallery/ac-new-horizons/Switch_AnimalCrossingNH_E3_screen_085.jpg'
+					/>
 				</div>
-				{/* Item 4  */}
-				<div className='hidden duration-700 ease-in-out' data-carousel-item>
-					<img src='../Images/image_4.png' className='absolute top-1/2 left-1/2 block w-full -translate-x-1/2 -translate-y-1/2' alt='...' />
+				<div className='h-56 bg-red-100'>
+					<img
+						className='h-full  w-full object-cover'
+						src='https://mypotatogames.com/wp-content/uploads/2020/01/animal_crossing_new_horizons_stary_night.jpg'
+					/>
 				</div>
-				{/* Item 5  */}
-				<div className='hidden duration-700 ease-in-out' data-carousel-item>
-					<img src='../Images/image_5.png' className='absolute top-1/2 left-1/2 block w-full -translate-x-1/2 -translate-y-1/2' alt='...' />
+				<div className='h-56 bg-purple-100'>
+					<img
+						className='h-full  w-full object-cover'
+						src='https://64.media.tumblr.com/5c2dd59cc619cb8b1f8ad920996efd99/1a1ce34079a1bbdf-d9/s1280x1920/e9a1011f61fdda81314cbe881cc481cc00e47041.jpg'
+					/>
 				</div>
-			</div>
-			{/* Slider indicators  */}
-			<div className='absolute bottom-5 left-1/2 z-30 flex -translate-x-1/2 space-x-3'>
-				<button type='button' className='h-3 w-3 rounded-full' aria-current='true' aria-label='Slide 1' data-carousel-slide-to='0'></button>
-				<button type='button' className='h-3 w-3 rounded-full' aria-current='false' aria-label='Slide 2' data-carousel-slide-to='1'></button>
-				<button type='button' className='h-3 w-3 rounded-full' aria-current='false' aria-label='Slide 3' data-carousel-slide-to='2'></button>
-				<button type='button' className='h-3 w-3 rounded-full' aria-current='false' aria-label='Slide 4' data-carousel-slide-to='3'></button>
-				<button type='button' className='h-3 w-3 rounded-full' aria-current='false' aria-label='Slide 5' data-carousel-slide-to='4'></button>
-			</div>
-			{/* Slider controls  */}
-			<button
-				type='button'
-				className='group absolute top-0 left-0 z-30 flex h-full cursor-pointer items-center justify-center px-4 focus:outline-none'
-				data-carousel-prev
-			>
-				<span className='inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white dark:bg-gray-800/30 dark:group-hover:bg-gray-800/60 dark:group-focus:ring-gray-800/70 sm:h-10 sm:w-10'>
-					<svg
-						aria-hidden='true'
-						className='h-5 w-5 text-white dark:text-gray-800 sm:h-6 sm:w-6'
-						fill='none'
-						stroke='currentColor'
-						viewBox='0 0 24 24'
-						xmlns='http://www.w3.org/2000/svg'
-					>
-						<path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M15 19l-7-7 7-7'></path>
-					</svg>
-					<span className='sr-only'>Previous</span>
-				</span>
-			</button>
-			<button
-				type='button'
-				className='group absolute top-0 right-0 z-30 flex h-full cursor-pointer items-center justify-center px-4 focus:outline-none'
-				data-carousel-next
-			>
-				<span className='inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white dark:bg-gray-800/30 dark:group-hover:bg-gray-800/60 dark:group-focus:ring-gray-800/70 sm:h-10 sm:w-10'>
-					<svg
-						aria-hidden='true'
-						className='h-5 w-5 text-white dark:text-gray-800 sm:h-6 sm:w-6'
-						fill='none'
-						stroke='currentColor'
-						viewBox='0 0 24 24'
-						xmlns='http://www.w3.org/2000/svg'
-					>
-						<path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M9 5l7 7-7 7'></path>
-					</svg>
-					<span className='sr-only'>Next</span>
-				</span>
-			</button>
+			</Slider>
 		</div>
 	);
 };
 
 export default Carousel;
+
+const NextArrow = ({ onClick }) => {
+	return (
+		<button
+			onClick={onClick}
+			type='button'
+			class='group absolute top-0 right-0 z-30 flex h-full cursor-pointer items-center justify-center px-4 focus:outline-none'
+			data-carousel-next
+		>
+			<span class='inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white dark:bg-gray-800/30 dark:group-hover:bg-gray-800/60 dark:group-focus:ring-gray-800/70 sm:h-10 sm:w-10'>
+				<svg
+					aria-hidden='true'
+					class='h-5 w-5 text-white dark:text-gray-800 sm:h-6 sm:w-6'
+					fill='none'
+					stroke='currentColor'
+					viewBox='0 0 24 24'
+					xmlns='http://www.w3.org/2000/svg'
+				>
+					<path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 5l7 7-7 7'></path>
+				</svg>
+				<span class='sr-only'>Next</span>
+			</span>
+		</button>
+	);
+};
+
+const PrevArrow = ({ onClick }) => {
+	return (
+		<button
+			onClick={onClick}
+			type='button'
+			class='group absolute top-0 left-0 z-30 flex h-full cursor-pointer items-center justify-center px-4 focus:outline-none'
+			data-carousel-prev
+		>
+			<span class='inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/30 group-hover:bg-white/50 group-focus:outline-none group-focus:ring-4 group-focus:ring-white dark:bg-gray-800/30 dark:group-hover:bg-gray-800/60 dark:group-focus:ring-gray-800/70 sm:h-10 sm:w-10'>
+				<svg
+					aria-hidden='true'
+					class='h-5 w-5 text-white dark:text-gray-800 sm:h-6 sm:w-6'
+					fill='none'
+					stroke='currentColor'
+					viewBox='0 0 24 24'
+					xmlns='http://www.w3.org/2000/svg'
+				>
+					<path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 19l-7-7 7-7'></path>
+				</svg>
+				<span class='sr-only'>Previous</span>
+			</span>
+		</button>
+	);
+};

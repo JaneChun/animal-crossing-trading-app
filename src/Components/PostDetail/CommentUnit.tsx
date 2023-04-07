@@ -223,7 +223,7 @@ const CommentUnit = ({
 								</>
 							)}
 
-							<div className='mt-1'>{comment.comment}</div>
+							<div className='mt-1 whitespace-pre-wrap'>{comment.comment}</div>
 						</div>
 						<div className='flex justify-between'>
 							<div className='pb-3 text-xs text-hover-mint'>{elapsedTime(comment.createdAt.toDate())}</div>

@@ -130,11 +130,12 @@ const NewPost = () => {
 					내용
 				</label>
 				<textarea
+					rows={10}
 					onChange={bodyInputHandler}
 					value={body}
 					placeholder='2마일에 구매하고 싶어요. 채팅 주세요!'
 					id='default-textarea'
-					className='sm:text-md block w-full resize-none rounded-lg border border-gray-300 bg-gray-50 p-4 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-ring-mint'
+					className='sm:text-md block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 text-sm text-gray-900 outline-none focus:ring-2 focus:ring-ring-mint'
 				/>
 			</div>
 			{/* Body */}
