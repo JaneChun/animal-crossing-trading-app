@@ -10,50 +10,55 @@ import PostEdit from './Components/PostDetail/PostEdit';
 import Chat from './Pages/Chat';
 import MyChat from './Pages/MyChat';
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+	[
+		{
+			path: '/',
+			element: <App />,
+			children: [
+				{
+					path: '/',
+					index: true,
+					element: <Home />,
+				},
+				{
+					path: '/login',
+					element: <Login />,
+				},
+				{
+					path: '/mypage',
+					element: <MyPage />,
+				},
+				{
+					path: '/newpost',
+					element: <NewPost />,
+				},
+				{
+					path: '/search',
+					element: <Search />,
+				},
+				{
+					path: '/post/:id',
+					element: <PostDetail />,
+				},
+				{
+					path: '/post-edit/:id',
+					element: <PostEdit />,
+				},
+				{
+					path: '/chat',
+					element: <MyChat />,
+				},
+				{
+					path: '/chat/:id',
+					element: <Chat />,
+				},
+			],
+		},
+	],
 	{
-		path: '/',
-		element: <App />,
-		children: [
-			{
-				path: '/',
-				index: true,
-				element: <Home />,
-			},
-			{
-				path: '/login',
-				element: <Login />,
-			},
-			{
-				path: '/mypage',
-				element: <MyPage />,
-			},
-			{
-				path: '/newpost',
-				element: <NewPost />,
-			},
-			{
-				path: '/search',
-				element: <Search />,
-			},
-			{
-				path: '/post/:id',
-				element: <PostDetail />,
-			},
-			{
-				path: '/post-edit/:id',
-				element: <PostEdit />,
-			},
-			{
-				path: '/chat',
-				element: <MyChat />,
-			},
-			{
-				path: '/chat/:id',
-				element: <Chat />,
-			},
-		],
-	},
-]);
+		basename: process.env.PUBLIC_URL,
+	}
+);
 
 export default router;
