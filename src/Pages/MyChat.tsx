@@ -38,7 +38,7 @@ const MyChat = () => {
 	};
 
 	return (
-		<div className='absolute top-[calc(61px)] h-[calc(100vh-121px)] w-screen overflow-y-auto p-5'>
+		<div className='custom-container p-5'>
 			<div className='pb-2 text-lg font-bold text-gray-900 '>채팅</div>
 			{chatData.length === 0 ? (
 				<div className='flex h-full w-full items-center justify-center'>

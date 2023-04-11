@@ -51,6 +51,8 @@ const NewPost = () => {
 			createdAt: serverTimestamp(),
 			creatorDisplayName: userInfo.displayName,
 			creatorIslandName: userInfo.islandName,
+			creatorRating: userInfo.rating,
+			creatorCount: userInfo.count,
 			creatorId: userInfo?.uid,
 			done: false,
 			comments: 0,
@@ -82,7 +84,7 @@ const NewPost = () => {
 	};
 
 	return (
-		<div className='absolute top-[calc(61px)] h-[calc(100vh-121px)] w-screen overflow-y-auto p-5'>
+		<div className='custom-container p-5'>
 			<div className='inline-flex rounded-md shadow-sm' role='group'>
 				{/* Type */}
 				<button

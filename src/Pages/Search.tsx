@@ -42,7 +42,7 @@ const Search = () => {
 	};
 
 	return (
-		<div className='absolute top-[calc(61px)] h-[calc(100vh-121px)] w-screen overflow-y-auto p-5'>
+		<div className='custom-container p-5'>
 			<form onSubmit={onSubmit}>
 				<div className='relative flex'>
 					<button
@@ -117,7 +117,6 @@ const Search = () => {
 							<PostUnit
 								key={doc.id}
 								id={doc.id}
-								page={'Home'}
 								type={doc.type}
 								title={doc.title}
 								createdAt={doc.createdAt}

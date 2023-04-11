@@ -4,7 +4,6 @@ import Home from './Pages/Home';
 import Login from './Pages/Login';
 import MyPage from './Pages/MyPage';
 import NewPost from './Pages/NewPost';
-import UserPage from './Pages/UserPage';
 import Search from './Pages/Search';
 import PostDetail from './Pages/PostDetail';
 import PostEdit from './Components/PostDetail/PostEdit';
@@ -32,10 +31,6 @@ const router = createBrowserRouter([
 			{
 				path: '/newpost',
 				element: <NewPost />,
-			},
-			{
-				path: '/user/:uid',
-				element: <UserPage />,
 			},
 			{
 				path: '/search',

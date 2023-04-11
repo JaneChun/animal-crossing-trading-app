@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { auth, db } from '../fbase';
-import { collection, query, where, orderBy, getDocs, limit, startAfter } from 'firebase/firestore';
+import { collection, getDocs, limit, orderBy, query, startAfter, where } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
+import { db } from '../fbase';
 import { doc } from '../Pages/Home';
 import PostUnit from './PostUnit';
-import { AuthContext } from '../context/AuthContext';
-import Footer from './Footer';
 
 function MyPosts() {
 	const [data, setData] = useState<doc[]>([]);
@@ -44,7 +42,7 @@ function MyPosts() {
 	};
 
 	return (
-		<div className='mt-5 p-3'>
+		<div className='mt-5 w-full p-3'>
 			{data.length !== 0 && (
 				<>
 					<div className='mb-4 flex items-center justify-between'>
@@ -58,7 +56,6 @@ function MyPosts() {
 										<PostUnit
 											key={doc.id}
 											id={doc.id}
-											page={'MyPosts'}
 											type={doc.type}
 											title={doc.title}
 											createdAt={doc.createdAt}
@@ -71,7 +68,7 @@ function MyPosts() {
 							)}
 						</ul>
 
-						<div className='flex justify-center'>
+						<div className='mt-5 flex justify-center'>
 							{isEnd ? (
 								<div className='mt-5 text-sm text-gray-400'>마지막 페이지입니다.</div>
 							) : (

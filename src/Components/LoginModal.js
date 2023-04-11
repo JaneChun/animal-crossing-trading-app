@@ -9,7 +9,7 @@ const LoginModal = ({ onSocialClick }) => {
 			id='crypto-modal'
 			tabIndex='-1'
 			aria-hidden='true'
-			className='fixed top-0 left-0 right-0 z-50 flex h-[calc(100%-1rem)] w-full items-center justify-center overflow-y-auto overflow-x-hidden p-4 md:inset-0 md:h-full'
+			className='absolute top-0 left-0 right-0 z-50 flex h-[calc(100%-1rem)] w-full items-center justify-center overflow-y-auto overflow-x-hidden p-4 md:inset-0 md:h-full'
 		>
 			<div className='relative flex w-full max-w-md justify-center md:h-auto'>
 				{/* Modal content */}

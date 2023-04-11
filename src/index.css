@@ -9,3 +9,9 @@
 		margin: 0;
 	}
 }
+
+@layer components {
+	.custom-container {
+		@apply absolute top-[calc(61px)] h-[calc(100%-121px)] w-full overflow-y-auto;
+	}
+}

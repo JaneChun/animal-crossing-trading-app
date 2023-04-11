@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Comment from '../Components/PostDetail/Comment';
 import { AuthContext } from '../context/AuthContext';
 import { db } from '../fbase';
+import { elapsedTime } from '../Utilities/elapsedTime';
 import { cartItem } from './NewPost';
 
 function PostDetail() {
@@ -105,9 +106,9 @@ function PostDetail() {
 			}
 		}
 	};
-
+	console.log('data', data);
 	return (
-		<div onClick={handleOutsideClick} className='absolute top-[calc(61px)] h-[calc(100vh-121px)] w-screen overflow-y-auto p-5'>
+		<div onClick={handleOutsideClick} className='custom-container p-5'>
 			{data && (
 				<div className='relative mx-2'>
 					{/* Type */}
@@ -175,16 +176,33 @@ function PostDetail() {
 					{/* Text Data */}
 					<div className='mt-3 mb-1 text-xl font-semibold text-gray-900'>{data.title}</div>
 					<div className='border-b border-gray-200 pb-3'>
-						<div className='flex items-center'>
-							<span className='text-md mr-2 mb-1 font-semibold text-gray-500'>{data.creatorDisplayName}</span>
-							<div className='mb-1 flex items-end text-sm text-gray-500'>
-								<img
-									className='mr-0.5 h-5 w-5'
-									src='https://firebasestorage.googleapis.com/v0/b/animal-crossing-trade-app.appspot.com/o/Src%2FCoconut_Tree_NH_Inv_Icon.png?alt=media&token=cd997010-694e-49b0-9390-483772cdad8a'
-								/>
-								<span>{data.creatorIslandName}</span>
+						<div className='mb-1 flex items-center justify-between'>
+							<div className='flex'>
+								<span className='text-md mr-2 font-semibold text-gray-500'>{data.creatorDisplayName}</span>
+								<span className='flex items-center text-sm text-gray-500'>
+									<img
+										className='mr-0.5 h-5 w-5'
+										src='https://firebasestorage.googleapis.com/v0/b/animal-crossing-trade-app.appspot.com/o/Src%2FCoconut_Tree_NH_Inv_Icon.png?alt=media&token=cd997010-694e-49b0-9390-483772cdad8a'
+									/>
+									<span>{data.creatorIslandName}</span>
+								</span>
+							</div>
+
+							<div className='flex items-center text-sm text-gray-500'>
+								<span className='text-yellow-400'>
+									<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 26 26'>
+										<path
+											fill='currentColor'
+											d='m12 18.275l-4.15 2.5q-.275.175-.575.15t-.525-.2q-.225-.175-.35-.438t-.05-.587l1.1-4.725L3.775 11.8q-.25-.225-.312-.513t.037-.562q.1-.275.3-.45t.55-.225l4.85-.425l1.875-4.45q.125-.3.388-.45t.537-.15q.275 0 .537.15t.388.45l1.875 4.45l4.85.425q.35.05.55.225t.3.45q.1.275.038.563t-.313.512l-3.675 3.175l1.1 4.725q.075.325-.05.588t-.35.437q-.225.175-.525.2t-.575-.15l-4.15-2.5Z'
+										/>
+									</svg>
+								</span>
+								<span>
+									{Number(data.creatorRating).toFixed(1)} ({data.creatorCount})
+								</span>
 							</div>
 						</div>
+						<div className='text-xs text-gray-500'>{elapsedTime(data.createdAt?.toDate())}</div>
 					</div>
 					<div className='mt-4 mb-4 whitespace-pre-wrap p-3 text-base font-normal text-gray-500'>{data.body}</div>
 					{/* Text Data */}

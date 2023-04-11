@@ -3,7 +3,6 @@ import { elapsedTime } from '../Utilities/elapsedTime';
 
 interface postProps {
 	id: string;
-	page: string;
 	type?: string;
 	title?: string;
 	createdAt: any;
@@ -11,16 +10,12 @@ interface postProps {
 	creatorId?: string;
 	comments?: number;
 	done?: boolean;
+	rating?: number;
+	count?: number;
 }
 
-const PostUnit = ({ id, page, type, title, createdAt, creatorDisplayName, creatorId, comments, done }: postProps) => {
+const PostUnit = ({ id, type, title, createdAt, creatorDisplayName, comments, done, rating, count }: postProps) => {
 	const navigate = useNavigate();
-
-	const onCreatorDisplayNameClick = () => {
-		if (page === 'Home') {
-			navigate(`user/${creatorId}`);
-		}
-	};
 
 	return (
 		<li className='py-3.5 sm:py-4'>
@@ -40,9 +35,7 @@ const PostUnit = ({ id, page, type, title, createdAt, creatorDisplayName, creato
 						<span className='text-gray-900'>{title}</span>
 					</p>
 					<p>
-						<span onClick={onCreatorDisplayNameClick} className='mr-2 truncate text-sm text-gray-500'>
-							{creatorDisplayName?.split(' ')[0]}
-						</span>
+						<span className='mr-2 truncate text-sm text-gray-500'>{creatorDisplayName}</span>
 						{createdAt && <span className='truncate text-xs text-gray-500'>{elapsedTime(createdAt.toDate())}</span>}
 					</p>
 				</div>

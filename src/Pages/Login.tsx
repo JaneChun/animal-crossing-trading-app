@@ -34,7 +34,7 @@ function Login() {
 		const UsersdocRef = doc(db, 'Users', userUid);
 		const UsersResponse = await getDoc(UsersdocRef);
 		if (!UsersResponse.exists()) {
-			await setDoc(UsersdocRef, { islandName: '', rating: 0, count: 0 });
+			await setDoc(UsersdocRef, { islandName: '', rating: 0, count: 0, isDeletedAccount: false });
 		}
 	};
 
@@ -63,7 +63,7 @@ function Login() {
 	// };
 
 	return (
-		<div className='h-screen'>
+		<div className='custom-container'>
 			<LoginModal onSocialClick={onSocialClick} />
 		</div>
 	);

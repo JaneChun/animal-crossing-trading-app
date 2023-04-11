@@ -1,15 +1,15 @@
-import { signOut } from 'firebase/auth';
+import { doc, updateDoc } from '@firebase/firestore';
+import { deleteUser, signOut } from 'firebase/auth';
 import React, { useContext, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EditProfile from '../Components/EditProfile';
 import MyPosts from '../Components/MyPosts';
 import { AuthContext } from '../context/AuthContext';
-import { auth } from '../fbase';
+import { auth, db } from '../fbase';
 
 function MyPage() {
 	const navigate = useNavigate();
 	const { userInfo } = useContext(AuthContext);
-	const uid = localStorage.getItem('uid');
 	const [isEditing, setIsEditing] = useState<boolean>(false);
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 	const modalRef = useRef<HTMLButtonElement | null>(null);
@@ -34,9 +34,33 @@ function MyPage() {
 		}
 	};
 
+	const onDeleteAccountClick = async () => {
+		const userInfo = auth.currentUser;
+
+		let answer = prompt('정말로 탈퇴하겠습니까? 맞으시면 "탈퇴합니다"라고 입력해주세요.');
+
+		if (answer === '탈퇴합니다') {
+			try {
+				if (!userInfo) return;
+				const docRef = doc(db, 'Users', userInfo.uid);
+
+				await updateDoc(docRef, {
+					isDeletedAccount: true,
+				});
+
+				await deleteUser(userInfo).then(() => {
+					alert('탈퇴되었습니다.');
+					navigate('/');
+				});
+			} catch (error) {
+				console.log(error);
+			}
+		}
+	};
+
 	return (
 		userInfo && (
-			<div onClick={handleOutsideClick} className='absolute top-[calc(61px)] h-[calc(100vh-121px)] w-screen overflow-y-auto p-5'>
+			<div onClick={handleOutsideClick} className='custom-container flex flex-col items-center p-5'>
 				<div className='w-full max-w-sm rounded-lg border border-gray-200 bg-white shadow'>
 					<div className='relative flex justify-end px-4 pt-4'>
 						{/* Dots Button */}
@@ -64,6 +88,11 @@ function MyPage() {
 								<li>
 									<button onClick={onLogOutClick} className='block px-6 py-2 hover:bg-gray-100 '>
 										로그아웃
+									</button>
+								</li>
+								<li>
+									<button onClick={onDeleteAccountClick} className='block px-6 py-2 hover:bg-gray-100 '>
+										회원 탈퇴
 									</button>
 								</li>
 							</ul>

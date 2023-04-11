@@ -89,7 +89,7 @@ const PostEdit = () => {
 	};
 
 	return (
-		<div className='absolute top-[calc(61px)] min-h-[calc(100vh-61px)] w-screen p-5'>
+		<div className='custom-container p-5'>
 			<div className='inline-flex rounded-md shadow-sm' role='group'>
 				{/* Type */}
 				<button
@@ -97,24 +97,18 @@ const PostEdit = () => {
 					name='buy'
 					type='button'
 					className={`${
-						type === 'buy' ? 'bg-gray-100 text-blue-700' : 'bg-white text-gray-900'
-					} rounded-l-lg border border-gray-200  px-4 py-2 text-sm font-medium  hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-blue-500`}
+						type === 'buy' ? 'bg-gray-100 text-mint' : 'bg-white text-gray-900'
+					} rounded-l-lg border border-gray-200  px-4 py-2 text-sm font-medium hover:bg-gray-100 hover:text-mint focus:z-10 focus:text-mint focus:ring-2 focus:ring-ring-mint`}
 				>
 					구해요
 				</button>
-				{/* <button
-					type='button'
-					className='border-t border-b border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-blue-500'
-				>
-					판매
-				</button> */}
 				<button
 					onClick={typeHandler}
 					name='sell'
 					type='button'
 					className={`${
-						type === 'sell' ? 'bg-gray-100 text-blue-700' : 'bg-white text-gray-900'
-					} rounded-r-lg border border-gray-200  px-4 py-2 text-sm font-medium  hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:text-blue-700 focus:ring-2 focus:ring-blue-700 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:hover:text-white dark:focus:text-white dark:focus:ring-blue-500`}
+						type === 'sell' ? 'bg-gray-100 text-mint' : 'bg-white text-gray-900'
+					} rounded-r-lg border border-gray-200  px-4 py-2 text-sm font-medium hover:bg-gray-100 hover:text-mint focus:z-10 focus:text-mint focus:ring-2 focus:ring-ring-mint`}
 				>
 					팔아요
 				</button>
@@ -163,16 +157,16 @@ const PostEdit = () => {
 
 			<div className='mt-5 mb-[calc(41px)] flex justify-end'>
 				<button
-					onClick={onCancel}
-					className='mr-2 mb-5 rounded border border-blue-500 bg-transparent py-2 px-4 font-semibold text-blue-700 hover:border-transparent hover:bg-blue-500 hover:text-white'
-				>
-					취소
-				</button>
-				<button
 					onClick={onSubmit}
-					className='mb-5 rounded border border-blue-500 bg-transparent py-2 px-4 font-semibold text-blue-700 hover:border-transparent hover:bg-blue-500 hover:text-white'
+					className='mr-2 rounded-lg border border-mint bg-mint py-2 px-4 font-semibold text-white hover:bg-hover-mint focus:ring-4 focus:ring-ring-mint'
 				>
 					수정
+				</button>
+				<button
+					onClick={onCancel}
+					className='rounded-lg border border-mint bg-transparent py-2 px-4 font-semibold text-mint hover:border-transparent hover:bg-mint hover:text-white focus:ring-4 focus:ring-ring-mint'
+				>
+					취소
 				</button>
 			</div>
 		</div>

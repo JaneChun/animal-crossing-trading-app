@@ -119,7 +119,7 @@ const Chat = () => {
 	};
 
 	return (
-		<div onClick={handleOutsideClick} className='absolute top-[calc(61px)] flex h-[calc(100vh-121px)] w-screen flex-col items-end'>
+		<div onClick={handleOutsideClick} className='custom-container flex flex-col items-end'>
 			{/* Conversation */}
 			<div className='-mb-6 flex w-full flex-1 grow flex-col justify-between overflow-y-auto'>
 				<div className='flex justify-between border-b p-5 sm:items-center'>
@@ -277,43 +277,38 @@ const Chat = () => {
 
 			{/* Rating PopUp */}
 			{isPopupOpen && (
-				<div
-					id='popup-modal'
-					className='fixed top-1/3 left-0 right-0 z-50 h-[calc(100%-1rem)] overflow-y-auto overflow-x-hidden p-4 md:inset-0 md:h-full'
-				>
-					<div className='relative h-full w-full max-w-md md:h-auto'>
-						<div className='relative rounded-lg bg-white shadow'>
-							<div className='p-6 text-center'>
-								<h3 className='text-md mb-2 font-normal text-gray-500'>상대방의 매너 점수는 어떤가요?</h3>
+				<div id='popup-modal' className='absolute top-1/3 left-0 right-0 z-50'>
+					<div className='m-5 rounded-lg bg-white shadow'>
+						<div className='p-6 text-center'>
+							<h3 className='text-md mb-2 font-normal text-gray-500'>상대방의 매너 점수는 어떤가요?</h3>
 
-								<div>
-									<ul className='mb-5 flex justify-center'>
-										{[...Array(5)].map((star, i) => {
-											const ratingValue = i + 1;
+							<div>
+								<ul className='mb-5 flex justify-center'>
+									{[...Array(5)].map((star, i) => {
+										const ratingValue = i + 1;
 
-											return (
-												<label>
-													<input className='hidden' onMouseOut={() => setHover(0)} type='radio' name='rating' value={ratingValue} />
-													<FaStar
-														onClick={() => setRating(ratingValue)}
-														onMouseEnter={() => setHover(ratingValue)}
-														className={`${ratingValue <= (hover || rating) ? 'text-yellow-400' : 'text-gray-200'} + cursor-pointer`}
-													/>
-												</label>
-											);
-										})}
-									</ul>
-								</div>
-
-								<button
-									onClick={deleteChat}
-									data-modal-hide='popup-modal'
-									type='button'
-									className='mr-2 inline-flex items-center rounded-lg bg-mint px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-hover-mint focus:outline-none focus:ring-4 focus:ring-ring-mint'
-								>
-									확인
-								</button>
+										return (
+											<label>
+												<input className='hidden' onMouseOut={() => setHover(0)} type='radio' name='rating' value={ratingValue} />
+												<FaStar
+													onClick={() => setRating(ratingValue)}
+													onMouseEnter={() => setHover(ratingValue)}
+													className={`${ratingValue <= (hover || rating) ? 'text-yellow-400' : 'text-gray-200'} + cursor-pointer`}
+												/>
+											</label>
+										);
+									})}
+								</ul>
 							</div>
+
+							<button
+								onClick={deleteChat}
+								data-modal-hide='popup-modal'
+								type='button'
+								className='mr-2 inline-flex items-center rounded-lg bg-mint px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-hover-mint focus:outline-none focus:ring-4 focus:ring-ring-mint'
+							>
+								확인
+							</button>
 						</div>
 					</div>
 				</div>

@@ -11,7 +11,7 @@ function Nav() {
 		// 	<Link to='/'>Home</Link>
 		// 	{isLoggedIn ? <Link to='/mypage'>MyPage</Link> : <Link to='/login'>Login</Link>}
 		// </nav>
-		<div className='fixed bottom-0 left-1/2 z-50 w-full -translate-x-1/2 border-t border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700'>
+		<div className='absolute bottom-0 z-50 w-full border-t border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-700'>
 			{/* <div className='w-full'>
 				<div className='mx-auto my-2 grid max-w-xs grid-cols-3 gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-600' role='group'>
 					<button

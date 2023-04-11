@@ -12,11 +12,13 @@ function App() {
 	console.log('user in App', userInfo);
 
 	return (
-		<>
-			<Header />
-			<Outlet />
-			<Nav />
-		</>
+		<div className='flex h-screen w-screen items-center justify-center'>
+			<div className='relative h-screen w-screen shadow-md lg:max-h-[700px] lg:max-w-sm'>
+				<Header />
+				<Outlet />
+				<Nav />
+			</div>
+		</div>
 	);
 }
 

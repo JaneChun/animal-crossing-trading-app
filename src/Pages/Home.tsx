@@ -15,6 +15,8 @@ export interface doc {
 	createdAt?: number;
 	done?: boolean;
 	comments?: number;
+	creatorRating?: number;
+	creatorCount?: number;
 }
 
 function Home() {
@@ -54,7 +56,7 @@ function Home() {
 	};
 
 	return (
-		<div className='absolute top-[calc(61px)] h-[calc(100vh-121px)] w-screen overflow-y-auto'>
+		<div className='custom-container'>
 			<Carousel />
 			<div className='p-7'>
 				<div className='mb-4 flex items-center justify-between'>
@@ -67,12 +69,13 @@ function Home() {
 								<PostUnit
 									key={doc.id}
 									id={doc.id}
-									page={'Home'}
 									type={doc.type}
 									title={doc.title}
 									createdAt={doc.createdAt}
 									creatorDisplayName={doc.creatorDisplayName}
 									creatorId={doc.creatorId}
+									rating={doc.creatorRating}
+									count={doc.creatorCount}
 									comments={doc.comments}
 									done={doc.done}
 								/>
