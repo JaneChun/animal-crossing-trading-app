@@ -42,6 +42,12 @@ const NewPost = () => {
 	};
 
 	const onSubmit = async () => {
+		if (!userInfo) {
+			alert('글 쓰기는 로그인 후 가능합니다.');
+			navigate('/login');
+			return;
+		}
+
 		const requestData = {
 			type,
 			title,
@@ -57,8 +63,6 @@ const NewPost = () => {
 			done: false,
 			comments: 0,
 		};
-
-		if (!userInfo) return;
 
 		if (type === '') {
 			alert('거래 종류를 선택해주세요.');

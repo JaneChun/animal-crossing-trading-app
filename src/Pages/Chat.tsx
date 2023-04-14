@@ -88,6 +88,7 @@ const Chat = () => {
 	const deleteChat = async () => {
 		updateRating();
 		setIsPopupOpen(false);
+		navigate('/chat');
 
 		if (participants.length === 1) {
 			deleteDoc(doc(db, 'Chats', data.chatId));
@@ -105,7 +106,6 @@ const Chat = () => {
 				}),
 			});
 		}
-		navigate('/chat');
 	};
 
 	const updateRating = async () => {

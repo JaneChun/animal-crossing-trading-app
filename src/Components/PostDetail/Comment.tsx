@@ -1,5 +1,6 @@
 import { collection, doc, DocumentData, increment, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import React, { SetStateAction, useContext, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { db } from '../../fbase';
 import CommentUnit from './CommentUnit';
@@ -15,6 +16,7 @@ interface CommentProps {
 
 const Comment = ({ done, id, comments, setComments, getComments, postCreatorId }: CommentProps) => {
 	const modalRef = useRef<HTMLButtonElement | null>(null);
+	const navigate = useNavigate();
 	const { userInfo } = useContext(AuthContext);
 	const [commentInput, setCommentInput] = useState('');
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -38,7 +40,13 @@ const Comment = ({ done, id, comments, setComments, getComments, postCreatorId }
 	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		if (!userInfo || !id || done) return;
+		if (!userInfo) {
+			alert('댓글 작성은 로그인 후 가능합니다.');
+			navigate('/login');
+			return;
+		}
+
+		if (!id || done) return;
 
 		const requestData = {
 			comment: commentInput,
