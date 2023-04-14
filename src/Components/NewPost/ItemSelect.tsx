@@ -19,15 +19,6 @@ const ItemSelect = ({ isDropdownOpen, setIsDropdownOpen, cart, setCart }: ItemSe
 	const [filteredData, setFilteredData] = useState<item[]>([]);
 	const [isToastVisible, setIsToastVisible] = useState(false);
 
-	useEffect(() => {
-		getData();
-	}, [category]);
-
-	useEffect(() => {
-		const filtered = itemData.filter((item) => item.name.includes(searchInput));
-		setFilteredData(filtered);
-	}, [searchInput]);
-
 	const getData = async () => {
 		if (!category) return;
 
@@ -38,6 +29,15 @@ const ItemSelect = ({ isDropdownOpen, setIsDropdownOpen, cart, setCart }: ItemSe
 			throw new Error(response.statusText);
 		}
 	};
+
+	useEffect(() => {
+		getData();
+	}, [category]);
+
+	useEffect(() => {
+		const filtered = itemData.filter((item) => item.name.includes(searchInput));
+		setFilteredData(filtered);
+	}, [searchInput, itemData]);
 
 	const addItemToCart = (item: item) => {
 		const isAdded = cart.find((cartItem) => cartItem.UniqueEntryID === item.UniqueEntryID);
@@ -172,7 +172,7 @@ const ListUnit = ({ item, addItemToCart }: listUnitProps) => {
 	return (
 		<li key={item.UniqueEntryID}>
 			<button onClick={() => addItemToCart(item)} className='flex w-full items-center whitespace-nowrap px-4 py-2 hover:bg-gray-100'>
-				<img className='mr-2 h-6 w-6 rounded-full' src={item.imageUrl} alt='Jese image' />
+				<img className='mr-2 h-6 w-6 rounded-full' src={item.imageUrl} alt={`${item.name}`} />
 				{item.name} {item.color && `(${item.color})`}
 			</button>
 		</li>

@@ -35,7 +35,7 @@ const CommentUnit = ({
 	const [isEditing, setIsEditing] = useState<boolean>(false);
 	const [newCommentInput, setNewCommentInput] = useState(comment.comment);
 	const { userInfo } = useContext(AuthContext);
-	const { data, dispatch } = useContext(ChatContext);
+	const { dispatch } = useContext(ChatContext);
 
 	const handleModal = (commentId: string) => {
 		if (!isModalOpen) {
@@ -171,7 +171,7 @@ const CommentUnit = ({
 						<img
 							className='h-11 w-11 rounded-full border object-cover'
 							src={comment.creatorPhotoURL}
-							alt={`${comment.creatorDisplayName}'s profile image`}
+							alt={`${comment.creatorDisplayName}'s profile`}
 						/>
 					</div>
 

@@ -21,7 +21,7 @@ const PostUnit = ({ id, type, title, createdAt, creatorDisplayName, comments, do
 		<li className='py-3.5 sm:py-4'>
 			<div className='flex items-center space-x-4'>
 				<div className='flex-shrink-0'>
-					<img className='h-8 w-8 rounded-md' src='https://content-resized.nookea.com/s1024/qPlJRRKAhoxDNPQnuFLzb' alt='Neil image' />
+					<img className='h-8 w-8 rounded-md' src='https://content-resized.nookea.com/s1024/qPlJRRKAhoxDNPQnuFLzb' alt='thumbnail' />
 				</div>
 				<div className='min-w-0 flex-1'>
 					<p onClick={() => navigate(`/post/${id}`)} className='text-md cursor-pointer truncate py-0.5 font-semibold text-gray-900'>

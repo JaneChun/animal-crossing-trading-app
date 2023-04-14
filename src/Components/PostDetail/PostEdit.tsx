@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { auth, db } from '../../fbase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import CartItem from '../../Components/NewPost/CartItem';
 import ItemSelect from '../../Components/NewPost/ItemSelect';
-import { cartItem } from '../../Pages/NewPost';
 import { AuthContext } from '../../context/AuthContext';
+import { db } from '../../fbase';
+import { cartItem } from '../../Pages/NewPost';
 
 const PostEdit = () => {
 	const navigate = useNavigate();
@@ -16,10 +16,6 @@ const PostEdit = () => {
 	const { userInfo } = useContext(AuthContext);
 	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 	const [cart, setCart] = useState<cartItem[]>([]);
-
-	useEffect(() => {
-		getData();
-	}, []);
 
 	const getData = async () => {
 		const docRef = doc(db, 'Boards', `${state.id}`);
@@ -35,6 +31,10 @@ const PostEdit = () => {
 			console.log('no such document!');
 		}
 	};
+
+	useEffect(() => {
+		getData();
+	}, []);
 
 	const typeHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
 		const { name } = e.target as HTMLButtonElement;

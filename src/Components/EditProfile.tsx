@@ -164,7 +164,7 @@ const EditProfile = ({ islandName, setIsEditing }: EditProfileProps) => {
 					</div>
 					<input onChange={fileInputHandler} id='dropzone-file' type='file' className='hidden' />
 				</label>
-				{fileURLString && <img className='absolute h-64 w-full object-cover px-5' src={fileURLString} />}
+				{fileURLString && <img className='absolute h-64 w-full object-cover px-5' alt='new profile' src={fileURLString} />}
 			</div>
 
 			<div className='flex'>

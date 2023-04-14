@@ -133,7 +133,7 @@ const Chat = () => {
 							</svg>
 						</button>
 
-						<img src={data.counterpart.photoURL} className='h-10 w-10 rounded-full' />
+						<img src={data.counterpart.photoURL} alt={`${data.counterpart.displayName} profile`} className='h-10 w-10 rounded-full' />
 
 						<div className='flex w-full items-center justify-between'>
 							<div className='flex flex-col leading-tight'>
@@ -142,6 +142,7 @@ const Chat = () => {
 									<div className='mb-1 flex items-end text-sm text-gray-500'>
 										<img
 											className='mr-0.5 h-5 w-5'
+											alt='island icon'
 											src='https://firebasestorage.googleapis.com/v0/b/animal-crossing-trade-app.appspot.com/o/Src%2FCoconut_Tree_NH_Inv_Icon.png?alt=media&token=cd997010-694e-49b0-9390-483772cdad8a'
 										/>
 										<span>{data.counterpart.islandName}</span>
@@ -224,11 +225,7 @@ const Chat = () => {
 											<span className='ml-2 text-xs text-gray-400'>{message.date.toDate().toLocaleTimeString().slice(0, -3)}</span>
 										</div>
 									</div>
-									<img
-										src={data.counterpart.photoURL}
-										alt={`${data.counterpart.displayName}'s profile image`}
-										className='order-1 h-10 w-10 rounded-full'
-									/>
+									<img src={data.counterpart.photoURL} alt={`${data.counterpart.displayName}'s profile`} className='order-1 h-10 w-10 rounded-full' />
 								</div>
 							</div>
 						)

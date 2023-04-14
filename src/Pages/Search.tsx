@@ -110,7 +110,7 @@ const Search = () => {
 			<div className='mt-6 mb-4 flex items-center justify-between'>
 				<div className='text-lg font-bold leading-none text-gray-900'>검색 결과</div>
 			</div>
-			<ul role='list' className='divide-y divide-gray-200'>
+			<ul className='divide-y divide-gray-200'>
 				{data.map(
 					(doc) =>
 						doc.createdAt && (

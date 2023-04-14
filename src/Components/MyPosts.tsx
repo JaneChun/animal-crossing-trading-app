@@ -10,10 +10,6 @@ function MyPosts() {
 	const [isEnd, setIsEnd] = useState(false);
 	const uid = localStorage.getItem('uid');
 
-	useEffect(() => {
-		getData();
-	}, []);
-
 	let q = query(collection(db, 'Boards'), where('creatorId', '==', uid), orderBy('createdAt', 'desc'), limit(5));
 
 	const getData = async () => {
@@ -36,6 +32,10 @@ function MyPosts() {
 		setLastestDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
 	};
 
+	useEffect(() => {
+		getData();
+	}, []);
+
 	const nextPage = () => {
 		q = query(collection(db, 'Boards'), orderBy('createdAt', 'desc'), limit(5), startAfter(lastestDoc));
 		getData();
@@ -49,7 +49,7 @@ function MyPosts() {
 						<div className='text-md font-bold leading-none text-gray-900 dark:text-white'>작성한 글</div>
 					</div>
 					<div className='flow-root'>
-						<ul role='list' className='divide-y divide-gray-200 dark:divide-gray-700'>
+						<ul className='divide-y divide-gray-200 dark:divide-gray-700'>
 							{data.map(
 								(doc) =>
 									doc.createdAt && (

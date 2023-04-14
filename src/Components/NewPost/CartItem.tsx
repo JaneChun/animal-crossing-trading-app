@@ -11,6 +11,10 @@ function CartItem({ item, cart, setCart }: CartItemProps) {
 	const [quantityInput, setQuantityInput] = useState<number>(1);
 	const [milesTicketInput, setMilesTicketInput] = useState<number>(1);
 
+	const deleteItemFromCart = () => {
+		setCart(cart.filter((cartItem) => cartItem.UniqueEntryID !== item.UniqueEntryID));
+	};
+
 	useEffect(() => {
 		item.quantity = quantityInput;
 		item.price = milesTicketInput;
@@ -19,10 +23,6 @@ function CartItem({ item, cart, setCart }: CartItemProps) {
 			deleteItemFromCart();
 		}
 	}, [quantityInput, milesTicketInput]);
-
-	const deleteItemFromCart = () => {
-		setCart(cart.filter((cartItem) => cartItem.UniqueEntryID !== item.UniqueEntryID));
-	};
 
 	const onQuantityDecrement = () => {
 		setQuantityInput((quantityInput) => quantityInput - 1);
@@ -61,7 +61,7 @@ function CartItem({ item, cart, setCart }: CartItemProps) {
 					<span className='sr-only'>Close modal</span>
 				</button>
 
-				<img className='mx-auto h-14 w-14 rounded-md' src={item.imageUrl} />
+				<img className='mx-auto h-14 w-14 rounded-md' alt={item.name} src={item.imageUrl} />
 				<p className='truncate whitespace-nowrap text-center text-xs text-gray-700 dark:text-gray-400'>{item.name}</p>
 				<p className='mt-1 truncate whitespace-nowrap text-center text-xs text-gray-400 dark:text-gray-400'>{item.color && `${item.color}`}</p>
 			</div>
@@ -109,6 +109,7 @@ function CartItem({ item, cart, setCart }: CartItemProps) {
 					<div className='flex w-full items-center'>
 						<img
 							className='ml-1 h-6 w-6'
+							alt='miles ticket'
 							src='https://firebasestorage.googleapis.com/v0/b/animal-crossing-trade-app.appspot.com/o/Src%2FMilesTicket.png?alt=media&token=f8e4f60a-1546-4084-9498-0f6f9e765859'
 						/>
 						<input

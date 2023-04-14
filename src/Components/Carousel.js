@@ -23,18 +23,21 @@ const Carousel = () => {
 				<div className='h-52'>
 					<img
 						className='h-full w-full object-cover'
+						alt='carousel1'
 						src='https://firebasestorage.googleapis.com/v0/b/animal-crossing-trade-app.appspot.com/o/Src%2F%E1%84%83%E1%85%A9%E1%86%BC%E1%84%86%E1%85%AE%E1%86%AF%E1%84%8B%E1%85%B4%E1%84%89%E1%85%AE%E1%87%81_20.11.13.%E1%84%89%E1%85%AE%E1%84%8C%E1%85%A5%E1%86%BC%20PPT.001.png?alt=media&token=c0164755-e01f-4b63-966e-7a8403f30650'
 					/>
 				</div>
 				<div className='h-52'>
 					<img
 						className='h-full  w-full object-cover'
+						alt='carousel2'
 						src='https://firebasestorage.googleapis.com/v0/b/animal-crossing-trade-app.appspot.com/o/Src%2F%E1%84%83%E1%85%A9%E1%86%BC%E1%84%86%E1%85%AE%E1%86%AF%E1%84%8B%E1%85%B4%E1%84%89%E1%85%AE%E1%87%81_20.11.13.%E1%84%89%E1%85%AE%E1%84%8C%E1%85%A5%E1%86%BC%20PPT.002.png?alt=media&token=de299d58-8dff-4a64-ab03-32e88d01f79d'
 					/>
 				</div>
 				<div className='h-52'>
 					<img
 						className='h-full  w-full object-cover'
+						alt='carousel3'
 						src='https://firebasestorage.googleapis.com/v0/b/animal-crossing-trade-app.appspot.com/o/Src%2F%E1%84%83%E1%85%A9%E1%86%BC%E1%84%86%E1%85%AE%E1%86%AF%E1%84%8B%E1%85%B4%E1%84%89%E1%85%AE%E1%87%81_20.11.13.%E1%84%89%E1%85%AE%E1%84%8C%E1%85%A5%E1%86%BC%20PPT.003.png?alt=media&token=83906f6c-3d41-4261-8b16-1b8e3d1d1c50'
 					/>
 				</div>

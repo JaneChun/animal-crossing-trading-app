@@ -182,6 +182,7 @@ function PostDetail() {
 								<span className='flex items-center text-sm text-gray-500'>
 									<img
 										className='mr-0.5 h-5 w-5'
+										alt='island icon'
 										src='https://firebasestorage.googleapis.com/v0/b/animal-crossing-trade-app.appspot.com/o/Src%2FCoconut_Tree_NH_Inv_Icon.png?alt=media&token=cd997010-694e-49b0-9390-483772cdad8a'
 									/>
 									<span>{data.creatorIslandName}</span>
@@ -231,6 +232,7 @@ function PostDetail() {
 										<div className='ml-1 flex items-center text-xs'>
 											<img
 												className='h-5 w-5'
+												alt='miles ticket'
 												src='https://firebasestorage.googleapis.com/v0/b/animal-crossing-trade-app.appspot.com/o/Src%2FMilesTicket.png?alt=media&token=f8e4f60a-1546-4084-9498-0f6f9e765859'
 											/>
 											{item.price}
@@ -250,6 +252,7 @@ function PostDetail() {
 							<div className='flex items-center rounded-md bg-white px-1 py-0.5'>
 								<img
 									className='mr-1 h-5 w-5'
+									alt='miles ticket'
 									src='https://firebasestorage.googleapis.com/v0/b/animal-crossing-trade-app.appspot.com/o/Src%2FMilesTicket.png?alt=media&token=f8e4f60a-1546-4084-9498-0f6f9e765859'
 								/>
 								<span className='text-md font-semibold'>

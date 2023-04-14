@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { auth, db } from '../fbase';
-import { signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
 import { AuthProvider } from '@firebase/auth-types';
+import { FacebookAuthProvider, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoginModal from '../Components/LoginModal';
-import { setDoc, doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../fbase';
 
 function Login() {
 	const navigate = useNavigate();
