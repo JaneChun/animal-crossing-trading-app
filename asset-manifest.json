@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "https://janechun.github.io/animal-crossing-trading-app/static/css/main.7ab1bc2c.css",
-    "main.js": "https://janechun.github.io/animal-crossing-trading-app/static/js/main.e159a55a.js",
+    "main.js": "https://janechun.github.io/animal-crossing-trading-app/static/js/main.32a19a7c.js",
     "static/media/slick.svg": "https://janechun.github.io/animal-crossing-trading-app/static/media/slick.2630a3e3eab21c607e21.svg",
     "static/media/slick.eot": "https://janechun.github.io/animal-crossing-trading-app/static/media/slick.a4e97f5a2a64f0ab1323.eot",
     "static/media/slick.ttf": "https://janechun.github.io/animal-crossing-trading-app/static/media/slick.c94f7671dcc99dce43e2.ttf",
     "static/media/slick.woff": "https://janechun.github.io/animal-crossing-trading-app/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "https://janechun.github.io/animal-crossing-trading-app/index.html",
     "main.7ab1bc2c.css.map": "https://janechun.github.io/animal-crossing-trading-app/static/css/main.7ab1bc2c.css.map",
-    "main.e159a55a.js.map": "https://janechun.github.io/animal-crossing-trading-app/static/js/main.e159a55a.js.map"
+    "main.32a19a7c.js.map": "https://janechun.github.io/animal-crossing-trading-app/static/js/main.32a19a7c.js.map"
   },
   "entrypoints": [
     "static/css/main.7ab1bc2c.css",
-    "static/js/main.e159a55a.js"
+    "static/js/main.32a19a7c.js"
   ]
 }
