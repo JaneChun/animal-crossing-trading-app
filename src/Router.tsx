@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createHashRouter } from 'react-router-dom';
 import App from './App';
 import Home from './Pages/Home';
 import Login from './Pages/Login';
@@ -10,7 +10,7 @@ import PostEdit from './Components/PostDetail/PostEdit';
 import Chat from './Pages/Chat';
 import MyChat from './Pages/MyChat';
 
-const router = createBrowserRouter(
+const router = createHashRouter(
 	[
 		{
 			path: '/',
@@ -57,7 +57,7 @@ const router = createBrowserRouter(
 		},
 	],
 	{
-		basename: process.env.PUBLIC_URL,
+		basename: '/',
 	}
 );
 
