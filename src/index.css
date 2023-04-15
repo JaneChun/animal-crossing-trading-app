@@ -15,3 +15,15 @@
 		@apply absolute top-[calc(61px)] h-[calc(100%-121px)] w-full overflow-y-auto;
 	}
 }
+
+body {
+	height: 100vh;
+}
+
+/* Avoid Chrome to see Safari hack */
+@supports (-webkit-touch-callout: none) {
+	body {
+		/* The hack for Safari */
+		height: -webkit-fill-available;
+	}
+}
