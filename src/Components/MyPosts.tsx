@@ -1,49 +1,23 @@
-import { collection, getDocs, limit, orderBy, query, startAfter, where } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
-import { db } from '../fbase';
-import { doc } from '../Pages/Home';
+import { useState } from 'react';
+import { useGetDataWithQuery } from '../Utilities/useGetDataWithQuery';
 import PostUnit from './PostUnit';
+import spinner from '../Images/loading.jpg';
 
-function MyPosts() {
-	const [data, setData] = useState<doc[]>([]);
-	const [lastestDoc, setLastestDoc] = useState<any>();
-	const [isEnd, setIsEnd] = useState(false);
-	const uid = localStorage.getItem('uid');
-
-	let q = query(collection(db, 'Boards'), where('creatorId', '==', uid), orderBy('createdAt', 'desc'), limit(5));
-
-	const getData = async () => {
-		if (isEnd) return;
-
-		const querySnapshot = await getDocs(q);
-
-		if (querySnapshot.empty) {
-			setIsEnd(true);
-		}
-
-		querySnapshot.forEach((doc) => {
-			const docObj = {
-				...doc.data(),
-				id: doc.id,
-			};
-			setData((data) => [...data, docObj]);
-		});
-
-		setLastestDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
-	};
-
-	useEffect(() => {
-		getData();
-	}, []);
+const MyPosts = () => {
+	const [currentPage, setCurrentPage] = useState<number>(0);
+	const { data, isEnd, error } = useGetDataWithQuery(currentPage, 5);
 
 	const nextPage = () => {
-		q = query(collection(db, 'Boards'), orderBy('createdAt', 'desc'), limit(5), startAfter(lastestDoc));
-		getData();
+		setCurrentPage(currentPage + 1);
 	};
 
 	return (
-		<div className='mt-5 w-full p-3'>
-			{data.length !== 0 && (
+		<div className='mt-5 w-full grow p-3'>
+			{data.length === 0 ? (
+				<div className='flex h-full w-full items-center justify-center'>
+					<img src={spinner} className='h-32' />
+				</div>
+			) : (
 				<>
 					<div className='mb-4 flex items-center justify-between'>
 						<div className='text-md font-bold leading-none text-gray-900 dark:text-white'>작성한 글</div>
@@ -85,6 +59,6 @@ function MyPosts() {
 			)}
 		</div>
 	);
-}
+};
 
 export default MyPosts;

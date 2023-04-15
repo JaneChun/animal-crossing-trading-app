@@ -1,58 +1,16 @@
-import { collection, getDocs, limit, orderBy, query, startAfter } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Carousel from '../Components/Carousel';
 import Footer from '../Components/Footer';
 import PostUnit from '../Components/PostUnit';
-import { db } from '../fbase';
+import spinner from '../Images/loading.jpg';
+import { useGetDataWithQuery } from '../Utilities/useGetDataWithQuery';
 
-export interface doc {
-	id: string;
-	type?: string;
-	title?: string;
-	body?: string;
-	creatorDisplayName?: string;
-	creatorId?: string;
-	createdAt?: number;
-	done?: boolean;
-	comments?: number;
-	creatorRating?: number;
-	creatorCount?: number;
-}
-
-function Home() {
-	const [data, setData] = useState<doc[]>([]);
-	const [lastestDoc, setLastestDoc] = useState<any>();
-	const [isEnd, setIsEnd] = useState(false);
-
-	useEffect(() => {
-		getData();
-	}, []);
-
-	let q = query(collection(db, 'Boards'), orderBy('createdAt', 'desc'), limit(10));
-
-	const getData = async () => {
-		if (isEnd) return;
-
-		const querySnapshot = await getDocs(q);
-
-		if (querySnapshot.empty) {
-			setIsEnd(true);
-		}
-
-		querySnapshot.forEach((doc) => {
-			const docObj = {
-				...doc.data(),
-				id: doc.id,
-			};
-			setData((data) => [...data, docObj]);
-		});
-
-		setLastestDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
-	};
+const Home = () => {
+	const [currentPage, setCurrentPage] = useState<number>(0);
+	const { data, isEnd, error } = useGetDataWithQuery(currentPage, 10);
 
 	const nextPage = () => {
-		q = query(collection(db, 'Boards'), orderBy('createdAt', 'desc'), limit(10), startAfter(lastestDoc));
-		getData();
+		setCurrentPage(currentPage + 1);
 	};
 
 	return (
@@ -65,7 +23,7 @@ function Home() {
 
 				{data.length === 0 ? (
 					<div className='flex h-full w-full items-center justify-center'>
-						<div className='animate-pulse px-3 py-1 text-center text-xs font-medium leading-none text-mint'>로딩중...</div>
+						<img src={spinner} className='h-32' />
 					</div>
 				) : (
 					<>
@@ -104,9 +62,9 @@ function Home() {
 					</>
 				)}
 			</div>
-			<Footer />
+			{data.length > 0 && <Footer />}
 		</div>
 	);
-}
+};
 
 export default Home;

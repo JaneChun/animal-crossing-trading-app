@@ -7,7 +7,7 @@ interface CartItemProps {
 	setCart: React.Dispatch<React.SetStateAction<cartItem[]>>;
 }
 
-function CartItem({ item, cart, setCart }: CartItemProps) {
+const CartItem = ({ item, cart, setCart }: CartItemProps) => {
 	const [quantityInput, setQuantityInput] = useState<number>(1);
 	const [milesTicketInput, setMilesTicketInput] = useState<number>(1);
 
@@ -149,6 +149,6 @@ function CartItem({ item, cart, setCart }: CartItemProps) {
 			{/* Miles Ticket Counter */}
 		</div>
 	);
-}
+};
 
 export default CartItem;

@@ -7,7 +7,7 @@ import MyPosts from '../Components/MyPosts';
 import { AuthContext } from '../context/AuthContext';
 import { auth, db } from '../fbase';
 
-function MyPage() {
+const MyPage = () => {
 	const navigate = useNavigate();
 	const { userInfo } = useContext(AuthContext);
 	const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -57,10 +57,10 @@ function MyPage() {
 			}
 		}
 	};
-
+	console.log('userInfo', userInfo);
 	return (
-		userInfo && (
-			<div onClick={handleOutsideClick} className='custom-container flex flex-col items-center p-5'>
+		<div onClick={handleOutsideClick} className='custom-container flex flex-col items-center p-5'>
+			{userInfo.displayName && (
 				<div className='w-full max-w-sm rounded-lg border border-gray-200 bg-white shadow'>
 					<div className='relative flex justify-end px-4 pt-4'>
 						{/* Dots Button */}
@@ -137,11 +137,11 @@ function MyPage() {
 						{isEditing && <EditProfile islandName={userInfo.islandName} setIsEditing={setIsEditing} />}
 					</div>
 				</div>
+			)}
 
-				{!isEditing && <MyPosts />}
-			</div>
-		)
+			{!isEditing && <MyPosts />}
+		</div>
 	);
-}
+};
 
 export default MyPage;

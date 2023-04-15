@@ -4,7 +4,7 @@ import Header from './Components/Header';
 import Nav from './Components/Nav';
 import { AuthContext } from './context/AuthContext';
 
-function App() {
+const App = () => {
 	const { userInfo } = useContext(AuthContext);
 	console.log('user in App', userInfo);
 
@@ -17,6 +17,6 @@ function App() {
 			</div>
 		</div>
 	);
-}
+};
 
 export default App;
