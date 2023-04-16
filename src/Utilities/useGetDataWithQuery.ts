@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
 import { collection, getDocs, limit, orderBy, query, startAfter } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
 import { db } from '../fbase';
 
 export interface doc {
@@ -20,10 +20,11 @@ export function useGetDataWithQuery(currentPage: number, count: number) {
 	const [data, setData] = useState<doc[]>([]);
 	const [lastestDoc, setLastestDoc] = useState<any>();
 	const [isEnd, setIsEnd] = useState<boolean>(false);
-	const [error, setError] = useState(null);
+	const [error, setError] = useState<Error | null>(null);
 
 	useEffect(() => {
 		getData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentPage, count]);
 
 	const createQuery = (currentPage: number) => {
@@ -56,8 +57,8 @@ export function useGetDataWithQuery(currentPage: number, count: number) {
 			});
 
 			setLastestDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
-		} catch (error) {
-			console.log(error);
+		} catch (error: unknown) {
+			setError(error as Error);
 		}
 	};
 	return { data, isEnd, error };

@@ -1,10 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import spinner from '../../Images/spinner.gif';
 import { cartItem, item } from '../../Pages/NewPost';
-import Loading from '../Loading';
 import Toast from './Toast';
 import UserAdd from './UserAdd';
-import spinner from '../../Images/spinner.gif';
 
 interface ItemSelectProps {
 	isDropdownOpen: boolean;
@@ -33,6 +32,7 @@ const ItemSelect = ({ isDropdownOpen, setIsDropdownOpen, cart, setCart }: ItemSe
 
 	useEffect(() => {
 		getData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [category]);
 
 	useEffect(() => {
@@ -153,7 +153,7 @@ const ItemSelect = ({ isDropdownOpen, setIsDropdownOpen, cart, setCart }: ItemSe
 						)
 					) : (
 						<div className='flex h-full w-full items-center justify-center'>
-							<img src={spinner} className='h-28' />
+							<img src={spinner} alt='loading' className='h-28' />
 						</div>
 						// <Loading />
 					)}

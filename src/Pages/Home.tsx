@@ -13,6 +13,8 @@ const Home = () => {
 		setCurrentPage(currentPage + 1);
 	};
 
+	if (error) console.log(error);
+
 	return (
 		<div className='custom-container flex flex-col'>
 			<Carousel />
@@ -23,7 +25,7 @@ const Home = () => {
 
 				{data.length === 0 ? (
 					<div className='flex h-full w-full items-center justify-center'>
-						<img src={spinner} className='h-32' />
+						<img src={spinner} alt='loading' className='h-32' />
 					</div>
 				) : (
 					<>

@@ -11,11 +11,13 @@ const MyPosts = () => {
 		setCurrentPage(currentPage + 1);
 	};
 
+	if (error) console.log(error);
+
 	return (
 		<div className='mt-5 w-full grow p-3'>
 			{data.length === 0 ? (
 				<div className='flex h-full w-full items-center justify-center'>
-					<img src={spinner} className='h-32' />
+					<img src={spinner} alt='loading' className='h-32' />
 				</div>
 			) : (
 				<>

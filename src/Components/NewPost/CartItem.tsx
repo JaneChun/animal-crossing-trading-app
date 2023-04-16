@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { cartItem } from '../../Pages/NewPost';
 
 interface CartItemProps {
@@ -11,9 +11,9 @@ const CartItem = ({ item, cart, setCart }: CartItemProps) => {
 	const [quantityInput, setQuantityInput] = useState<number>(1);
 	const [milesTicketInput, setMilesTicketInput] = useState<number>(1);
 
-	const deleteItemFromCart = () => {
+	const deleteItemFromCart = useCallback(() => {
 		setCart(cart.filter((cartItem) => cartItem.UniqueEntryID !== item.UniqueEntryID));
-	};
+	}, [cart, item.UniqueEntryID, setCart]);
 
 	useEffect(() => {
 		item.quantity = quantityInput;
@@ -22,7 +22,7 @@ const CartItem = ({ item, cart, setCart }: CartItemProps) => {
 		if (item.quantity === 0) {
 			deleteItemFromCart();
 		}
-	}, [quantityInput, milesTicketInput]);
+	}, [quantityInput, milesTicketInput, item, deleteItemFromCart]);
 
 	const onQuantityDecrement = () => {
 		setQuantityInput((quantityInput) => quantityInput - 1);
