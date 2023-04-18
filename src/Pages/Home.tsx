@@ -4,6 +4,7 @@ import Carousel from '../Components/Carousel';
 import Footer from '../Components/Footer';
 import PostUnit from '../Components/PostUnit';
 import { db } from '../fbase';
+import spinner from '../Images/loading.jpg';
 
 export interface doc {
 	id: string;
@@ -65,7 +66,7 @@ function Home() {
 
 				{data.length === 0 ? (
 					<div className='flex h-full w-full items-center justify-center'>
-						<div className='animate-pulse px-3 py-1 text-center text-xs font-medium leading-none text-mint'>로딩중...</div>
+						<img src={spinner} alt='loading' className='h-32' />
 					</div>
 				) : (
 					<>
@@ -104,7 +105,7 @@ function Home() {
 					</>
 				)}
 			</div>
-			<Footer />
+			{data.length > 0 && <Footer />}
 		</div>
 	);
 }

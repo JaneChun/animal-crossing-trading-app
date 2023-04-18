@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { cartItem, item } from '../../Pages/NewPost';
-import Loading from '../Loading';
+import spinner from '../../Images/spinner.gif';
 import Toast from './Toast';
 import UserAdd from './UserAdd';
 
@@ -151,7 +151,9 @@ const ItemSelect = ({ isDropdownOpen, setIsDropdownOpen, cart, setCart }: ItemSe
 							<UserAdd setCart={setCart} />
 						)
 					) : (
-						<Loading />
+						<div className='flex h-full w-full items-center justify-center'>
+							<img src={spinner} alt='loading' className='h-28' />
+						</div>
 					)}
 				</ul>
 			</div>

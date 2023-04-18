@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { db } from '../fbase';
 import { doc } from '../Pages/Home';
 import PostUnit from './PostUnit';
+import spinner from '../Images/loading.jpg';
 
 function MyPosts() {
 	const [data, setData] = useState<doc[]>([]);
@@ -42,8 +43,12 @@ function MyPosts() {
 	};
 
 	return (
-		<div className='mt-5 w-full p-3'>
-			{data.length !== 0 && (
+		<div className='mt-5 w-full grow p-3'>
+			{data.length === 0 ? (
+				<div className='flex h-full w-full items-center justify-center'>
+					<img src={spinner} alt='loading' className='h-32' />
+				</div>
+			) : (
 				<>
 					<div className='mb-4 flex items-center justify-between'>
 						<div className='text-md font-bold leading-none text-gray-900 dark:text-white'>작성한 글</div>
