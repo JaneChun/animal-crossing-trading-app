@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import LoginModal from '../Components/LoginModal';
 import { auth, db } from '../fbase';
 
-function Login() {
+const Login = () => {
 	const navigate = useNavigate();
 
 	const onSocialClick = async (e: React.MouseEvent<HTMLDivElement>) => {
@@ -67,6 +67,6 @@ function Login() {
 			<LoginModal onSocialClick={onSocialClick} />
 		</div>
 	);
-}
+};
 
 export default Login;

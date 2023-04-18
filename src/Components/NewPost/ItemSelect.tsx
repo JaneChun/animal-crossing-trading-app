@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { cartItem, item } from '../../Pages/NewPost';
 import spinner from '../../Images/spinner.gif';
+import { cartItem, item } from '../../Pages/NewPost';
 import Toast from './Toast';
 import UserAdd from './UserAdd';
 

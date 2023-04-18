@@ -1,4 +1,4 @@
-import { collection, getDocs, limit, orderBy, query, startAfter } from 'firebase/firestore';
+import { collection, getDocs, limit, orderBy, query } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import Carousel from '../Components/Carousel';
 import Footer from '../Components/Footer';
@@ -53,9 +53,10 @@ function Home() {
 	};
 
 	const nextPage = () => {
-		q = query(collection(db, 'Boards'), orderBy('createdAt', 'desc'), limit(10), startAfter(lastestDoc));
-		getData();
+		setCurrentPage(currentPage + 1);
 	};
+
+	if (error) console.log(error);
 
 	return (
 		<div className='custom-container flex flex-col'>

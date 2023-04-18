@@ -7,7 +7,7 @@ import { db } from '../fbase';
 import { elapsedTime } from '../Utilities/elapsedTime';
 import { cartItem } from './NewPost';
 
-function PostDetail() {
+const PostDetail = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const [data, setData] = useState<DocumentData>({});
@@ -276,6 +276,6 @@ function PostDetail() {
 			)}
 		</div>
 	);
-}
+};
 
 export default PostDetail;
