@@ -8,18 +8,19 @@ import { ChatContext } from '../context/ChatContext';
 import { db } from '../fbase';
 
 const Chat = () => {
+	const navigate = useNavigate();
 	const { userInfo } = useContext(AuthContext);
 	const { data } = useContext(ChatContext);
 	const [chatInput, setChatInput] = useState('');
 	const [messages, setMessages] = useState<DocumentData[]>([]);
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 	const modalRef = useRef<HTMLButtonElement | null>(null);
-	const navigate = useNavigate();
 	const [participants, setParticipants] = useState([]);
 	const messageEndRef = useRef<HTMLDivElement | null>(null);
 	const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
 	const [rating, setRating] = useState<number>(0);
 	const [hover, setHover] = useState<number>(0);
+	const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
 	useEffect(() => {
 		const unsub = onSnapshot(doc(db, 'Chats', data.chatId), (doc: DocumentData) => {
@@ -35,6 +36,9 @@ const Chat = () => {
 	}, [data.chatId]);
 
 	useEffect(() => {
+		if (textAreaRef.current) {
+			textAreaRef.current.focus();
+		}
 		if (messageEndRef.current) {
 			messageEndRef.current.scrollIntoView({ behavior: 'smooth' });
 		}
@@ -242,6 +246,7 @@ const Chat = () => {
 				</label>
 				<div className='flex items-center bg-gray-50 px-3 py-2'>
 					<textarea
+						ref={textAreaRef}
 						disabled={participants.length === 1 ? true : false}
 						id='chat'
 						value={chatInput}
