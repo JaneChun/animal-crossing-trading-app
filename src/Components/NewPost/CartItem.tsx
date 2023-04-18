@@ -8,12 +8,8 @@ interface CartItemProps {
 }
 
 function CartItem({ item, cart, setCart }: CartItemProps) {
-	const [quantityInput, setQuantityInput] = useState<number>(1);
-	const [milesTicketInput, setMilesTicketInput] = useState<number>(1);
-
-	const deleteItemFromCart = () => {
-		setCart(cart.filter((cartItem) => cartItem.UniqueEntryID !== item.UniqueEntryID));
-	};
+	const [quantityInput, setQuantityInput] = useState<number>(item.quantity || 1);
+	const [milesTicketInput, setMilesTicketInput] = useState<number>(item.price || 1);
 
 	useEffect(() => {
 		item.quantity = quantityInput;
@@ -23,6 +19,10 @@ function CartItem({ item, cart, setCart }: CartItemProps) {
 			deleteItemFromCart();
 		}
 	}, [quantityInput, milesTicketInput]);
+
+	const deleteItemFromCart = () => {
+		setCart(cart.filter((cartItem) => cartItem.UniqueEntryID !== item.UniqueEntryID));
+	};
 
 	const onQuantityDecrement = () => {
 		setQuantityInput((quantityInput) => quantityInput - 1);

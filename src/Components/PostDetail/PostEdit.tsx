@@ -17,8 +17,12 @@ const PostEdit = () => {
 	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 	const [cart, setCart] = useState<cartItem[]>([]);
 
+	useEffect(() => {
+		getData();
+	}, []);
+
 	const getData = async () => {
-		const docRef = doc(db, 'Boards', `${state.id}`);
+		const docRef = doc(db, 'Boards', state.id);
 		const docSnap = await getDoc(docRef);
 
 		if (docSnap.exists()) {
@@ -31,10 +35,6 @@ const PostEdit = () => {
 			console.log('no such document!');
 		}
 	};
-
-	useEffect(() => {
-		getData();
-	}, []);
 
 	const typeHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
 		const { name } = e.target as HTMLButtonElement;
