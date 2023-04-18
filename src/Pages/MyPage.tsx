@@ -20,6 +20,7 @@ function MyPage() {
 
 	const onLogOutClick = () => {
 		signOut(auth);
+		localStorage.clear();
 		navigate('/');
 	};
 
