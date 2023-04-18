@@ -11,6 +11,11 @@ function MyPosts() {
 	const [isEnd, setIsEnd] = useState(false);
 	const uid = localStorage.getItem('uid');
 
+	useEffect(() => {
+		getData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
 	let q = query(collection(db, 'Boards'), where('creatorId', '==', uid), orderBy('createdAt', 'desc'), limit(5));
 
 	const getData = async () => {
@@ -32,10 +37,6 @@ function MyPosts() {
 
 		setLastestDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
 	};
-
-	useEffect(() => {
-		getData();
-	}, []);
 
 	const nextPage = () => {
 		q = query(collection(db, 'Boards'), where('creatorId', '==', uid), orderBy('createdAt', 'desc'), limit(5), startAfter(lastestDoc));

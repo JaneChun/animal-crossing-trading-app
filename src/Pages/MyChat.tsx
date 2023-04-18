@@ -15,11 +15,12 @@ const MyChat = () => {
 
 	useEffect(() => {
 		getData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const getData = async () => {
 		const q = query(collection(db, 'Chats'), where('participants', 'array-contains', uid), orderBy('lastUpdate', 'desc'));
-		const unsubscribe = await onSnapshot(q, (querySnapshot) => {
+		await onSnapshot(q, (querySnapshot) => {
 			let temp: DocumentData[] = [];
 			querySnapshot.forEach((doc) => {
 				const docObj = {

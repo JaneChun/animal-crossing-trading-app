@@ -27,6 +27,7 @@ function Home() {
 
 	useEffect(() => {
 		getData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	let q = query(collection(db, 'Boards'), orderBy('createdAt', 'desc'), limit(10));
