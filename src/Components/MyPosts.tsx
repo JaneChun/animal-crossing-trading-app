@@ -37,7 +37,7 @@ function MyPosts() {
 	}, []);
 
 	const nextPage = () => {
-		q = query(collection(db, 'Boards'), orderBy('createdAt', 'desc'), limit(5), startAfter(lastestDoc));
+		q = query(collection(db, 'Boards'), where('creatorId', '==', uid), orderBy('createdAt', 'desc'), limit(5), startAfter(lastestDoc));
 		getData();
 	};
 
