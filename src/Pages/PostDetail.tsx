@@ -1,9 +1,10 @@
 import { collection, deleteDoc, doc, DocumentData, getDoc, getDocs, orderBy, query, updateDoc } from 'firebase/firestore';
+import { deleteObject, ref } from 'firebase/storage';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Comment from '../Components/PostDetail/Comment';
 import { AuthContext } from '../context/AuthContext';
-import { db } from '../fbase';
+import { db, storage } from '../fbase';
 import { elapsedTime } from '../Utilities/elapsedTime';
 import { cartItem } from './NewPost';
 
@@ -68,10 +69,10 @@ function PostDetail() {
 			const docRef = doc(db, 'Boards', data.id);
 			try {
 				await deleteDoc(docRef);
-				// if (사진이 있다면) {
-				// 	const desertRef = ref(storage, 사진)
-				// 	await deleteObject(desertRef);
-				// }
+				if (data.photoURL) {
+					const desertRef = ref(storage, `BoardImages/${data.id}`);
+					await deleteObject(desertRef);
+				}
 				navigate('/');
 			} catch (error) {
 				console.log(error);
