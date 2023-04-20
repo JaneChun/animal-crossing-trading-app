@@ -176,7 +176,7 @@ function PostDetail() {
 
 					{/* Text Data */}
 					<div className='mt-3 mb-1 text-xl font-semibold text-gray-900'>{data.title}</div>
-					<div className='border-b border-gray-200 pb-3'>
+					<div className='mb-3 border-b border-gray-200 pb-3'>
 						<div className='mb-1 flex items-center justify-between'>
 							<div className='flex'>
 								<span className='text-md mr-2 font-semibold text-gray-500'>{data.creatorDisplayName}</span>
@@ -206,7 +206,7 @@ function PostDetail() {
 						</div>
 						<div className='text-xs text-gray-500'>{elapsedTime(data.createdAt?.toDate())}</div>
 					</div>
-					<img className='w-full' src={data.photoURL} />
+					<img className='w-full rounded-lg' src={data.photoURL} />
 					<div className='mt-4 mb-4 whitespace-pre-wrap p-3 text-base font-normal text-gray-500'>{data.body}</div>
 					{/* Text Data */}
 

@@ -218,7 +218,7 @@ const NewPost = () => {
 						<>
 							<img
 								className='absolute h-64 w-full cursor-pointer rounded-lg object-cover brightness-100 group-hover:brightness-75'
-								alt='new profile'
+								alt='thumbnail'
 								src={fileURLString}
 							/>
 							<div
