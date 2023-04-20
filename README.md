@@ -3,7 +3,7 @@
 # 🌴 모동숲 마켓
 
 > #### 닌텐도 게임 "모여봐요 동물의 숲" 유저들을 위한 아이템 거래 사이트! 📦
->
+
 > <br/>
 
 ![헤더 이미지](https://firebasestorage.googleapis.com/v0/b/animal-crossing-trade-app.appspot.com/o/Src%2F%E1%84%83%E1%85%A9%E1%86%BC%E1%84%86%E1%85%AE%E1%86%AF%E1%84%8B%E1%85%B4%E1%84%89%E1%85%AE%E1%87%81_20.11.13.%E1%84%89%E1%85%AE%E1%84%8C%E1%85%A5%E1%86%BC%20PPT.001.png?alt=media&token=c0164755-e01f-4b63-966e-7a8403f30650)
@@ -171,7 +171,7 @@ https://janechun.github.io/animal-crossing-trading-app
 ### 🔎 Search
 
 <details>
-<summary>아이템 검색</summary>
+<summary>게시글 검색</summary>
 <img src='https://user-images.githubusercontent.com/108467211/233405176-d884133b-a510-4998-b7a3-d35b42de230f.gif' width='300px'/>
 </details>
 
