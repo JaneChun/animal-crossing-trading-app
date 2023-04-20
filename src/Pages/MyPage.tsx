@@ -38,7 +38,7 @@ function MyPage() {
 	const onDeleteAccountClick = async () => {
 		const userInfo = auth.currentUser;
 
-		let answer = prompt('정말로 탈퇴하겠습니까? 맞으시면 "탈퇴합니다"라고 입력해주세요.');
+		let answer = prompt('정말로 탈퇴하겠습니까? 탈퇴하시면 지금까지 작성한 게시글이 모두 삭제됩니다.\n(맞으시면 "탈퇴합니다"라고 입력해주세요.)');
 
 		if (answer === '탈퇴합니다') {
 			try {
