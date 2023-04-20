@@ -105,6 +105,7 @@ const EditProfile = ({ islandName, setIsEditing }: EditProfileProps) => {
 			setDisplayNameInput('');
 			setFileURLString(null);
 			setIsEditing(false);
+			window.location.reload();
 		} catch (error) {
 			console.log(error);
 		}
@@ -131,6 +132,7 @@ const EditProfile = ({ islandName, setIsEditing }: EditProfileProps) => {
 					섬 이름
 				</label>
 				<input
+					autoComplete='false'
 					onChange={islandNameInputChangeHandler}
 					value={islandNameInput}
 					type='text'
