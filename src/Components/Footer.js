@@ -1,6 +1,4 @@
-import React from 'react';
-
-function Footer() {
+const Footer = () => {
 	return (
 		<footer className='bg-[#f9fafc] dark:bg-gray-900'>
 			<div className='container mx-auto w-full p-4 sm:p-6'>
@@ -90,6 +88,6 @@ function Footer() {
 			</div>
 		</footer>
 	);
-}
+};
 
 export default Footer;

@@ -7,7 +7,7 @@ import MyPosts from '../Components/MyPosts';
 import { AuthContext } from '../Context/AuthContext';
 import { auth, db } from '../fbase';
 
-function MyPage() {
+const MyPage = () => {
 	const navigate = useNavigate();
 	const { userInfo } = useContext(AuthContext);
 	const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -58,7 +58,7 @@ function MyPage() {
 			}
 		}
 	};
-
+	console.log('userInfo', userInfo);
 	return (
 		<div onClick={handleOutsideClick} className='custom-container flex flex-col items-center p-5'>
 			{userInfo.displayName && (
@@ -143,6 +143,6 @@ function MyPage() {
 			{!isEditing && <MyPosts />}
 		</div>
 	);
-}
+};
 
 export default MyPage;
