@@ -4,7 +4,7 @@ import React, { useContext, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EditProfile from '../Components/EditProfile';
 import MyPosts from '../Components/MyPosts';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from '../Context/AuthContext';
 import { auth, db } from '../fbase';
 
 function MyPage() {

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import CartItem from '../Components/NewPost/CartItem';
 import ItemSelect from '../Components/NewPost/ItemSelect';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from '../Context/AuthContext';
 import { db, storage } from '../fbase';
 
 export interface item {

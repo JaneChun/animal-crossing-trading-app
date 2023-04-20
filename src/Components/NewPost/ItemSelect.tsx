@@ -145,9 +145,9 @@ const ItemSelect = ({ isDropdownOpen, setIsDropdownOpen, cart, setCart }: ItemSe
 				<ul className='h-60 overflow-y-auto px-3 pb-3 text-sm text-gray-700' aria-labelledby='dropdownSearchButton'>
 					{category && itemData.length !== 0 ? (
 						!searchInput ? (
-							itemData.map((item: item) => <ListUnit key={item.UniqueEntryID} item={item} addItemToCart={addItemToCart} />)
+							itemData.map((item: item) => <ListUnit key={item.UniqueEntryID + item.color} item={item} addItemToCart={addItemToCart} />)
 						) : filteredData.length > 0 ? (
-							filteredData.map((item: item) => <ListUnit key={item.UniqueEntryID} item={item} addItemToCart={addItemToCart} />)
+							filteredData.map((item: item) => <ListUnit key={item.UniqueEntryID + item.color} item={item} addItemToCart={addItemToCart} />)
 						) : (
 							<UserAdd setCart={setCart} />
 						)
@@ -172,7 +172,7 @@ interface listUnitProps {
 
 const ListUnit = ({ item, addItemToCart }: listUnitProps) => {
 	return (
-		<li key={item.UniqueEntryID}>
+		<li>
 			<button onClick={() => addItemToCart(item)} className='flex w-full items-center whitespace-nowrap px-4 py-2 hover:bg-gray-100'>
 				<img className='mr-2 h-6 w-6 rounded-full' src={item.imageUrl} alt={`${item.name}`} />
 				{item.name} {item.color && `(${item.color})`}

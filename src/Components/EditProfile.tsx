@@ -4,7 +4,7 @@ import { auth, db, storage } from '../fbase';
 // import { v4 as uuidv4 } from 'uuid';
 import { doc, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadString } from 'firebase/storage';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from '../Context/AuthContext';
 
 interface EditProfileProps {
 	islandName: string;

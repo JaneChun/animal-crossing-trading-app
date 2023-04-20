@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from './Components/Header';
 import Nav from './Components/Nav';
-import { AuthContext } from './context/AuthContext';
+import { AuthContext } from './Context/AuthContext';
 
 function App() {
 	const { userInfo } = useContext(AuthContext);

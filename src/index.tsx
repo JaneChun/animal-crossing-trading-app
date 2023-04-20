@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
-import { AuthContextProvider } from './context/AuthContext';
-import { ChatContextProvider } from './context/ChatContext';
+import { AuthContextProvider } from './Context/AuthContext';
+import { ChatContextProvider } from './Context/ChatContext';
 import './index.css';
 import router from './Router';
 

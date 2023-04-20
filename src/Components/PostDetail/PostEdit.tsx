@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CartItem from '../../Components/NewPost/CartItem';
 import ItemSelect from '../../Components/NewPost/ItemSelect';
-import { AuthContext } from '../../context/AuthContext';
+import { AuthContext } from '../../Context/AuthContext';
 import { db, storage } from '../../fbase';
 import { cartItem } from '../../Pages/NewPost';
 import spinner from '../../Images/loading.jpg';

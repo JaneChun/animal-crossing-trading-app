@@ -3,7 +3,7 @@ import { deleteObject, ref } from 'firebase/storage';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Comment from '../Components/PostDetail/Comment';
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from '../Context/AuthContext';
 import { db, storage } from '../fbase';
 import { elapsedTime } from '../Utilities/elapsedTime';
 import { cartItem } from './NewPost';

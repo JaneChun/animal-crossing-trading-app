@@ -1,8 +1,8 @@
 import { collection, DocumentData, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
-import { ChatContext } from '../context/ChatContext';
+import { AuthContext } from '../Context/AuthContext';
+import { ChatContext } from '../Context/ChatContext';
 import { db } from '../fbase';
 import { elapsedTime } from '../Utilities/elapsedTime';
 
