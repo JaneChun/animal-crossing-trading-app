@@ -12,9 +12,10 @@ interface postProps {
 	done?: boolean;
 	rating?: number;
 	count?: number;
+	photoURL?: string;
 }
 
-const PostUnit = ({ id, type, title, createdAt, creatorDisplayName, comments, done, rating, count }: postProps) => {
+const PostUnit = ({ id, type, title, createdAt, creatorDisplayName, comments, done, photoURL }: postProps) => {
 	const navigate = useNavigate();
 
 	return (
