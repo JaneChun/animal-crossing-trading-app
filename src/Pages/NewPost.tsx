@@ -23,13 +23,13 @@ export interface cartItem extends item {
 
 const NewPost = () => {
 	const navigate = useNavigate();
+	const { userInfo } = useContext(AuthContext);
 	const [type, setType] = useState<string>('buy');
 	const [title, setTitle] = useState<string>('');
 	const [body, setBody] = useState<string>('');
-	const { userInfo } = useContext(AuthContext);
-	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 	const [cart, setCart] = useState<cartItem[]>([]);
 	const [fileURLString, setFileURLString] = useState<any>(null);
+	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
 	const typeHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
 		const { name } = e.target as HTMLButtonElement;
@@ -119,6 +119,10 @@ const NewPost = () => {
 		return profileImageUrl;
 	};
 
+	const deleteFileInput = () => {
+		setFileURLString(null);
+	};
+
 	return (
 		<div className='custom-container p-5'>
 			<div className='inline-flex rounded-md shadow-sm' role='group'>
@@ -181,8 +185,8 @@ const NewPost = () => {
 				<label htmlFor='default-textarea' className='mb-2 block text-sm font-medium text-gray-900'>
 					사진
 				</label>
-				{/* here */}
-				<div className='relative flex w-full items-center justify-center'>
+				{/* photo */}
+				<div className='group relative flex w-full items-center justify-center'>
 					<label
 						htmlFor='dropzone-file'
 						className='flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100'
@@ -210,9 +214,31 @@ const NewPost = () => {
 						</div>
 						<input onChange={fileInputHandler} id='dropzone-file' type='file' className='hidden' />
 					</label>
-					{fileURLString && <img className='absolute h-64 w-full object-cover px-5' alt='new profile' src={fileURLString} />}
+					{fileURLString && (
+						<>
+							<img
+								className='absolute h-64 w-full cursor-pointer rounded-lg object-cover brightness-100 group-hover:brightness-75'
+								alt='new profile'
+								src={fileURLString}
+							/>
+							<div
+								onClick={deleteFileInput}
+								className='invisible absolute z-10 flex w-full justify-center text-white hover:visible group-hover:visible'
+							>
+								<svg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'>
+									<mask id='ipSDeleteFour0'>
+										<g fill='none' stroke='#fff' strokeLinejoin='round' strokeWidth='4'>
+											<path strokeLinecap='round' d='M8 11h32M18 5h12' />
+											<path fill='#fff' d='M12 17h24v23a3 3 0 0 1-3 3H15a3 3 0 0 1-3-3V17Z' />
+										</g>
+									</mask>
+									<path fill='currentColor' d='M0 0h48v48H0z' mask='url(#ipSDeleteFour0)' />
+								</svg>
+							</div>
+						</>
+					)}
 				</div>
-				{/* here */}
+				{/* photo */}
 			</div>
 			{/* Body */}
 
