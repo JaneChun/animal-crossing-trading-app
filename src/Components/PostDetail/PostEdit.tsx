@@ -108,7 +108,7 @@ const PostEdit = () => {
 			creatorDisplayName: userInfo?.displayName,
 			creatorId: userInfo?.uid,
 			done: false,
-			photoURL: '',
+			photoURL,
 		};
 
 		if (newFileURLString) {
