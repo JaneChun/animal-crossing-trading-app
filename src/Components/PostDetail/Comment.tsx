@@ -1,7 +1,7 @@
 import { collection, doc, DocumentData, increment, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import React, { SetStateAction, useContext, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../context/AuthContext';
+import { AuthContext } from '../../Context/AuthContext';
 import { db } from '../../fbase';
 import CommentUnit from './CommentUnit';
 

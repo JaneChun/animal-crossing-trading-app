@@ -1,5 +1,14 @@
-# Created by https://www.toptal.com/developers/gitignore/api/macos,visualstudiocode,react
-# Edit at https://www.toptal.com/developers/gitignore?templates=macos,visualstudiocode,react
+# Created by https://www.toptal.com/developers/gitignore/api/macos,react,visualstudiocode,firebase
+# Edit at https://www.toptal.com/developers/gitignore?templates=macos,react,visualstudiocode,firebase
+
+### Firebase ###
+.idea
+**/node_modules/*
+**/.firebaserc
+
+### Firebase Patch ###
+.runtimeconfig.json
+.firebase/
 
 ### macOS ###
 # General
@@ -35,7 +44,6 @@ Temporary Items
 *.icloud
 
 ### react ###
-.env
 .DS_*
 *.log
 logs
@@ -70,4 +78,4 @@ sketch
 .history
 .ionide
 
-# End of https://www.toptal.com/developers/gitignore/api/macos,visualstudiocode,react
+# End of https://www.toptal.com/developers/gitignore/api/macos,react,visualstudiocode,firebase

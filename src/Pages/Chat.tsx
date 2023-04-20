@@ -3,8 +3,8 @@ import { arrayUnion, deleteDoc, doc, DocumentData, increment, onSnapshot, Timest
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
-import { ChatContext } from '../context/ChatContext';
+import { AuthContext } from '../Context/AuthContext';
+import { ChatContext } from '../Context/ChatContext';
 import { db } from '../fbase';
 
 const Chat = () => {

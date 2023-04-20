@@ -24,6 +24,7 @@ const Login = () => {
 				localStorage.setItem('uid', user.uid);
 				checkUsersData(user.uid);
 				navigate('/');
+				window.location.reload();
 			})
 			.catch((error) => {
 				console.log(error);

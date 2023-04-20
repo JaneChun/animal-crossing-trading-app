@@ -89,6 +89,7 @@ function MyPosts() {
 											creatorId={doc.creatorId}
 											done={doc.done}
 											comments={doc.comments}
+											photoURL={doc.photoURL}
 										/>
 									)
 							)}

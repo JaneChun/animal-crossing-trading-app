@@ -1,9 +1,10 @@
 import { collection, deleteDoc, doc, DocumentData, getDoc, getDocs, orderBy, query, updateDoc } from 'firebase/firestore';
+import { deleteObject, ref } from 'firebase/storage';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Comment from '../Components/PostDetail/Comment';
-import { AuthContext } from '../context/AuthContext';
-import { db } from '../fbase';
+import { AuthContext } from '../Context/AuthContext';
+import { db, storage } from '../fbase';
 import { elapsedTime } from '../Utilities/elapsedTime';
 import { cartItem } from './NewPost';
 
@@ -68,10 +69,10 @@ const PostDetail = () => {
 			const docRef = doc(db, 'Boards', data.id);
 			try {
 				await deleteDoc(docRef);
-				// if (사진이 있다면) {
-				// 	const desertRef = ref(storage, 사진)
-				// 	await deleteObject(desertRef);
-				// }
+				if (data.photoURL) {
+					const desertRef = ref(storage, `BoardImages/${data.id}`);
+					await deleteObject(desertRef);
+				}
 				navigate('/');
 			} catch (error) {
 				console.log(error);
@@ -176,7 +177,7 @@ const PostDetail = () => {
 
 					{/* Text Data */}
 					<div className='mt-3 mb-1 text-xl font-semibold text-gray-900'>{data.title}</div>
-					<div className='border-b border-gray-200 pb-3'>
+					<div className='mb-3 border-b border-gray-200 pb-3'>
 						<div className='mb-1 flex items-center justify-between'>
 							<div className='flex'>
 								<span className='text-md mr-2 font-semibold text-gray-500'>{data.creatorDisplayName}</span>
@@ -206,6 +207,7 @@ const PostDetail = () => {
 						</div>
 						<div className='text-xs text-gray-500'>{elapsedTime(data.createdAt?.toDate())}</div>
 					</div>
+					<img className='w-full rounded-lg' src={data.photoURL} />
 					<div className='mt-4 mb-4 whitespace-pre-wrap p-3 text-base font-normal text-gray-500'>{data.body}</div>
 					{/* Text Data */}
 

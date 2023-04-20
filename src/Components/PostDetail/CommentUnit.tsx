@@ -1,8 +1,8 @@
 import { deleteDoc, doc, DocumentData, getDoc, increment, setDoc, updateDoc } from 'firebase/firestore';
 import React, { SetStateAction, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../context/AuthContext';
-import { ChatContext } from '../../context/ChatContext';
+import { AuthContext } from '../../Context/AuthContext';
+import { ChatContext } from '../../Context/ChatContext';
 import { db } from '../../fbase';
 import { elapsedTime } from '../../Utilities/elapsedTime';
 

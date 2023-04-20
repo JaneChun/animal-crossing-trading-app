@@ -18,6 +18,7 @@ export interface doc {
 	comments?: number;
 	creatorRating?: number;
 	creatorCount?: number;
+	photoURL?: string;
 }
 
 function Home() {
@@ -83,10 +84,9 @@ function Home() {
 											createdAt={doc.createdAt}
 											creatorDisplayName={doc.creatorDisplayName}
 											creatorId={doc.creatorId}
-											rating={doc.creatorRating}
-											count={doc.creatorCount}
 											comments={doc.comments}
 											done={doc.done}
+											photoURL={doc.photoURL}
 										/>
 									)
 							)}
