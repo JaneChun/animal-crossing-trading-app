@@ -166,7 +166,6 @@ const ItemSelect = ({ isDropdownOpen, setIsDropdownOpen, cart, setCart }: ItemSe
 export default ItemSelect;
 
 interface listUnitProps {
-	key: string;
 	item: item;
 	addItemToCart: (item: item) => void;
 }
