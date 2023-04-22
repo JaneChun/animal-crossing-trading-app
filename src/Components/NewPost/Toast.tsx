@@ -1,8 +1,21 @@
+import { useEffect, useState } from 'react';
+
 interface ToastProps {
-	isToastVisible: boolean;
+	item: string | null;
 }
 
-const Toast = ({ isToastVisible }: ToastProps) => {
+const Toast = ({ item }: ToastProps) => {
+	const [isToastVisible, setIsToastVisible] = useState(false);
+
+	useEffect(() => {
+		if (item) {
+			setIsToastVisible(true);
+			setTimeout(() => {
+				setIsToastVisible(false);
+			}, 1000);
+		}
+	}, [item]);
+
 	return (
 		<div
 			className={`${
@@ -20,7 +33,7 @@ const Toast = ({ isToastVisible }: ToastProps) => {
 					</svg>
 				</span>
 				<div className='ml-3'>
-					<p className='text-sm text-gray-700 dark:text-gray-400'>아이템이 추가되었어요.</p>
+					<p className='text-sm text-gray-700 dark:text-gray-400'>{item}이(가) 추가되었어요.</p>
 				</div>
 			</div>
 		</div>
