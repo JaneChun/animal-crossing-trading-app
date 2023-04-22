@@ -1,10 +1,10 @@
 import { updateProfile } from 'firebase/auth';
 import React, { useContext, useState } from 'react';
-import { auth, db, storage } from '../fbase';
+import { auth, db } from '../fbase';
 // import { v4 as uuidv4 } from 'uuid';
 import { doc, updateDoc } from 'firebase/firestore';
-import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import { AuthContext } from '../Context/AuthContext';
+import { uploadFile } from '../Utilities/uploadFile';
 
 interface EditProfileProps {
 	islandName: string;
@@ -36,14 +36,6 @@ const EditProfile = ({ islandName, setIsEditing }: EditProfileProps) => {
 			};
 			reader.readAsDataURL(file);
 		}
-	};
-
-	const createRef = async () => {
-		const fileRef: any = ref(storage, `ProfileImages/${userInfo?.uid}`);
-		await uploadString(fileRef, fileURLString, 'data_url');
-		const profileImageUrl = await getDownloadURL(ref(storage, fileRef));
-
-		return profileImageUrl;
 	};
 
 	const deleteFileInput = () => {
@@ -95,7 +87,7 @@ const EditProfile = ({ islandName, setIsEditing }: EditProfileProps) => {
 
 			// 사진 바뀌었을 때
 			if (fileURLString) {
-				const photoURL = await createRef();
+				const photoURL = await uploadFile(fileURLString, 'ProfileImages', userInfo.uid);
 				requestData = { ...requestData, photoURL };
 			}
 

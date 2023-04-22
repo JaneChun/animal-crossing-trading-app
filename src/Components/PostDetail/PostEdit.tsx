@@ -1,14 +1,14 @@
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { getDownloadURL, ref, uploadString } from 'firebase/storage';
+import { doc, updateDoc } from 'firebase/firestore';
 import React, { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CartItem from '../../Components/NewPost/CartItem';
 import ItemSelect from '../../Components/NewPost/ItemSelect';
 import { AuthContext } from '../../Context/AuthContext';
-import { db, storage } from '../../fbase';
-import { cartItem } from '../../Pages/NewPost';
 import spinner from '../../Images/loading.jpg';
+import { cartItem } from '../../Pages/NewPost';
+import { uploadFile } from '../../Utilities/uploadFile';
 import useGetPostDetail from '../../Utilities/useGetPostDetail';
+import { db } from '../../fbase';
 
 const PostEdit = () => {
 	const navigate = useNavigate();
@@ -62,14 +62,6 @@ const PostEdit = () => {
 		}
 	};
 
-	const createRef = async (docId: string) => {
-		const fileRef: any = ref(storage, `BoardImages/${docId}`);
-		await uploadString(fileRef, newFileURLString, 'data_url');
-		const profileImageUrl = await getDownloadURL(ref(storage, fileRef));
-
-		return profileImageUrl;
-	};
-
 	const deleteFileInput = () => {
 		setPhotoURL('');
 		setNewFileURLString(null);
@@ -105,7 +97,7 @@ const PostEdit = () => {
 		};
 
 		if (newFileURLString) {
-			const photoURL = await createRef(state.id);
+			const photoURL = await uploadFile(newFileURLString, 'BoardImages', state.id);
 			requestData = { ...requestData, photoURL };
 		}
 

@@ -1,12 +1,12 @@
 import { doc, serverTimestamp, setDoc, Timestamp } from 'firebase/firestore';
-import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import CartItem from '../Components/NewPost/CartItem';
 import ItemSelect from '../Components/NewPost/ItemSelect';
 import { AuthContext } from '../Context/AuthContext';
-import { db, storage } from '../fbase';
+import { db } from '../fbase';
+import { uploadFile } from '../Utilities/uploadFile';
 
 export interface item {
 	UniqueEntryID: string;
@@ -80,7 +80,7 @@ const NewPost = () => {
 		}
 
 		if (fileURLString) {
-			const photoURL = await createRef(docId);
+			const photoURL = await uploadFile(fileURLString, 'BoardImages', docId);
 			requestData = { ...requestData, photoURL };
 		}
 
@@ -109,14 +109,6 @@ const NewPost = () => {
 			};
 			reader.readAsDataURL(file);
 		}
-	};
-
-	const createRef = async (docId: string) => {
-		const fileRef: any = ref(storage, `BoardImages/${docId}`);
-		await uploadString(fileRef, fileURLString, 'data_url');
-		const profileImageUrl = await getDownloadURL(ref(storage, fileRef));
-
-		return profileImageUrl;
 	};
 
 	const deleteFileInput = () => {
