@@ -1,12 +1,14 @@
 import { doc, serverTimestamp, setDoc, Timestamp } from 'firebase/firestore';
-import { getDownloadURL, ref, uploadString } from 'firebase/storage';
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import CartItem from '../Components/NewPost/CartItem';
 import ItemSelect from '../Components/NewPost/ItemSelect';
 import { AuthContext } from '../Context/AuthContext';
-import { db, storage } from '../fbase';
+import { db } from '../fbase';
+import { uploadFile } from '../Utilities/uploadFile';
+import ErrorToast from '../Components/ErrorToast';
+import { FirebaseError } from 'firebase/app';
 
 export interface item {
 	UniqueEntryID: string;
@@ -30,6 +32,7 @@ const NewPost = () => {
 	const [cart, setCart] = useState<cartItem[]>([]);
 	const [fileURLString, setFileURLString] = useState<any>(null);
 	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+	const [error, setError] = useState<string | null>(null);
 
 	const typeHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
 		const { name } = e.target as HTMLButtonElement;
@@ -44,13 +47,27 @@ const NewPost = () => {
 		setBody(e.target.value);
 	};
 
-	const onSubmit = async () => {
+	const validateForm = () => {
 		if (!userInfo) {
-			alert('글 쓰기는 로그인 후 가능합니다.');
-			navigate('/login');
-			return;
+			navigate('/login', {
+				state: {
+					error: '글 쓰기는 로그인 후 가능합니다.',
+				},
+			});
+			return false;
 		}
 
+		if (!title || !body) {
+			setError('제목이나 내용이 비어있는지 확인해주세요.');
+			return false;
+		}
+		return true;
+	};
+
+	const onSubmit = async () => {
+		if (!validateForm()) return;
+
+		const docId = uuidv4();
 		let requestData = {
 			type,
 			title,
@@ -58,29 +75,18 @@ const NewPost = () => {
 			cart,
 			cartList: cart.map((item) => item.name),
 			createdAt: serverTimestamp(),
-			creatorDisplayName: userInfo.displayName,
-			creatorIslandName: userInfo.islandName,
-			creatorRating: userInfo.rating,
-			creatorCount: userInfo.count,
+			creatorDisplayName: userInfo?.displayName,
+			creatorIslandName: userInfo?.islandName,
+			creatorRating: userInfo?.rating,
+			creatorCount: userInfo?.count,
 			creatorId: userInfo?.uid,
 			done: false,
 			comments: 0,
 			photoURL: '',
 		};
-		const docId = uuidv4();
-
-		if (type === '') {
-			alert('거래 종류를 선택해주세요.');
-			return;
-		}
-
-		if (title === '' || body === '') {
-			alert('제목이나 내용이 비어있는지 확인해주세요.');
-			return;
-		}
 
 		if (fileURLString) {
-			const photoURL = await createRef(docId);
+			const photoURL = await uploadFile(fileURLString, 'BoardImages', docId);
 			requestData = { ...requestData, photoURL };
 		}
 
@@ -88,13 +94,15 @@ const NewPost = () => {
 			const docRef = doc(db, 'Boards', docId);
 			await setDoc(docRef, requestData);
 			alert('작성했습니다.');
-			navigate('/');
-		} catch (error) {
-			console.log(error);
-		} finally {
 			setTitle('');
 			setBody('');
 			setFileURLString(null);
+			navigate(`/post/${docId}`);
+		} catch (error: unknown) {
+			const { code } = error as FirebaseError;
+			if (code === 'invalid-argument') {
+				setError('프로필에 비어있는 정보가 없는지 다시 확인해주세요.');
+			}
 		}
 	};
 
@@ -111,20 +119,13 @@ const NewPost = () => {
 		}
 	};
 
-	const createRef = async (docId: string) => {
-		const fileRef: any = ref(storage, `BoardImages/${docId}`);
-		await uploadString(fileRef, fileURLString, 'data_url');
-		const profileImageUrl = await getDownloadURL(ref(storage, fileRef));
-
-		return profileImageUrl;
-	};
-
 	const deleteFileInput = () => {
 		setFileURLString(null);
 	};
 
 	return (
 		<div className='custom-container p-5'>
+			{error && <ErrorToast error={error} setError={setError} />}
 			<div className='inline-flex rounded-md shadow-sm' role='group'>
 				{/* Type */}
 				<button

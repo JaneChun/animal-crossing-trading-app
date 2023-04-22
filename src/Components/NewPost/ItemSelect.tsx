@@ -17,7 +17,7 @@ const ItemSelect = ({ isDropdownOpen, setIsDropdownOpen, cart, setCart }: ItemSe
 	const [itemData, setItemData] = useState<item[]>([]);
 	const [searchInput, setSearchInput] = useState<string>('');
 	const [filteredData, setFilteredData] = useState<item[]>([]);
-	const [isToastVisible, setIsToastVisible] = useState(false);
+	const [clickedItem, setClickedItem] = useState<string | null>(null);
 
 	const getData = async () => {
 		if (!category) return;
@@ -45,10 +45,7 @@ const ItemSelect = ({ isDropdownOpen, setIsDropdownOpen, cart, setCart }: ItemSe
 		if (isAdded === undefined) {
 			setCart((cart) => [...cart, { ...item, quantity: 1, price: 1 }]);
 		}
-		setIsToastVisible(true);
-		setTimeout(() => {
-			setIsToastVisible(false);
-		}, 1000);
+		setClickedItem(item.name);
 	};
 
 	const searchInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,7 +62,7 @@ const ItemSelect = ({ isDropdownOpen, setIsDropdownOpen, cart, setCart }: ItemSe
 		<div className='relative'>
 			{/* Toast */}
 			<div className='flex justify-center'>
-				<Toast isToastVisible={isToastVisible} />
+				<Toast item={clickedItem} />
 			</div>
 			<label htmlFor='item' className='mb-2 block text-sm font-medium text-gray-900 '>
 				아이템

@@ -1,47 +1,40 @@
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { getDownloadURL, ref, uploadString } from 'firebase/storage';
+import { doc, updateDoc } from 'firebase/firestore';
 import React, { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CartItem from '../../Components/NewPost/CartItem';
 import ItemSelect from '../../Components/NewPost/ItemSelect';
 import { AuthContext } from '../../Context/AuthContext';
-import { db, storage } from '../../fbase';
-import { cartItem } from '../../Pages/NewPost';
 import spinner from '../../Images/loading.jpg';
+import { cartItem } from '../../Pages/NewPost';
+import { uploadFile } from '../../Utilities/uploadFile';
+import useGetPostDetail from '../../Utilities/useGetPostDetail';
+import { db } from '../../fbase';
 
 const PostEdit = () => {
 	const navigate = useNavigate();
 	const { state } = useLocation();
+	const { userInfo } = useContext(AuthContext);
+	const { data, error, loading } = useGetPostDetail(state.id);
 	const [type, setType] = useState<string>('buy');
 	const [title, setTitle] = useState<string>('');
 	const [body, setBody] = useState<string>('');
-	const { userInfo } = useContext(AuthContext);
-	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 	const [cart, setCart] = useState<cartItem[]>([]);
 	const [photoURL, setPhotoURL] = useState<string>('');
+	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 	const [newFileURLString, setNewFileURLString] = useState<any>(null);
-	const [loading, setLoading] = useState<boolean>(false);
+	const [uploadLoading, setUploadLoading] = useState<boolean>(false);
+
+	if (error) console.log(error);
 
 	useEffect(() => {
-		getData();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	const getData = async () => {
-		const docRef = doc(db, 'Boards', state.id);
-		const docSnap = await getDoc(docRef);
-
-		if (docSnap.exists()) {
-			const docData = docSnap.data();
-			setType(docData.type);
-			setTitle(docData.title);
-			setBody(docData.body);
-			setCart(docData.cart);
-			setPhotoURL(docData.photoURL);
-		} else {
-			console.log('no such document!');
+		if (data) {
+			setType(data.type);
+			setTitle(data.title);
+			setBody(data.body);
+			setCart(data.cart);
+			setPhotoURL(data.photoURL);
 		}
-	};
+	}, [data]);
 
 	const typeHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
 		const { name } = e.target as HTMLButtonElement;
@@ -67,14 +60,6 @@ const PostEdit = () => {
 			};
 			reader.readAsDataURL(file);
 		}
-	};
-
-	const createRef = async (docId: string) => {
-		const fileRef: any = ref(storage, `BoardImages/${docId}`);
-		await uploadString(fileRef, newFileURLString, 'data_url');
-		const profileImageUrl = await getDownloadURL(ref(storage, fileRef));
-
-		return profileImageUrl;
 	};
 
 	const deleteFileInput = () => {
@@ -112,14 +97,14 @@ const PostEdit = () => {
 		};
 
 		if (newFileURLString) {
-			const photoURL = await createRef(state.id);
+			const photoURL = await uploadFile(newFileURLString, 'BoardImages', state.id);
 			requestData = { ...requestData, photoURL };
 		}
 
 		try {
-			setLoading(true);
+			setUploadLoading(true);
 			await updateDoc(doc(db, 'Boards', state.id), requestData);
-			setLoading(false);
+			setUploadLoading(false);
 			navigate(`/post/${state.id}`);
 		} catch (error) {
 			console.log(error);
@@ -132,7 +117,7 @@ const PostEdit = () => {
 
 	return (
 		<div className='custom-container p-5'>
-			{loading ? (
+			{loading || uploadLoading ? (
 				<div className='flex h-full w-full items-center justify-center'>
 					<img src={spinner} alt='loading' className='h-32' />
 				</div>
@@ -165,7 +150,7 @@ const PostEdit = () => {
 
 					{/* Title */}
 					<div className='mt-5 mb-6'>
-						<label htmlFor='default-input' className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'>
+						<label htmlFor='title-input' className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'>
 							제목
 						</label>
 						<input
@@ -173,7 +158,7 @@ const PostEdit = () => {
 							onChange={titleInputHandler}
 							placeholder='DIY 작업대 레시피 구해요 :)'
 							type='text'
-							id='default-input'
+							id='title-input'
 							className='block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
 						/>
 					</div>
@@ -181,21 +166,21 @@ const PostEdit = () => {
 
 					{/* Body */}
 					<div className='mb-6'>
-						<label htmlFor='default-textarea' className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'>
+						<label htmlFor='body-textarea' className='mb-2 block text-sm font-medium text-gray-900 dark:text-white'>
 							내용
 						</label>
 						<textarea
 							onChange={bodyInputHandler}
 							value={body}
 							placeholder='2마일에 구매하고 싶어요. 채팅 주세요!'
-							id='default-textarea'
+							id='body-textarea'
 							rows={10}
 							className='sm:text-md block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500'
 						/>
 					</div>
 
 					<div className='mb-6'>
-						<label htmlFor='default-textarea' className='mb-2 block text-sm font-medium text-gray-900'>
+						<label htmlFor='file-input' className='mb-2 block text-sm font-medium text-gray-900'>
 							사진
 						</label>
 						{/* photo */}

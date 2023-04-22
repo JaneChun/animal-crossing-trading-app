@@ -1,13 +1,23 @@
 import { AuthProvider } from '@firebase/auth-types';
 import { FacebookAuthProvider, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import LoginModal from '../Components/LoginModal';
 import { auth, db } from '../fbase';
+import ErrorToast from '../Components/ErrorToast';
+import { FirebaseError } from 'firebase/app';
 
 const Login = () => {
 	const navigate = useNavigate();
+	const { state } = useLocation();
+	const [error, setError] = useState<string | null>(null);
+
+	useEffect(() => {
+		if (state) {
+			setError(state.error);
+		}
+	}, [state]);
 
 	const onSocialClick = async (e: React.MouseEvent<HTMLDivElement>) => {
 		const { id } = e.target as HTMLDivElement;
@@ -18,17 +28,20 @@ const Login = () => {
 			provider = new FacebookAuthProvider();
 		}
 
-		await signInWithPopup(auth, provider)
-			.then((result) => {
-				const user = result.user;
-				localStorage.setItem('uid', user.uid);
-				checkUsersData(user.uid);
+		try {
+			const response = await signInWithPopup(auth, provider);
+			const user = response.user;
+			localStorage.setItem('uid', user.uid);
+			checkUsersData(user.uid).then(() => {
 				navigate('/');
 				window.location.reload();
-			})
-			.catch((error) => {
-				console.log(error);
 			});
+		} catch (error: unknown) {
+			const { code } = error as FirebaseError;
+			if (code === 'auth/popup-closed-by-user') {
+				setError('로그인 중 팝업 창이 종료되어 로그인에 실패했습니다.');
+			}
+		}
 	};
 
 	const checkUsersData = async (userUid: string) => {
@@ -65,6 +78,7 @@ const Login = () => {
 
 	return (
 		<div className='custom-container'>
+			{error && <ErrorToast error={error} setError={setError} />}
 			<LoginModal onSocialClick={onSocialClick} />
 		</div>
 	);

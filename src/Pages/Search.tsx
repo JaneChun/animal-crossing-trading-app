@@ -124,6 +124,7 @@ const Search = () => {
 								creatorId={doc.creatorId}
 								comments={doc.comments}
 								done={doc.done}
+								photoURL={doc.photoURL}
 							/>
 						)
 				)}

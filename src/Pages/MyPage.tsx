@@ -6,6 +6,8 @@ import EditProfile from '../Components/EditProfile';
 import MyPosts from '../Components/MyPosts';
 import { AuthContext } from '../Context/AuthContext';
 import { auth, db } from '../fbase';
+import { FirebaseError } from 'firebase/app';
+import ErrorToast from '../Components/ErrorToast';
 
 const MyPage = () => {
 	const navigate = useNavigate();
@@ -13,6 +15,7 @@ const MyPage = () => {
 	const [isEditing, setIsEditing] = useState<boolean>(false);
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 	const modalRef = useRef<HTMLButtonElement | null>(null);
+	const [error, setError] = useState<string | null>(null);
 
 	const onEditProfileClick = () => {
 		setIsEditing((isEditing) => !isEditing);
@@ -20,7 +23,7 @@ const MyPage = () => {
 
 	const onLogOutClick = () => {
 		signOut(auth);
-		localStorage.clear();
+		localStorage.removeItem('uid');
 		navigate('/');
 	};
 
@@ -37,31 +40,37 @@ const MyPage = () => {
 
 	const onDeleteAccountClick = async () => {
 		const userInfo = auth.currentUser;
+		const ok = window.confirm('정말로 탈퇴하겠습니까?\n탈퇴하시면 지금까지 작성한 게시글이 모두 삭제됩니다.');
+		if (!ok) return;
 
-		let answer = prompt('정말로 탈퇴하겠습니까? 탈퇴하시면 지금까지 작성한 게시글이 모두 삭제됩니다.\n(맞으시면 "탈퇴합니다"라고 입력해주세요.)');
+		try {
+			if (!userInfo) return;
+			const docRef = doc(db, 'Users', userInfo.uid);
 
-		if (answer === '탈퇴합니다') {
-			try {
-				if (!userInfo) return;
-				const docRef = doc(db, 'Users', userInfo.uid);
+			await updateDoc(docRef, {
+				isDeletedAccount: true,
+			});
 
-				await updateDoc(docRef, {
-					isDeletedAccount: true,
-				});
-
-				await deleteUser(userInfo).then(() => {
-					alert('탈퇴되었습니다.');
-					navigate('/');
-				});
-			} catch (error) {
-				console.log(error);
+			await deleteUser(userInfo).then(() => {
+				localStorage.removeItem('uid');
+				alert('탈퇴되었습니다.');
+				navigate('/');
+			});
+		} catch (error: unknown) {
+			const { code } = error as FirebaseError;
+			if (code === 'not-found') {
+				setError('찾을 수 없는 사용자입니다.');
+			}
+			if (code === 'requires-recent-login') {
+				setError('다시 로그인 후 시도해주세요.');
 			}
 		}
 	};
-	console.log('userInfo', userInfo);
+
 	return (
 		<div onClick={handleOutsideClick} className='custom-container flex flex-col items-center p-5'>
-			{userInfo.displayName && (
+			{error && <ErrorToast error={error} setError={setError} />}
+			{userInfo && (
 				<div className='w-full max-w-sm rounded-lg border border-gray-200 bg-white shadow'>
 					<div className='relative flex justify-end px-4 pt-4'>
 						{/* Dots Button */}

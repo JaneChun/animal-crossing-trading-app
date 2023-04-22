@@ -1,56 +1,29 @@
-import { collection, deleteDoc, doc, DocumentData, getDoc, getDocs, orderBy, query, updateDoc } from 'firebase/firestore';
+import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Comment from '../Components/PostDetail/Comment';
 import { AuthContext } from '../Context/AuthContext';
 import { db, storage } from '../fbase';
+import spinner from '../Images/loading.jpg';
 import { elapsedTime } from '../Utilities/elapsedTime';
+import useGetComment from '../Utilities/useGetComment';
+import useGetPostDetail from '../Utilities/useGetPostDetail';
 import { cartItem } from './NewPost';
 
 const PostDetail = () => {
-	const { id } = useParams();
 	const navigate = useNavigate();
-	const [data, setData] = useState<DocumentData>({});
-	const [comments, setComments] = useState<DocumentData[]>([]);
+	const { id } = useParams();
+	const { userInfo } = useContext(AuthContext);
+	const [isUpdated, setIsUpdated] = useState<boolean>(false);
+	const { data, error, loading } = useGetPostDetail(id!, isUpdated);
+	const [isCommentsUpdated, setIsCommentsUpdated] = useState<boolean>(false);
+	const { comments, commentsError, commentsLoading } = useGetComment(id!, isCommentsUpdated);
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 	const modalRef = useRef<HTMLButtonElement | null>(null);
-	const { userInfo } = useContext(AuthContext);
 
-	useEffect(() => {
-		getData();
-		getComments();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
-	const getData = async () => {
-		if (!id) return;
-
-		const docRef = doc(db, 'Boards', id);
-		const docSnap = await getDoc(docRef);
-
-		if (docSnap.exists()) {
-			const docData = docSnap.data();
-			setData({ ...docData, id });
-		} else {
-			console.log('no such document!');
-		}
-	};
-
-	const getComments = async () => {
-		if (!id) return;
-
-		// const q = query(collection(db, 'Boards', id, 'Comments'), orderBy('createdAt', 'desc'));
-		const q = query(collection(db, `Boards/${id}/Comments`), orderBy('createdAt', 'asc'));
-		const querySnapshot = await getDocs(q);
-		querySnapshot.forEach((doc) => {
-			const docObj = {
-				...doc.data(),
-				commentId: doc.id,
-			};
-			setComments((comments) => [...comments, docObj]);
-		});
-	};
+	if (error) console.log(error);
+	if (commentsError) console.log(commentsError);
 
 	const editPost = () => {
 		if (data.done) return;
@@ -80,17 +53,6 @@ const PostDetail = () => {
 		}
 	};
 
-	const handleModal = () => {
-		setIsModalOpen(!isModalOpen);
-	};
-
-	const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
-		const target = e.target as any;
-		if (isModalOpen && !modalRef.current?.contains(target)) {
-			setIsModalOpen(false);
-		}
-	};
-
 	const closePost = async () => {
 		if (!userInfo || !id || data.done) return;
 
@@ -102,16 +64,31 @@ const PostDetail = () => {
 				await updateDoc(docRef, {
 					done: true,
 				});
-				getData();
+				setIsUpdated(!isUpdated);
 			} catch (error) {
 				console.log(error);
 			}
 		}
 	};
-	console.log('data', data);
+
+	const handleModal = () => {
+		setIsModalOpen(!isModalOpen);
+	};
+
+	const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
+		const target = e.target as any;
+		if (isModalOpen && !modalRef.current?.contains(target)) {
+			setIsModalOpen(false);
+		}
+	};
+
 	return (
 		<div onClick={handleOutsideClick} className='custom-container p-5'>
-			{data && (
+			{loading || commentsLoading ? (
+				<div className='flex h-full w-full items-center justify-center'>
+					<img src={spinner} alt='loading' className='h-32' />
+				</div>
+			) : (
 				<div className='relative mx-2'>
 					{/* Type */}
 					<div>
@@ -207,7 +184,7 @@ const PostDetail = () => {
 						</div>
 						<div className='text-xs text-gray-500'>{elapsedTime(data.createdAt?.toDate())}</div>
 					</div>
-					<img className='w-full rounded-lg' src={data.photoURL} />
+					<img className='w-full rounded-lg' alt='thumbnail' src={data.photoURL} />
 					<div className='mt-4 mb-4 whitespace-pre-wrap p-3 text-base font-normal text-gray-500'>{data.body}</div>
 					{/* Text Data */}
 
@@ -270,9 +247,9 @@ const PostDetail = () => {
 						done={data.done}
 						postCreatorId={data.creatorId}
 						comments={comments}
-						setComments={setComments}
 						id={data.id}
-						getComments={getComments}
+						isCommentsUpdated={isCommentsUpdated}
+						setIsCommentsUpdated={setIsCommentsUpdated}
 					/>
 				</div>
 			)}
