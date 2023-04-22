@@ -14,7 +14,9 @@ const MyChat = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		getData();
+		if (uid) {
+			getData();
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
