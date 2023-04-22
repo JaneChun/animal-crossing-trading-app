@@ -8,6 +8,7 @@ import { AuthContext } from '../Context/AuthContext';
 import { db } from '../fbase';
 import { uploadFile } from '../Utilities/uploadFile';
 import ErrorToast from '../Components/ErrorToast';
+import { FirebaseError } from 'firebase/app';
 
 export interface item {
 	UniqueEntryID: string;
@@ -93,13 +94,15 @@ const NewPost = () => {
 			const docRef = doc(db, 'Boards', docId);
 			await setDoc(docRef, requestData);
 			alert('작성했습니다.');
-			navigate(`/post/${docId}`);
-		} catch (error) {
-			console.log(error);
-		} finally {
 			setTitle('');
 			setBody('');
 			setFileURLString(null);
+			navigate(`/post/${docId}`);
+		} catch (error: unknown) {
+			const { code } = error as FirebaseError;
+			if (code === 'invalid-argument') {
+				setError('프로필에 비어있는 정보가 없는지 다시 확인해주세요.');
+			}
 		}
 	};
 

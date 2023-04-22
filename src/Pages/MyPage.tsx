@@ -52,12 +52,18 @@ const MyPage = () => {
 			});
 
 			await deleteUser(userInfo).then(() => {
+				localStorage.removeItem('uid');
 				alert('탈퇴되었습니다.');
 				navigate('/');
 			});
 		} catch (error: unknown) {
 			const { code } = error as FirebaseError;
-			setError(code);
+			if (code === 'not-found') {
+				setError('찾을 수 없는 사용자입니다.');
+			}
+			if (code === 'requires-recent-login') {
+				setError('다시 로그인 후 시도해주세요.');
+			}
 		}
 	};
 
