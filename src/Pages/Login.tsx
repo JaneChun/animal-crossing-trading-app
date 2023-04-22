@@ -1,13 +1,22 @@
 import { AuthProvider } from '@firebase/auth-types';
 import { FacebookAuthProvider, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import LoginModal from '../Components/LoginModal';
 import { auth, db } from '../fbase';
+import ErrorToast from '../Components/ErrorToast';
 
 const Login = () => {
 	const navigate = useNavigate();
+	const { state } = useLocation();
+	const [error, setError] = useState<string | null>(null);
+
+	useEffect(() => {
+		if (state) {
+			setError(state.error);
+		}
+	}, []);
 
 	const onSocialClick = async (e: React.MouseEvent<HTMLDivElement>) => {
 		const { id } = e.target as HTMLDivElement;
@@ -65,6 +74,7 @@ const Login = () => {
 
 	return (
 		<div className='custom-container'>
+			{error && <ErrorToast error={error} setError={setError} />}
 			<LoginModal onSocialClick={onSocialClick} />
 		</div>
 	);

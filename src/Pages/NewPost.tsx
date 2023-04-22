@@ -7,6 +7,7 @@ import ItemSelect from '../Components/NewPost/ItemSelect';
 import { AuthContext } from '../Context/AuthContext';
 import { db } from '../fbase';
 import { uploadFile } from '../Utilities/uploadFile';
+import ErrorToast from '../Components/ErrorToast';
 
 export interface item {
 	UniqueEntryID: string;
@@ -30,6 +31,7 @@ const NewPost = () => {
 	const [cart, setCart] = useState<cartItem[]>([]);
 	const [fileURLString, setFileURLString] = useState<any>(null);
 	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+	const [error, setError] = useState<string | null>(null);
 
 	const typeHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
 		const { name } = e.target as HTMLButtonElement;
@@ -44,13 +46,27 @@ const NewPost = () => {
 		setBody(e.target.value);
 	};
 
-	const onSubmit = async () => {
+	const validateForm = () => {
 		if (!userInfo) {
-			alert('글 쓰기는 로그인 후 가능합니다.');
-			navigate('/login');
-			return;
+			navigate('/login', {
+				state: {
+					error: '글 쓰기는 로그인 후 가능합니다.',
+				},
+			});
+			return false;
 		}
 
+		if (!title || !body) {
+			setError('제목이나 내용이 비어있는지 확인해주세요.');
+			return false;
+		}
+		return true;
+	};
+
+	const onSubmit = async () => {
+		if (!validateForm()) return;
+
+		const docId = uuidv4();
 		let requestData = {
 			type,
 			title,
@@ -58,26 +74,15 @@ const NewPost = () => {
 			cart,
 			cartList: cart.map((item) => item.name),
 			createdAt: serverTimestamp(),
-			creatorDisplayName: userInfo.displayName,
-			creatorIslandName: userInfo.islandName,
-			creatorRating: userInfo.rating,
-			creatorCount: userInfo.count,
+			creatorDisplayName: userInfo?.displayName,
+			creatorIslandName: userInfo?.islandName,
+			creatorRating: userInfo?.rating,
+			creatorCount: userInfo?.count,
 			creatorId: userInfo?.uid,
 			done: false,
 			comments: 0,
 			photoURL: '',
 		};
-		const docId = uuidv4();
-
-		if (type === '') {
-			alert('거래 종류를 선택해주세요.');
-			return;
-		}
-
-		if (title === '' || body === '') {
-			alert('제목이나 내용이 비어있는지 확인해주세요.');
-			return;
-		}
 
 		if (fileURLString) {
 			const photoURL = await uploadFile(fileURLString, 'BoardImages', docId);
@@ -117,6 +122,7 @@ const NewPost = () => {
 
 	return (
 		<div className='custom-container p-5'>
+			{error && <ErrorToast error={error} setError={setError} />}
 			<div className='inline-flex rounded-md shadow-sm' role='group'>
 				{/* Type */}
 				<button
