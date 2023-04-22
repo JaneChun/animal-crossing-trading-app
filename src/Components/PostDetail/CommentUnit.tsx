@@ -9,8 +9,8 @@ import { elapsedTime } from '../../Utilities/elapsedTime';
 interface CommentUnitProps {
 	id: string;
 	comment: DocumentData;
-	setComments: React.Dispatch<SetStateAction<DocumentData[]>>;
-	getComments: () => Promise<void>;
+	isCommentsUpdated: boolean;
+	setIsCommentsUpdated: React.Dispatch<React.SetStateAction<boolean>>;
 	isModalOpen: boolean;
 	setIsModalOpen: React.Dispatch<SetStateAction<boolean>>;
 	clickedComment: string;
@@ -22,12 +22,12 @@ interface CommentUnitProps {
 const CommentUnit = ({
 	id,
 	comment,
-	setComments,
-	getComments,
 	isModalOpen,
 	setIsModalOpen,
 	clickedComment,
 	setClickedComment,
+	isCommentsUpdated,
+	setIsCommentsUpdated,
 	modalRef,
 	postCreatorId,
 }: CommentUnitProps) => {
@@ -77,8 +77,7 @@ const CommentUnit = ({
 			await updateDoc(desertRef, {
 				comment: newCommentInput,
 			});
-			setComments([]);
-			getComments();
+			setIsCommentsUpdated(!isCommentsUpdated);
 		} catch (error) {
 			console.log(error);
 		}
@@ -92,8 +91,7 @@ const CommentUnit = ({
 			try {
 				await deleteDoc(desertRef);
 				updateCommentsLength();
-				setComments([]);
-				getComments();
+				setIsCommentsUpdated(!isCommentsUpdated);
 			} catch (error) {
 				console.log(error);
 			}

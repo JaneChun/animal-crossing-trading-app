@@ -88,7 +88,7 @@ const NewPost = () => {
 			const docRef = doc(db, 'Boards', docId);
 			await setDoc(docRef, requestData);
 			alert('작성했습니다.');
-			navigate('/');
+			navigate(`/post/${docId}`);
 		} catch (error) {
 			console.log(error);
 		} finally {
