@@ -17,7 +17,7 @@ const Login = () => {
 		if (state) {
 			setError(state.error);
 		}
-	}, []);
+	}, [state]);
 
 	const onSocialClick = async (e: React.MouseEvent<HTMLDivElement>) => {
 		const { id } = e.target as HTMLDivElement;
