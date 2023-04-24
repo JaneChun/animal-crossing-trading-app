@@ -22,6 +22,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
+      - run: echo ${{ github.workspace }}
+
       - name: Install and Build 🔧
         run: |
           npm install
