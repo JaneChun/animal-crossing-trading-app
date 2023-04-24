@@ -24,6 +24,5 @@ jobs:
 
       - name: Install and Build 🔧
         run: |
-          CI='false'
           npm install
           npm run build
