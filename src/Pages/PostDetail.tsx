@@ -1,14 +1,15 @@
-import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { deleteDoc, doc } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
 import React, { useContext, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Comment from '../Components/PostDetail/Comment';
 import { AuthContext } from '../Context/AuthContext';
-import { db, storage } from '../fbase';
 import spinner from '../Images/loading.jpg';
 import { elapsedTime } from '../Utilities/elapsedTime';
+import { updateDataToFirestore } from '../Utilities/firebaseApi';
 import useGetComment from '../Utilities/useGetComment';
 import useGetPostDetail from '../Utilities/useGetPostDetail';
+import { db, storage } from '../fbase';
 import { cartItem } from './NewPost';
 
 const PostDetail = () => {
@@ -61,9 +62,8 @@ const PostDetail = () => {
 		if (confirm) {
 			try {
 				const docRef = doc(db, 'Boards', id);
-				await updateDoc(docRef, {
-					done: true,
-				});
+				const requestData = { done: true };
+				await updateDataToFirestore(docRef, requestData);
 				setIsUpdated(!isUpdated);
 			} catch (error) {
 				console.log(error);

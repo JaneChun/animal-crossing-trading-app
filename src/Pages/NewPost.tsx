@@ -1,14 +1,15 @@
-import { doc, serverTimestamp, setDoc, Timestamp } from 'firebase/firestore';
+import { FirebaseError } from 'firebase/app';
+import { doc, serverTimestamp, Timestamp } from 'firebase/firestore';
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+import ErrorToast from '../Components/ErrorToast';
 import CartItem from '../Components/NewPost/CartItem';
 import ItemSelect from '../Components/NewPost/ItemSelect';
 import { AuthContext } from '../Context/AuthContext';
 import { db } from '../fbase';
+import { setDataToFirestore } from '../Utilities/firebaseApi';
 import { uploadFile } from '../Utilities/uploadFile';
-import ErrorToast from '../Components/ErrorToast';
-import { FirebaseError } from 'firebase/app';
 
 export interface item {
 	UniqueEntryID: string;
@@ -92,7 +93,7 @@ const NewPost = () => {
 
 		try {
 			const docRef = doc(db, 'Boards', docId);
-			await setDoc(docRef, requestData);
+			await setDataToFirestore(docRef, requestData);
 			alert('작성했습니다.');
 			setTitle('');
 			setBody('');

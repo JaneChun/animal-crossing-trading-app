@@ -1,11 +1,12 @@
 import { uuidv4 } from '@firebase/util';
-import { arrayUnion, deleteDoc, doc, DocumentData, increment, onSnapshot, Timestamp, updateDoc } from 'firebase/firestore';
+import { arrayUnion, deleteDoc, doc, DocumentData, increment, onSnapshot, Timestamp } from 'firebase/firestore';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { FaStar } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../Context/AuthContext';
 import { ChatContext } from '../Context/ChatContext';
 import { db } from '../fbase';
+import { updateDataToFirestore } from '../Utilities/firebaseApi';
 
 const Chat = () => {
 	const navigate = useNavigate();
@@ -51,19 +52,19 @@ const Chat = () => {
 	const onSubmit = async () => {
 		if (participants.length === 1 || chatInput === '') return;
 
-		const requestData = {
-			messages: arrayUnion({
-				id: uuidv4(),
-				senderId: userInfo.uid,
-				text: chatInput,
-				date: Timestamp.now(),
-			}),
-			lastUpdate: Timestamp.now(),
-		};
-
 		try {
 			// 둘의 채팅방에 추가
-			await updateDoc(doc(db, 'Chats', data.chatId), requestData);
+			const docRef = doc(db, 'Chats', data.chatId);
+			const requestData = {
+				messages: arrayUnion({
+					id: uuidv4(),
+					senderId: userInfo.uid,
+					text: chatInput,
+					date: Timestamp.now(),
+				}),
+				lastUpdate: Timestamp.now(),
+			};
+			await updateDataToFirestore(docRef, requestData);
 		} catch (error) {
 			console.log(error);
 		} finally {
@@ -94,21 +95,21 @@ const Chat = () => {
 		setIsPopupOpen(false);
 		navigate('/chat');
 
-		if (participants.length === 1) {
-			deleteDoc(doc(db, 'Chats', data.chatId));
-		} else {
-			await updateDoc(doc(db, 'Chats', data.chatId), {
-				participants: [data.counterpart.uid],
-			});
+		const docRef = doc(db, 'Chats', data.chatId);
 
-			await updateDoc(doc(db, 'Chats', data.chatId), {
+		if (participants.length === 1) {
+			deleteDoc(docRef);
+		} else {
+			const requestData = {
+				participants: [data.counterpart.uid],
 				messages: arrayUnion({
 					id: uuidv4(),
 					senderId: 'system',
 					text: `${userInfo.displayName}님이 나가셨습니다.`,
 					date: Timestamp.now(),
 				}),
-			});
+			};
+			await updateDataToFirestore(docRef, requestData);
 		}
 	};
 
@@ -116,10 +117,11 @@ const Chat = () => {
 		const counterpartRating = Number(data.counterpart.rating);
 		const counterPartCount = Number(data.counterpart.count);
 		const docRef = doc(db, 'Users', data.counterpart.uid);
-		await updateDoc(docRef, {
+		const requestData = {
 			rating: ((counterpartRating * counterPartCount + rating) / (counterPartCount + 1)).toFixed(1),
 			count: increment(1),
-		});
+		};
+		await updateDataToFirestore(docRef, requestData);
 	};
 
 	return (

@@ -2,8 +2,9 @@ import { updateProfile } from 'firebase/auth';
 import React, { useContext, useState } from 'react';
 import { auth, db } from '../fbase';
 // import { v4 as uuidv4 } from 'uuid';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc } from 'firebase/firestore';
 import { AuthContext } from '../Context/AuthContext';
+import { updateDataToFirestore } from '../Utilities/firebaseApi';
 import { uploadFile } from '../Utilities/uploadFile';
 
 interface EditProfileProps {
@@ -71,9 +72,10 @@ const EditProfile = ({ islandName, setIsEditing }: EditProfileProps) => {
 					return;
 				}
 				const docRef = doc(db, 'Users', userInfo.uid);
-				await updateDoc(docRef, {
+				const requestData = {
 					islandName: islandNameInput,
-				});
+				};
+				await updateDataToFirestore(docRef, requestData);
 			}
 
 			// 이름 바뀌었을 때

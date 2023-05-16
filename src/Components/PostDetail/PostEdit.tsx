@@ -1,4 +1,4 @@
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc } from 'firebase/firestore';
 import React, { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CartItem from '../../Components/NewPost/CartItem';
@@ -6,6 +6,7 @@ import ItemSelect from '../../Components/NewPost/ItemSelect';
 import { AuthContext } from '../../Context/AuthContext';
 import spinner from '../../Images/loading.jpg';
 import { cartItem } from '../../Pages/NewPost';
+import { updateDataToFirestore } from '../../Utilities/firebaseApi';
 import { uploadFile } from '../../Utilities/uploadFile';
 import useGetPostDetail from '../../Utilities/useGetPostDetail';
 import { db } from '../../fbase';
@@ -103,7 +104,8 @@ const PostEdit = () => {
 
 		try {
 			setUploadLoading(true);
-			await updateDoc(doc(db, 'Boards', state.id), requestData);
+			const docRef = doc(db, 'Boards', state.id);
+			await updateDataToFirestore(docRef, requestData);
 			setUploadLoading(false);
 			navigate(`/post/${state.id}`);
 		} catch (error) {

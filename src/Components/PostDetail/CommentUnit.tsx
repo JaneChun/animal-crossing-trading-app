@@ -1,10 +1,11 @@
-import { deleteDoc, doc, DocumentData, getDoc, increment, setDoc, updateDoc } from 'firebase/firestore';
+import { deleteDoc, doc, DocumentData, getDoc, increment } from 'firebase/firestore';
 import React, { SetStateAction, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../Context/AuthContext';
 import { ChatContext } from '../../Context/ChatContext';
 import { db } from '../../fbase';
 import { elapsedTime } from '../../Utilities/elapsedTime';
+import { setDataToFirestore, updateDataToFirestore } from '../../Utilities/firebaseApi';
 
 interface CommentUnitProps {
 	id: string;
@@ -48,10 +49,9 @@ const CommentUnit = ({
 
 	const updateCommentsLength = async () => {
 		const docRef = doc(db, 'Boards', id);
+		const requestData = { comments: increment(-1) };
 		try {
-			await updateDoc(docRef, {
-				comments: increment(-1),
-			});
+			await updateDataToFirestore(docRef, requestData);
 		} catch (error) {
 			console.log(error);
 		}
@@ -73,10 +73,9 @@ const CommentUnit = ({
 		}
 
 		const desertRef = doc(db, 'Boards', id, 'Comments', comment.commentId);
+		const requestData = { comment: newCommentInput };
 		try {
-			await updateDoc(desertRef, {
-				comment: newCommentInput,
-			});
+			await updateDataToFirestore(desertRef, requestData);
 			setIsCommentsUpdated(!isCommentsUpdated);
 		} catch (error) {
 			console.log(error);
@@ -115,11 +114,13 @@ const CommentUnit = ({
 
 		// 이미 존재하는 채팅방인지 확인한다.
 		const combinedId = userInfo.uid > comment.creatorId ? userInfo.uid + comment.creatorId : comment.creatorId + userInfo.uid;
+
 		try {
 			const response = await getDoc(doc(db, 'Chats', combinedId));
 			// 이미 둘이 채팅한 적이 없다면 새로 만든다.
 			if (!response.exists()) {
-				await setDoc(doc(db, 'Chats', combinedId), {
+				const chatRef = doc(db, 'Chats', combinedId);
+				const requestData = {
 					messages: [],
 					participants: [userInfo.uid, comment.creatorId],
 					usersInfo: [
@@ -140,7 +141,9 @@ const CommentUnit = ({
 							count: comment.creatorCount,
 						},
 					],
-				});
+				};
+
+				await setDataToFirestore(chatRef, requestData);
 			}
 
 			dispatch({
