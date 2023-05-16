@@ -7,14 +7,16 @@ import { db } from '../fbase';
 import { elapsedTime } from '../Utilities/elapsedTime';
 
 const MyChat = () => {
-	const [chatData, setChatData] = useState<DocumentData[]>([]);
+	const navigate = useNavigate();
 	const { userInfo } = useContext(AuthContext);
 	const { dispatch } = useContext(ChatContext);
+	const [chatData, setChatData] = useState<DocumentData[]>([]);
 	const uid = localStorage.getItem('uid');
-	const navigate = useNavigate();
 
 	useEffect(() => {
-		getData();
+		if (uid) {
+			getData();
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -41,7 +43,7 @@ const MyChat = () => {
 	return (
 		<div className='custom-container p-5'>
 			<div className='pb-2 text-lg font-bold text-gray-900 '>채팅</div>
-			{chatData.length === 0 ? (
+			{!uid || chatData.length === 0 ? (
 				<div className='flex h-full w-full items-center justify-center'>
 					<span className='text-sm text-gray-500'>참여 중인 채팅방이 없습니다.</span>
 				</div>

@@ -40,8 +40,11 @@ const Comment = ({ done, id, comments, isCommentsUpdated, setIsCommentsUpdated, 
 		e.preventDefault();
 
 		if (!userInfo) {
-			alert('댓글 작성은 로그인 후 가능합니다.');
-			navigate('/login');
+			navigate('/login', {
+				state: {
+					error: '댓글 작성은 로그인 후 가능합니다.',
+				},
+			});
 			return;
 		}
 

@@ -184,7 +184,7 @@ const PostDetail = () => {
 						</div>
 						<div className='text-xs text-gray-500'>{elapsedTime(data.createdAt?.toDate())}</div>
 					</div>
-					<img className='w-full rounded-lg' alt='thumbnail' src={data.photoURL} />
+					{data.photoURL && <img className='w-full rounded-lg' alt='thumbnail' src={data.photoURL} />}
 					<div className='mt-4 mb-4 whitespace-pre-wrap p-3 text-base font-normal text-gray-500'>{data.body}</div>
 					{/* Text Data */}
 

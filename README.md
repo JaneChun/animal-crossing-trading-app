@@ -1,10 +1,10 @@
+<div align='center'>
+
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FJaneChun%2Fanimal-crossing-trading-app&count_bg=%230CC6B8&title_bg=%23000000&icon=leaflet.svg&icon_color=%23FFFFFF&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 
 # 🌴 모동숲 마켓
 
 > #### 닌텐도 게임 "모여봐요 동물의 숲" 유저들을 위한 아이템 거래 사이트! 📦
->
-> <br/>
 
 ![헤더 이미지](https://firebasestorage.googleapis.com/v0/b/animal-crossing-trade-app.appspot.com/o/Src%2F%E1%84%83%E1%85%A9%E1%86%BC%E1%84%86%E1%85%AE%E1%86%AF%E1%84%8B%E1%85%B4%E1%84%89%E1%85%AE%E1%87%81_20.11.13.%E1%84%89%E1%85%AE%E1%84%8C%E1%85%A5%E1%86%BC%20PPT.001.png?alt=media&token=c0164755-e01f-4b63-966e-7a8403f30650)
 
@@ -12,29 +12,27 @@
 
 ## 🌿 프로젝트 소개
 
-<hr />
-"모여봐요 동물의 숲"에서 섬 생활을 하다보면, 가끔 내 섬에서 원하는 아이템을 찾기 어려운 경우가 생기곤 합니다. 
+"모여봐요 동물의 숲"에서 섬 생활을 하다보면, 가끔 내 섬에서 원하는 아이템을 찾기 어려운 경우가 생기곤 합니다.
+<br/>
 그러나 걱정하지 마세요. 다른 유저들과 거래를 통해 쉽고 빠르게 원하는 아이템과 레시피를 구할 수 있습니다.
 <br/>
 <br/>
-현재 한국에서는 네이버 닌텐도 카페가 유일하게 활성화된 채널이지만, 해외에는 Nookazon 등 모동숲 거래에 특화된 매우 편리한 사이트들이 존재합니다. 그래서 저는 한국 유저에게도 모동숲 거래에 특화된 사이트가 있으면 좋겠다고 생각하여 제작하게 되었습니다. <br/>
+현재 한국에서는 네이버 닌텐도 카페가 유일하게 활성화된 채널이지만, 해외에는 Nookazon 등 모동숲 거래에 특화된 매우 편리한 사이트들이 존재합니다. 
+<br/>
+그래서 저는 한국 유저에게도 모동숲 거래에 특화된 사이트가 있으면 좋겠다고 생각하여 제작하게 되었습니다. <br/>
 <br/>모동숲 마켓에서 함께 거래하며 더욱 즐거운 섬 생활이 되시길 바랍니다!💛
 
 <br/>
 
 ## 🌱 개발 인원 및 기간
 
-<hr />
-<ul>
-  <li>개발 인원 : 프론트엔드 1명 <a href='https://github.com/JaneChun'>JaneChun</a> (솔로 프로젝트)</li>
-  <li>개발 기간 2023.03.23 ~ 2023.04.20</li>
-</ul>
+개발 인원 : 프론트엔드 1명 <a href='https://github.com/JaneChun'>JaneChun</a> (솔로 프로젝트)
+<br/>
+개발 기간 2023.03.23 ~ 2023.04.20
 
 <br/>
 
 ## 🔗 배포 링크
-
-<hr />
 
 https://janechun.github.io/animal-crossing-trading-app
 
@@ -42,7 +40,6 @@ https://janechun.github.io/animal-crossing-trading-app
 
 ## 🪵 기술 스택
 
-<hr />
 <div>
 <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=TypeScript&logoColor=white"/><br/>
 <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=white"/><br/>
@@ -54,8 +51,6 @@ https://janechun.github.io/animal-crossing-trading-app
 <br/>
 
 ## ☘️ 구현 기능
-
-<hr />
 
 ### 👤 Auth
 
@@ -158,12 +153,12 @@ https://janechun.github.io/animal-crossing-trading-app
 
 <details>
 <summary>채팅 상세 화면</summary>
-<img src='https://user-images.githubusercontent.com/108467211/233405154-717ca8c8-1fdd-413b-836f-5b08c5ff1726.gif'/>
+<img src='https://user-images.githubusercontent.com/108467211/233405154-717ca8c8-1fdd-413b-836f-5b08c5ff1726.gif' height='500px'/>
 </details>
 
 <details>
 <summary>채팅 나가기 & 매너 점수 평가</summary>
-<img src='https://user-images.githubusercontent.com/108467211/233405159-7087a3ea-7fa8-4929-b660-143392f244ae.gif'/>
+<img src='https://user-images.githubusercontent.com/108467211/233405159-7087a3ea-7fa8-4929-b660-143392f244ae.gif' height='500px'/>
 </details>
 
 <br />
@@ -171,15 +166,15 @@ https://janechun.github.io/animal-crossing-trading-app
 ### 🔎 Search
 
 <details>
-<summary>아이템 검색</summary>
+<summary>게시글 검색</summary>
 <img src='https://user-images.githubusercontent.com/108467211/233405176-d884133b-a510-4998-b7a3-d35b42de230f.gif' width='300px'/>
 </details>
-
+  
 <br/>
 
 ## 🍃 디렉토리 구조
-
-<hr />
+  
+</div>
 
 ```
 📦 src
