@@ -1,12 +1,13 @@
 import { AuthProvider } from '@firebase/auth-types';
-import { FacebookAuthProvider, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import LoginModal from '../Components/LoginModal';
-import { auth, db } from '../fbase';
-import ErrorToast from '../Components/ErrorToast';
 import { FirebaseError } from 'firebase/app';
+import { FacebookAuthProvider, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import ErrorToast from '../Components/ErrorToast';
+import LoginModal from '../Components/LoginModal';
+import { setDataToFirestore } from '../Utilities/firebaseApi';
+import { auth, db } from '../fbase';
 
 const Login = () => {
 	const navigate = useNavigate();
@@ -45,10 +46,16 @@ const Login = () => {
 	};
 
 	const checkUsersData = async (userUid: string) => {
-		const UsersdocRef = doc(db, 'Users', userUid);
-		const UsersResponse = await getDoc(UsersdocRef);
-		if (!UsersResponse.exists()) {
-			await setDoc(UsersdocRef, { islandName: '', rating: 0, count: 0, isDeletedAccount: false });
+		const usersDocRef = doc(db, 'Users', userUid);
+		const usersResponse = await getDoc(usersDocRef);
+		if (!usersResponse.exists()) {
+			const requestData = {
+				islandName: '',
+				rating: 0,
+				count: 0,
+				isDeletedAccount: false,
+			};
+			await setDataToFirestore(usersDocRef, requestData);
 		}
 	};
 

@@ -1,13 +1,14 @@
-import { doc, updateDoc } from '@firebase/firestore';
+import { doc } from '@firebase/firestore';
+import { FirebaseError } from 'firebase/app';
 import { deleteUser, signOut } from 'firebase/auth';
 import React, { useContext, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import EditProfile from '../Components/EditProfile';
+import ErrorToast from '../Components/ErrorToast';
 import MyPosts from '../Components/MyPosts';
 import { AuthContext } from '../Context/AuthContext';
+import { updateDataToFirestore } from '../Utilities/firebaseApi';
 import { auth, db } from '../fbase';
-import { FirebaseError } from 'firebase/app';
-import ErrorToast from '../Components/ErrorToast';
 
 const MyPage = () => {
 	const navigate = useNavigate();
@@ -46,10 +47,8 @@ const MyPage = () => {
 		try {
 			if (!userInfo) return;
 			const docRef = doc(db, 'Users', userInfo.uid);
-
-			await updateDoc(docRef, {
-				isDeletedAccount: true,
-			});
+			const requestData = { isDeletedAccount: true };
+			await updateDataToFirestore(docRef, requestData);
 
 			await deleteUser(userInfo).then(() => {
 				localStorage.removeItem('uid');

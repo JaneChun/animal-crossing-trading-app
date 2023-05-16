@@ -1,8 +1,9 @@
-import { collection, doc, DocumentData, increment, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
-import React, { SetStateAction, useContext, useRef, useState } from 'react';
+import { collection, doc, DocumentData, increment, serverTimestamp } from 'firebase/firestore';
+import React, { useContext, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../Context/AuthContext';
 import { db } from '../../fbase';
+import { setDataToFirestore, updateDataToFirestore } from '../../Utilities/firebaseApi';
 import CommentUnit from './CommentUnit';
 
 interface CommentProps {
@@ -28,15 +29,13 @@ const Comment = ({ done, id, comments, isCommentsUpdated, setIsCommentsUpdated, 
 
 	const updateCommentsLength = async () => {
 		const docRef = doc(db, 'Boards', id);
+		const requestData = { comments: increment(1) };
 		try {
-			await updateDoc(docRef, {
-				comments: increment(1),
-			});
+			await updateDataToFirestore(docRef, requestData);
 		} catch (error) {
 			console.log(error);
 		}
 	};
-
 	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
@@ -48,17 +47,6 @@ const Comment = ({ done, id, comments, isCommentsUpdated, setIsCommentsUpdated, 
 
 		if (!id || done) return;
 
-		const requestData = {
-			comment: commentInput,
-			createdAt: serverTimestamp(),
-			creatorDisplayName: userInfo.displayName,
-			creatorIslandName: userInfo.islandName,
-			creatorPhotoURL: userInfo.photoURL,
-			creatorId: userInfo.uid,
-			creatorRating: userInfo.rating,
-			creatorCount: userInfo.count,
-		};
-
 		if (commentInput === '') {
 			alert('내용이 비어있는지 확인해주세요.');
 			return;
@@ -66,7 +54,17 @@ const Comment = ({ done, id, comments, isCommentsUpdated, setIsCommentsUpdated, 
 
 		try {
 			const commentRef = doc(collection(db, 'Boards', id, 'Comments'));
-			await setDoc(commentRef, requestData);
+			const requestData = {
+				comment: commentInput,
+				createdAt: serverTimestamp(),
+				creatorDisplayName: userInfo.displayName,
+				creatorIslandName: userInfo.islandName,
+				creatorPhotoURL: userInfo.photoURL,
+				creatorId: userInfo.uid,
+				creatorRating: userInfo.rating,
+				creatorCount: userInfo.count,
+			};
+			await setDataToFirestore(commentRef, requestData);
 			alert('작성했습니다.');
 			updateCommentsLength();
 			setIsCommentsUpdated(!isCommentsUpdated);
