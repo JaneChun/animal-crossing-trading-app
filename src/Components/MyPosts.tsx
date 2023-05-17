@@ -4,12 +4,13 @@ import { db } from '../fbase';
 import { doc } from '../Pages/Home';
 import PostUnit from './PostUnit';
 import spinner from '../Images/loading.jpg';
+import useToggle from '../Hooks/useToggle';
 
 function MyPosts() {
+	const [loading, toggleLoading] = useToggle(false);
 	const [data, setData] = useState<doc[]>([]);
 	const [lastestDoc, setLastestDoc] = useState<any>();
 	const [isEnd, setIsEnd] = useState(false);
-	const [loading, setLoading] = useState<boolean>(false);
 	const uid = localStorage.getItem('uid');
 
 	useEffect(() => {
@@ -22,7 +23,7 @@ function MyPosts() {
 	const getData = async () => {
 		if (isEnd) return;
 
-		setLoading(true);
+		toggleLoading();
 		const querySnapshot = await getDocs(q);
 
 		if (querySnapshot.empty) {
@@ -38,7 +39,7 @@ function MyPosts() {
 		});
 
 		setLastestDoc(querySnapshot.docs[querySnapshot.docs.length - 1]);
-		setLoading(false);
+		toggleLoading();
 	};
 
 	const nextPage = async () => {

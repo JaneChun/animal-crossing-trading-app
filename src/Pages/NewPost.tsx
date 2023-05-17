@@ -10,6 +10,7 @@ import { AuthContext } from '../Context/AuthContext';
 import { db } from '../fbase';
 import { setDataToFirestore } from '../Utilities/firebaseApi';
 import { uploadFile } from '../Utilities/uploadFile';
+import useToggle from '../Hooks/useToggle';
 
 export interface item {
 	UniqueEntryID: string;
@@ -27,12 +28,12 @@ export interface cartItem extends item {
 const NewPost = () => {
 	const navigate = useNavigate();
 	const { userInfo } = useContext(AuthContext);
+	const [isDropdownOpen, toggleIsDropdownOpen] = useToggle(false);
 	const [type, setType] = useState<string>('buy');
 	const [title, setTitle] = useState<string>('');
 	const [body, setBody] = useState<string>('');
 	const [cart, setCart] = useState<cartItem[]>([]);
 	const [fileURLString, setFileURLString] = useState<any>(null);
-	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 
 	const typeHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -244,7 +245,7 @@ const NewPost = () => {
 			</div>
 			{/* Body */}
 
-			<ItemSelect isDropdownOpen={isDropdownOpen} setIsDropdownOpen={setIsDropdownOpen} cart={cart} setCart={setCart} />
+			<ItemSelect isDropdownOpen={isDropdownOpen} toggleIsDropdownOpen={toggleIsDropdownOpen} cart={cart} setCart={setCart} />
 
 			{/* Cart */}
 			<div className='mt-5 flex flex-wrap justify-center'>

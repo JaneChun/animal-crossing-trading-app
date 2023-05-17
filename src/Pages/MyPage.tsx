@@ -7,20 +7,17 @@ import EditProfile from '../Components/EditProfile';
 import ErrorToast from '../Components/ErrorToast';
 import MyPosts from '../Components/MyPosts';
 import { AuthContext } from '../Context/AuthContext';
+import useToggle from '../Hooks/useToggle';
 import { updateDataToFirestore } from '../Utilities/firebaseApi';
 import { auth, db } from '../fbase';
 
 const MyPage = () => {
 	const navigate = useNavigate();
 	const { userInfo } = useContext(AuthContext);
-	const [isEditing, setIsEditing] = useState<boolean>(false);
-	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+	const [isEditing, toggleIsEditing] = useToggle(false);
+	const [isModalOpen, toggleIsModalOpen] = useToggle(false);
 	const modalRef = useRef<HTMLButtonElement | null>(null);
 	const [error, setError] = useState<string | null>(null);
-
-	const onEditProfileClick = () => {
-		setIsEditing((isEditing) => !isEditing);
-	};
 
 	const onLogOutClick = () => {
 		signOut(auth);
@@ -29,13 +26,13 @@ const MyPage = () => {
 	};
 
 	const handleModal = () => {
-		setIsModalOpen(!isModalOpen);
+		toggleIsModalOpen();
 	};
 
 	const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
 		const target = e.target as any;
 		if (isModalOpen && !modalRef.current?.contains(target)) {
-			setIsModalOpen(false);
+			toggleIsModalOpen();
 		}
 	};
 
@@ -136,14 +133,14 @@ const MyPage = () => {
 						<div className='mt-4 flex space-x-3 md:mt-6'>
 							{!isEditing && (
 								<button
-									onClick={onEditProfileClick}
+									onClick={toggleIsEditing}
 									className='inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200'
 								>
 									프로필 수정
 								</button>
 							)}
 						</div>
-						{isEditing && <EditProfile islandName={userInfo.islandName} setIsEditing={setIsEditing} />}
+						{isEditing && <EditProfile islandName={userInfo.islandName} toggleIsEditing={toggleIsEditing} />}
 					</div>
 				</div>
 			)}

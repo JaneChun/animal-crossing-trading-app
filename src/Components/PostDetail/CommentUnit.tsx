@@ -6,6 +6,7 @@ import { ChatContext } from '../../Context/ChatContext';
 import { db } from '../../fbase';
 import { elapsedTime } from '../../Utilities/elapsedTime';
 import { setDataToFirestore, updateDataToFirestore } from '../../Utilities/firebaseApi';
+import useToggle from '../../Hooks/useToggle';
 
 interface CommentUnitProps {
 	id: string;
@@ -13,7 +14,7 @@ interface CommentUnitProps {
 	isCommentsUpdated: boolean;
 	setIsCommentsUpdated: React.Dispatch<React.SetStateAction<boolean>>;
 	isModalOpen: boolean;
-	setIsModalOpen: React.Dispatch<SetStateAction<boolean>>;
+	toggleIsModalOpen: () => void;
 	clickedComment: string;
 	setClickedComment: React.Dispatch<SetStateAction<string>>;
 	modalRef: React.RefObject<HTMLButtonElement>;
@@ -24,7 +25,7 @@ const CommentUnit = ({
 	id,
 	comment,
 	isModalOpen,
-	setIsModalOpen,
+	toggleIsModalOpen,
 	clickedComment,
 	setClickedComment,
 	isCommentsUpdated,
@@ -33,17 +34,17 @@ const CommentUnit = ({
 	postCreatorId,
 }: CommentUnitProps) => {
 	const navigate = useNavigate();
-	const [isEditing, setIsEditing] = useState<boolean>(false);
-	const [newCommentInput, setNewCommentInput] = useState(comment.comment);
 	const { userInfo } = useContext(AuthContext);
 	const { dispatch } = useContext(ChatContext);
+	const [isEditing, toggleIsEditing] = useToggle(false);
+	const [newCommentInput, setNewCommentInput] = useState(comment.comment);
 
 	const handleModal = (commentId: string) => {
 		if (!isModalOpen) {
-			setIsModalOpen(true);
+			toggleIsModalOpen();
 			setClickedComment(commentId);
 		} else {
-			setIsModalOpen(false);
+			toggleIsModalOpen();
 		}
 	};
 
@@ -68,7 +69,7 @@ const CommentUnit = ({
 		if (!id) return;
 
 		if (comment.comment === newCommentInput) {
-			setIsEditing(false);
+			toggleIsEditing();
 			return;
 		}
 
@@ -104,7 +105,7 @@ const CommentUnit = ({
 	const editCancel = () => {
 		const confirm = window.confirm('수정을 취소하겠습니까?');
 		if (confirm) {
-			setIsEditing(false);
+			toggleIsEditing();
 			setNewCommentInput(comment.comment);
 		}
 	};
@@ -209,7 +210,7 @@ const CommentUnit = ({
 									>
 										<ul className='text-sm text-gray-700' aria-labelledby='dropdownMenuIconButton'>
 											<li>
-												<button onClick={() => setIsEditing(true)} className='block px-6 py-2 hover:bg-gray-100'>
+												<button onClick={toggleIsEditing} className='block px-6 py-2 hover:bg-gray-100'>
 													수정
 												</button>
 											</li>

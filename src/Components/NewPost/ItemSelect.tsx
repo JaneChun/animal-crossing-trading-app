@@ -7,12 +7,12 @@ import UserAdd from './UserAdd';
 
 interface ItemSelectProps {
 	isDropdownOpen: boolean;
-	setIsDropdownOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	toggleIsDropdownOpen: () => void;
 	cart: cartItem[];
 	setCart: React.Dispatch<React.SetStateAction<cartItem[]>>;
 }
 
-const ItemSelect = ({ isDropdownOpen, setIsDropdownOpen, cart, setCart }: ItemSelectProps) => {
+const ItemSelect = ({ isDropdownOpen, toggleIsDropdownOpen, cart, setCart }: ItemSelectProps) => {
 	const [category, setCategory] = useState<string>('');
 	const [itemData, setItemData] = useState<item[]>([]);
 	const [searchInput, setSearchInput] = useState<string>('');
@@ -55,7 +55,7 @@ const ItemSelect = ({ isDropdownOpen, setIsDropdownOpen, cart, setCart }: ItemSe
 	const categorySelectHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
 		const { value } = e.target as HTMLButtonElement;
 		setCategory(value);
-		setIsDropdownOpen(false);
+		toggleIsDropdownOpen();
 	};
 
 	return (
@@ -69,7 +69,7 @@ const ItemSelect = ({ isDropdownOpen, setIsDropdownOpen, cart, setCart }: ItemSe
 			</label>
 			<button
 				id='item'
-				onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+				onClick={toggleIsDropdownOpen}
 				className='inline-flex items-center rounded-lg bg-mint px-4 py-2.5 text-center text-sm font-medium text-white hover:bg-hover-mint focus:outline-none focus:ring-4 focus:ring-ring-mint'
 				type='button'
 			>

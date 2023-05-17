@@ -7,18 +7,19 @@ import { AuthContext } from '../Context/AuthContext';
 import { ChatContext } from '../Context/ChatContext';
 import { db } from '../fbase';
 import { updateDataToFirestore } from '../Utilities/firebaseApi';
+import useToggle from '../Hooks/useToggle';
 
 const Chat = () => {
 	const navigate = useNavigate();
 	const { userInfo } = useContext(AuthContext);
 	const { data } = useContext(ChatContext);
+	const [isModalOpen, toggleIsModalOpen] = useToggle(false);
+	const [isPopupOpen, toggleIsPopupOpen] = useToggle(false);
 	const [chatInput, setChatInput] = useState('');
 	const [messages, setMessages] = useState<DocumentData[]>([]);
-	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 	const modalRef = useRef<HTMLButtonElement | null>(null);
 	const [participants, setParticipants] = useState([]);
 	const messageEndRef = useRef<HTMLDivElement | null>(null);
-	const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
 	const [rating, setRating] = useState<number>(0);
 	const [hover, setHover] = useState<number>(0);
 	const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -73,26 +74,26 @@ const Chat = () => {
 	};
 
 	const handleModal = () => {
-		setIsModalOpen(!isModalOpen);
+		toggleIsModalOpen();
 	};
 
 	const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
 		const target = e.target as any;
 		if (isModalOpen && !modalRef.current?.contains(target)) {
-			setIsModalOpen(false);
+			toggleIsModalOpen();
 		}
 	};
 
 	const onLeaveClick = () => {
 		const confirm = window.confirm('정말 나가겠습니까?');
 		if (confirm) {
-			setIsPopupOpen(true);
+			toggleIsPopupOpen();
 		}
 	};
 
 	const deleteChat = async () => {
 		updateRating();
-		setIsPopupOpen(false);
+		toggleIsPopupOpen();
 		navigate('/chat');
 
 		const docRef = doc(db, 'Chats', data.chatId);
@@ -288,11 +289,11 @@ const Chat = () => {
 
 							<div>
 								<ul className='mb-5 flex justify-center'>
-									{[...Array(5)].map((star, i) => {
+									{[...Array(5)].map((_, i) => {
 										const ratingValue = i + 1;
 
 										return (
-											<label>
+											<label key={i}>
 												<input className='hidden' onMouseOut={() => setHover(0)} type='radio' name='rating' value={ratingValue} />
 												<FaStar
 													onClick={() => setRating(ratingValue)}

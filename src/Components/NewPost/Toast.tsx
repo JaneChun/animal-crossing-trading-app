@@ -1,17 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import useToggle from '../../Hooks/useToggle';
 
 interface ToastProps {
 	item: string | null;
 }
 
 const Toast = ({ item }: ToastProps) => {
-	const [isToastVisible, setIsToastVisible] = useState(false);
+	const [isToastVisible, toggleIsToastVisible] = useToggle(false);
 
 	useEffect(() => {
 		if (item) {
-			setIsToastVisible(true);
+			toggleIsToastVisible();
 			setTimeout(() => {
-				setIsToastVisible(false);
+				toggleIsToastVisible();
 			}, 1000);
 		}
 	}, [item]);
