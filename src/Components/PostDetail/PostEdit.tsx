@@ -8,22 +8,23 @@ import spinner from '../../Images/loading.jpg';
 import { cartItem } from '../../Pages/NewPost';
 import { updateDataToFirestore } from '../../Utilities/firebaseApi';
 import { uploadFile } from '../../Utilities/uploadFile';
-import useGetPostDetail from '../../Utilities/useGetPostDetail';
+import useGetPostDetail from '../../Hooks/useGetPostDetail';
 import { db } from '../../fbase';
+import useToggle from '../../Hooks/useToggle';
 
 const PostEdit = () => {
 	const navigate = useNavigate();
 	const { state } = useLocation();
 	const { userInfo } = useContext(AuthContext);
 	const { data, error, loading } = useGetPostDetail(state.id);
+	const [isDropdownOpen, toggleIsDropdownOpen] = useToggle(false);
+	const [uploadLoading, toggleUploadLoading] = useToggle(false);
 	const [type, setType] = useState<string>('buy');
 	const [title, setTitle] = useState<string>('');
 	const [body, setBody] = useState<string>('');
 	const [cart, setCart] = useState<cartItem[]>([]);
 	const [photoURL, setPhotoURL] = useState<string>('');
-	const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 	const [newFileURLString, setNewFileURLString] = useState<any>(null);
-	const [uploadLoading, setUploadLoading] = useState<boolean>(false);
 
 	if (error) console.log(error);
 
@@ -103,10 +104,10 @@ const PostEdit = () => {
 		}
 
 		try {
-			setUploadLoading(true);
+			toggleUploadLoading();
 			const docRef = doc(db, 'Boards', state.id);
 			await updateDataToFirestore(docRef, requestData);
-			setUploadLoading(false);
+			toggleUploadLoading();
 			navigate(`/post/${state.id}`);
 		} catch (error) {
 			console.log(error);
@@ -243,7 +244,7 @@ const PostEdit = () => {
 
 					{/* Body */}
 
-					<ItemSelect isDropdownOpen={isDropdownOpen} setIsDropdownOpen={setIsDropdownOpen} cart={cart} setCart={setCart} />
+					<ItemSelect isDropdownOpen={isDropdownOpen} toggleIsDropdownOpen={toggleIsDropdownOpen} cart={cart} setCart={setCart} />
 
 					{/* Cart */}
 					<div className='mt-5 flex flex-wrap justify-center'>

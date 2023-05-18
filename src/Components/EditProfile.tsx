@@ -9,10 +9,10 @@ import { uploadFile } from '../Utilities/uploadFile';
 
 interface EditProfileProps {
 	islandName: string;
-	setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+	toggleIsEditing: () => void;
 }
 
-const EditProfile = ({ islandName, setIsEditing }: EditProfileProps) => {
+const EditProfile = ({ islandName, toggleIsEditing }: EditProfileProps) => {
 	const { userInfo } = useContext(AuthContext);
 	const [displayNameInput, setDisplayNameInput] = useState<string>(userInfo.displayName);
 	const [islandNameInput, setIslandNameInput] = useState<string>(islandName);
@@ -98,7 +98,7 @@ const EditProfile = ({ islandName, setIsEditing }: EditProfileProps) => {
 			}
 			setDisplayNameInput('');
 			setFileURLString(null);
-			setIsEditing(false);
+			toggleIsEditing();
 			window.location.reload();
 		} catch (error) {
 			console.log(error);
@@ -197,7 +197,7 @@ const EditProfile = ({ islandName, setIsEditing }: EditProfileProps) => {
 					변경
 				</button>
 				<button
-					onClick={() => setIsEditing(false)}
+					onClick={toggleIsEditing}
 					className='rounded-lg border border-mint bg-transparent py-2 px-4 text-sm font-semibold text-mint  hover:bg-gray-100 focus:ring-2 focus:ring-gray-300'
 				>
 					취소

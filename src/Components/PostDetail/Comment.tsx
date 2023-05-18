@@ -5,6 +5,7 @@ import { AuthContext } from '../../Context/AuthContext';
 import { db } from '../../fbase';
 import { setDataToFirestore, updateDataToFirestore } from '../../Utilities/firebaseApi';
 import CommentUnit from './CommentUnit';
+import useToggle from '../../Hooks/useToggle';
 
 interface CommentProps {
 	id: string;
@@ -16,12 +17,12 @@ interface CommentProps {
 }
 
 const Comment = ({ done, id, comments, isCommentsUpdated, setIsCommentsUpdated, postCreatorId }: CommentProps) => {
-	const modalRef = useRef<HTMLButtonElement | null>(null);
 	const navigate = useNavigate();
 	const { userInfo } = useContext(AuthContext);
-	const [commentInput, setCommentInput] = useState('');
-	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+	const [isModalOpen, toggleIsModalOpen] = useToggle(false);
+	const [commentInput, setCommentInput] = useState<string>('');
 	const [clickedComment, setClickedComment] = useState<string>('');
+	const modalRef = useRef<HTMLButtonElement | null>(null);
 
 	const commentInputHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setCommentInput(e.target.value);
@@ -81,7 +82,7 @@ const Comment = ({ done, id, comments, isCommentsUpdated, setIsCommentsUpdated, 
 	const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
 		const target = e.target as any;
 		if (isModalOpen && !modalRef.current?.contains(target)) {
-			setIsModalOpen(false);
+			toggleIsModalOpen();
 		}
 	};
 
@@ -97,7 +98,7 @@ const Comment = ({ done, id, comments, isCommentsUpdated, setIsCommentsUpdated, 
 						isCommentsUpdated={isCommentsUpdated}
 						setIsCommentsUpdated={setIsCommentsUpdated}
 						isModalOpen={isModalOpen}
-						setIsModalOpen={setIsModalOpen}
+						toggleIsModalOpen={toggleIsModalOpen}
 						clickedComment={clickedComment}
 						setClickedComment={setClickedComment}
 						modalRef={modalRef}

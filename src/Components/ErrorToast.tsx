@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import useToggle from '../Hooks/useToggle';
 
 interface ErrorToastProps {
 	error: string | null;
@@ -6,14 +7,14 @@ interface ErrorToastProps {
 }
 
 const ErrorToast = ({ error, setError }: ErrorToastProps) => {
-	const [isToastVisible, setIsToastVisible] = useState<boolean>(false);
+	const [isToastVisible, toggleIsToastVisible] = useToggle(false);
 
 	useEffect(() => {
-		setIsToastVisible(true);
+		toggleIsToastVisible();
 	}, [error]);
 
 	const closeToast = () => {
-		setIsToastVisible(false);
+		toggleIsToastVisible();
 		setError(null);
 	};
 

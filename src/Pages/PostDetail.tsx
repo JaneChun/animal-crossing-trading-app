@@ -7,8 +7,8 @@ import { AuthContext } from '../Context/AuthContext';
 import spinner from '../Images/loading.jpg';
 import { elapsedTime } from '../Utilities/elapsedTime';
 import { updateDataToFirestore } from '../Utilities/firebaseApi';
-import useGetComment from '../Utilities/useGetComment';
-import useGetPostDetail from '../Utilities/useGetPostDetail';
+import useGetComment from '../Hooks/useGetComment';
+import useGetPostDetail from '../Hooks/useGetPostDetail';
 import { db, storage } from '../fbase';
 import { cartItem } from './NewPost';
 
