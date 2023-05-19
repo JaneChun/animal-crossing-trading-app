@@ -10,6 +10,7 @@ import { AuthContext } from '../Context/AuthContext';
 import useToggle from '../Hooks/useToggle';
 import { updateDataToFirestore } from '../Utilities/firebaseApi';
 import { auth, db } from '../fbase';
+import Button from '../Components/Button';
 
 const MyPage = () => {
 	const navigate = useNavigate();
@@ -132,12 +133,9 @@ const MyPage = () => {
 						</div>
 						<div className='mt-4 flex space-x-3 md:mt-6'>
 							{!isEditing && (
-								<button
-									onClick={toggleIsEditing}
-									className='inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200'
-								>
+								<Button color='gray' size='md' onClick={toggleIsEditing}>
 									프로필 수정
-								</button>
+								</Button>
 							)}
 						</div>
 						{isEditing && <EditProfile islandName={userInfo.islandName} toggleIsEditing={toggleIsEditing} />}

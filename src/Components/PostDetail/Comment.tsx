@@ -6,6 +6,7 @@ import { db } from '../../fbase';
 import { setDataToFirestore, updateDataToFirestore } from '../../Utilities/firebaseApi';
 import CommentUnit from './CommentUnit';
 import useToggle from '../../Hooks/useToggle';
+import Button from '../Button';
 
 interface CommentProps {
 	id: string;
@@ -123,12 +124,9 @@ const Comment = ({ done, id, comments, isCommentsUpdated, setIsCommentsUpdated, 
 							></textarea>
 						</div>
 						<div className='flex items-center justify-end border-t px-3 py-2'>
-							<button
-								type='submit'
-								className='rounded-lg border border-mint bg-transparent py-1.5 px-3 text-sm font-semibold text-mint hover:border-transparent hover:bg-mint hover:text-white focus:ring-4 focus:ring-ring-mint'
-							>
+							<Button type='submit' color='white-hover-mint' size='sm'>
 								작성
-							</button>
+							</Button>
 						</div>
 					</div>
 				</form>

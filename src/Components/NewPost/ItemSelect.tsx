@@ -4,6 +4,7 @@ import spinner from '../../Images/spinner.gif';
 import { cartItem, item } from '../../Pages/NewPost';
 import Toast from './Toast';
 import UserAdd from './UserAdd';
+import Button from '../Button';
 
 interface ItemSelectProps {
 	isDropdownOpen: boolean;
@@ -67,17 +68,12 @@ const ItemSelect = ({ isDropdownOpen, toggleIsDropdownOpen, cart, setCart }: Ite
 			<label htmlFor='item' className='mb-2 block text-sm font-medium text-gray-900 '>
 				아이템
 			</label>
-			<button
-				id='item'
-				onClick={toggleIsDropdownOpen}
-				className='inline-flex items-center rounded-lg bg-mint px-4 py-2.5 text-center text-sm font-medium text-white hover:bg-hover-mint focus:outline-none focus:ring-4 focus:ring-ring-mint'
-				type='button'
-			>
+			<Button color='mint' size='md2' className='inline-flex items-center' onClick={toggleIsDropdownOpen}>
 				{category === '' ? '아이템 선택' : categories.find((item) => item.EN === category)?.KR}
 				<svg className='ml-2 h-4 w-4' aria-hidden='true' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
 					<path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7'></path>
 				</svg>
-			</button>
+			</Button>
 
 			{/* Category Dropdown */}
 			<div className={`${!isDropdownOpen && 'hidden'} + z-10 mt-2 w-36 divide-y divide-gray-100 rounded-lg bg-white shadow`}>

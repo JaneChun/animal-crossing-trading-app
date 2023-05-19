@@ -8,6 +8,7 @@ import { ChatContext } from '../Context/ChatContext';
 import { db } from '../fbase';
 import { updateDataToFirestore } from '../Utilities/firebaseApi';
 import useToggle from '../Hooks/useToggle';
+import Button from '../Components/Button';
 
 const Chat = () => {
 	const navigate = useNavigate();
@@ -306,14 +307,9 @@ const Chat = () => {
 								</ul>
 							</div>
 
-							<button
-								onClick={deleteChat}
-								data-modal-hide='popup-modal'
-								type='button'
-								className='mr-2 inline-flex items-center rounded-lg bg-mint px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-hover-mint focus:outline-none focus:ring-4 focus:ring-ring-mint'
-							>
+							<Button color='mint' size='md' onClick={deleteChat}>
 								확인
-							</button>
+							</Button>
 						</div>
 					</div>
 				</div>

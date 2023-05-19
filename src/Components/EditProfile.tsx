@@ -6,6 +6,7 @@ import { doc } from 'firebase/firestore';
 import { AuthContext } from '../Context/AuthContext';
 import { updateDataToFirestore } from '../Utilities/firebaseApi';
 import { uploadFile } from '../Utilities/uploadFile';
+import Button from './Button';
 
 interface EditProfileProps {
 	islandName: string;
@@ -190,18 +191,12 @@ const EditProfile = ({ islandName, toggleIsEditing }: EditProfileProps) => {
 			</div>
 
 			<div className='flex'>
-				<button
-					onClick={onSubmit}
-					className='mr-2 rounded-lg border border-mint bg-mint py-2 px-4 text-sm font-semibold text-white hover:bg-hover-mint focus:ring-2 focus:ring-ring-mint'
-				>
+				<Button onClick={onSubmit} color='mint' size='md'>
 					변경
-				</button>
-				<button
-					onClick={toggleIsEditing}
-					className='rounded-lg border border-mint bg-transparent py-2 px-4 text-sm font-semibold text-mint  hover:bg-gray-100 focus:ring-2 focus:ring-gray-300'
-				>
+				</Button>
+				<Button onClick={toggleIsEditing} color='white' size='md'>
 					취소
-				</button>
+				</Button>
 			</div>
 		</>
 	);

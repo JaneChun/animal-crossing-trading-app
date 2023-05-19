@@ -11,6 +11,7 @@ import { db } from '../fbase';
 import { setDataToFirestore } from '../Utilities/firebaseApi';
 import { uploadFile } from '../Utilities/uploadFile';
 import useToggle from '../Hooks/useToggle';
+import Button from '../Components/Button';
 
 export interface item {
 	UniqueEntryID: string;
@@ -254,12 +255,9 @@ const NewPost = () => {
 			{/* Cart */}
 
 			<div className='mt-3 flex justify-end'>
-				<button
-					onClick={onSubmit}
-					className='rounded-lg border border-mint bg-transparent py-2 px-4 font-semibold text-mint hover:border-transparent hover:bg-mint hover:text-white focus:ring-4 focus:ring-ring-mint'
-				>
+				<Button color='white' size='lg' onClick={onSubmit}>
 					작성
-				</button>
+				</Button>
 			</div>
 		</div>
 	);
