@@ -20,7 +20,7 @@ const Carousel = () => {
 	const imgClass = 'aspect-video object-cover';
 
 	return (
-		<div className=''>
+		<>
 			<Slider {...settings}>
 				<div className='h-auto'>
 					<img
@@ -68,7 +68,7 @@ const Carousel = () => {
 					/>
 				</div> */}
 			</Slider>
-		</div>
+		</>
 	);
 };
 
